@@ -781,7 +781,9 @@ section { padding: 5rem 0; }
 .home-hero {
   position: relative; height: 100vh;
   min-height: 600px; max-height: 960px;
-  display: flex; align-items: center; overflow: hidden;
+  display: flex; align-items: center;
+  padding-top: 64px;          /* push content below fixed navbar */
+  overflow: hidden;
 }
 .hero-bg-layer { position: absolute; inset: 0; }
 .hero-bg-img {
@@ -805,15 +807,20 @@ section { padding: 5rem 0; }
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px;
 }
-.hero-container {
-  position: relative; z-index: 2; width: 100%;
-  padding-top: 80px; height: 100%;
-  display: flex; flex-direction: column; justify-content: center;
+/* container inside the hero — no flex, just stacks its children */
+.hero-container { position: relative; z-index: 2; width: 100%; }
+
+/* row: text left, vinyl right */
+.home-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
 }
-.hero-text { flex: 1; min-width: 280px; }
+.hero-text { flex: 1; min-width: 0; max-width: 580px; }
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3.2rem, 7.5vw, 6rem);
+  font-size: clamp(3rem, 7vw, 5.8rem);
   line-height: 0.90; text-transform: uppercase; font-weight: 900;
   margin-bottom: 1.25rem;
 }
@@ -834,12 +841,15 @@ section { padding: 5rem 0; }
 .hero-anim-1 { animation: fadeSlideDown 0.7s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
 .hero-anim-4 { animation: fadeSlideUp 0.7s ease 1.2s both; }
 
+/* vinyl: wrap has the explicit size so flex knows the width */
 .hero-vinyl-wrap {
   flex-shrink: 0;
+  width: clamp(200px, 26vw, 340px);
+  height: clamp(200px, 26vw, 340px);
   animation: springIn 1.3s cubic-bezier(0.34,1.56,0.64,1) 0.7s both;
 }
 .hero-vinyl {
-  width: clamp(200px, 26vw, 340px); height: clamp(200px, 26vw, 340px);
+  width: 100%; height: 100%;
   border-radius: 50%;
   background: conic-gradient(from 0deg,
     #1c1c1c 0deg, #0d0d0d 15deg, #1c1c1c 30deg, #0d0d0d 45deg,
@@ -859,9 +869,9 @@ section { padding: 5rem 0; }
   animation: spin 18s linear infinite reverse;
 }
 .hero-scroll-hint {
-  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-  color: rgba(255,255,255,0.32); font-family: var(--font-display);
+  color: rgba(255,255,255,0.32); font-family: var(--font-display); z-index: 2;
   font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
   animation: fadeSlideUp 0.6s ease 1.7s both; pointer-events: none;
 }
@@ -925,13 +935,12 @@ section { padding: 5rem 0; }
 
   /* ─ Home hero ─ */
   .home-hero { height: 100svh; min-height: 560px; max-height: none; }
-  .hero-container { padding-top: 70px; justify-content: center; }
+
   .home-hero-inner { flex-direction: column; align-items: center; text-align: center; gap: 2rem; }
   .hero-text { min-width: unset; width: 100%; }
   .hero-desc { margin-left: auto; margin-right: auto; }
   .home-hero-inner .about-socials { justify-content: center; }
-  .hero-vinyl-wrap { order: -1; }
-  .hero-vinyl { width: 190px !important; height: 190px !important; }
+  .hero-vinyl-wrap { order: -1; width: 190px; height: 190px; }
 
   /* ─ Layout ─ */
   section { padding: 2.5rem 0; }
@@ -958,7 +967,7 @@ section { padding: 5rem 0; }
   .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
   .section-title { font-size: clamp(1.4rem, 7vw, 2rem) !important; }
   .quick-nav-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.75rem; }
-  .hero-vinyl { width: 150px !important; height: 150px !important; }
+  .hero-vinyl-wrap { width: 150px; height: 150px; }
   .hero-scroll-hint { display: none; }
   .nav-logo-text { font-size: 1.1rem !important; }
 
