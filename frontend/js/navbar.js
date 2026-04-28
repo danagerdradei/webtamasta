@@ -42,7 +42,7 @@ function buildNavbarHTML(isSubPage = false) {
 <nav class="navbar" id="navbar">
   <div class="container">
     <a href="${root}index.html" class="nav-logo-wrap">
-      ${ATAMASTA_LOGO_SVG}
+      <img src="${root}img/logo.png" alt="Atamasta" style="width:38px;height:38px;border-radius:50%;display:block;flex-shrink:0;" />
       <span class="nav-logo-text">ATA<span>MASTA</span></span>
     </a>
     <ul class="nav-links" id="nav-links">
