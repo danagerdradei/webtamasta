@@ -76,8 +76,8 @@ function renderAlbumGrid() {
     <div class="album-card reveal" data-album-index="${i}" onclick="selectAlbum(${i})">
       ${album.is_premium ? '<div class="album-premium-badge"><i class="fas fa-crown"></i> Premium</div>' : ''}
       <div class="album-cover-wrap">
-        <img src="${album.cover_url || 'assets/images/album-placeholder.jpg'}" alt="${album.title}" loading="lazy"
-             onerror="this.src='https://via.placeholder.com/400x400/111111/d4a017?text=${encodeURIComponent(album.title)}'" />
+        <img src="${album.cover_url || ''}" alt="${album.title}" loading="lazy"
+             onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23111%22/%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2255%22 fill=%22none%22 stroke=%22%23d4a017%22 stroke-width=%222%22 opacity=%22.4%22/%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2210%22 fill=%22%23d4a017%22 opacity=%22.4%22/%3E%3C/svg%3E'" />
         <div class="album-overlay">
           <button class="album-play-btn" onclick="event.stopPropagation(); selectAlbum(${i}); playTrack(0)">
             <i class="fas fa-play"></i>
@@ -118,7 +118,7 @@ function selectAlbum(index) {
   const playerSection = document.getElementById('player-section');
   playerSection.style.display = 'block';
 
-  const cover = album.cover_url || `https://via.placeholder.com/80x80/111111/d4a017?text=${encodeURIComponent(album.title)}`;
+  const cover = album.cover_url || '';
   document.getElementById('player-cover').src = cover;
   document.getElementById('player-album-name').textContent = album.title + ' (' + album.year + ')';
   document.getElementById('player-song-title').textContent = 'Selecciona una canción';
@@ -269,7 +269,7 @@ function renderVideoGrid() {
         <img
           src="https://img.youtube.com/vi/${song.youtube_embed_id || song.embedId}/maxresdefault.jpg"
           alt="${song.title}"
-          onerror="this.src='https://via.placeholder.com/480x270/111111/d4a017?text=VIDEO'"
+          onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 9%22%3E%3Crect width=%2216%22 height=%229%22 fill=%22%23111%22/%3E%3Cpolygon points=%226.5,2.5 6.5,6.5 11,4.5%22 fill=%22%23d4a017%22 opacity=%22.5%22/%3E%3C/svg%3E'"
           style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"
         />
         <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);transition:background 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'">

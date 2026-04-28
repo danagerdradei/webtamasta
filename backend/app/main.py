@@ -51,7 +51,7 @@ def seed_initial_data():
                 {
                     "title": "Rapresent",
                     "year": 2021,
-                    "cover_url": "https://via.placeholder.com/400x400/111111/d4a017?text=RAPRESENT",
+                    "cover_url": "",
                     "description": "Primer álbum de Atamasta. Boom bap puro representando el Rap Latino desde Colombia y Ecuador. Producido íntegramente por Golden Fingaz.",
                     "is_premium": False,
                     "spotify_url": "https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM",
@@ -65,7 +65,7 @@ def seed_initial_data():
                 {
                     "title": "Golden Era",
                     "year": 2023,
-                    "cover_url": "https://via.placeholder.com/400x400/0a1628/d4a017?text=GOLDEN+ERA",
+                    "cover_url": "",
                     "description": "El álbum más completo de Atamasta. Diez canciones de boom bap puro inspiradas en el Hip Hop de los 90s. Producción 100% de Golden Fingaz.",
                     "is_premium": True,
                     "spotify_url": "https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM",
