@@ -52,6 +52,7 @@ function buildNavbarHTML(isSubPage = false) {
       <li><a href="${pages}music.html" data-page="music"><i class="fas fa-headphones"></i> Música</a></li>
       <li><a href="${pages}videos.html" data-page="videos"><i class="fas fa-film"></i> Videos</a></li>
       <li><a href="${pages}contact.html" data-page="contact"><i class="fas fa-envelope"></i> Contacto</a></li>
+      <li class="nav-mobile-auth" id="nav-mobile-auth"></li>
     </ul>
     <div class="nav-auth" id="nav-auth"></div>
     <button class="hamburger" id="hamburger" aria-label="Menú">

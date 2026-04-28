@@ -58,30 +58,47 @@ function initNavbar() {
 
 function updateNavAuth() {
   const user = getUser();
-  const authArea = document.getElementById('nav-auth');
-  if (!authArea) return;
-
   const isSubPage = window.location.pathname.includes('/pages/');
   const base = isSubPage ? '' : 'pages/';
   const adminHref = isSubPage ? 'admin.html' : 'pages/admin.html';
 
+  let desktopHTML = '';
+  let mobileHTML = '';
+
   if (user) {
     const initial = user.username ? user.username[0].toUpperCase() : 'U';
-    authArea.innerHTML = `
+    const roleBadge = user.role === 'admin'
+      ? '<span class="badge badge-admin">Admin</span>'
+      : user.role === 'premium' ? '<span class="badge badge-premium">Premium</span>' : '';
+    const adminBtn = user.role === 'admin' ? `<a href="${adminHref}" class="btn btn-secondary btn-sm">Panel</a>` : '';
+    desktopHTML = `
       <div class="nav-user">
         <div class="avatar">${initial}</div>
-        <span>${user.username}</span>
-        ${user.role === 'admin' ? '<span class="badge badge-admin">Admin</span>' : user.role === 'premium' ? '<span class="badge badge-premium">Premium</span>' : ''}
+        <span>${user.username}</span>${roleBadge}
       </div>
-      ${user.role === 'admin' ? `<a href="${adminHref}" class="btn btn-secondary btn-sm">Panel</a>` : ''}
-      <button class="btn btn-sm" style="background:var(--bg3);color:var(--text-muted);" onclick="handleLogout()">Salir</button>
-    `;
+      ${adminBtn}
+      <button class="btn btn-sm" style="background:var(--bg3);color:var(--text-muted);" onclick="handleLogout()">Salir</button>`;
+    mobileHTML = `
+      <div class="nav-user" style="color:var(--text);font-size:1rem;margin-bottom:0.25rem;">
+        <div class="avatar">${initial}</div>
+        <span>${user.username}</span>${roleBadge}
+      </div>
+      ${adminBtn}
+      <button class="btn btn-secondary btn-sm" style="width:220px;justify-content:center;" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>`;
   } else {
-    authArea.innerHTML = `
+    desktopHTML = `
       <a href="${base}login.html" class="btn btn-secondary btn-sm">Iniciar sesión</a>
-      <a href="${base}register.html" class="btn btn-primary btn-sm">Registrarse</a>
-    `;
+      <a href="${base}register.html" class="btn btn-primary btn-sm">Registrarse</a>`;
+    mobileHTML = `
+      <a href="${base}login.html" class="btn btn-secondary btn-sm" style="width:220px;justify-content:center;"><i class="fas fa-sign-in-alt"></i> Iniciar sesión</a>
+      <a href="${base}register.html" class="btn btn-primary btn-sm" style="width:220px;justify-content:center;"><i class="fas fa-user-plus"></i> Registrarse</a>`;
   }
+
+  const authArea = document.getElementById('nav-auth');
+  if (authArea) authArea.innerHTML = desktopHTML;
+
+  const mobileArea = document.getElementById('nav-mobile-auth');
+  if (mobileArea) mobileArea.innerHTML = mobileHTML;
 }
 
 function handleLogout() {
