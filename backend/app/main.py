@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from .database import engine, Base
 from .config import settings
-from .routers import auth, albums, admin, contact
+from .routers import auth, albums, admin, contact, beats
 from . import models
 
 
@@ -120,6 +120,7 @@ app.include_router(auth.router)
 app.include_router(albums.router)
 app.include_router(admin.router)
 app.include_router(contact.router)
+app.include_router(beats.router)
 
 
 @app.get("/api/health")

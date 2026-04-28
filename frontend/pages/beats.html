@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beats — Atamasta | Golden Fingaz Production</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    /* ── Beats page extras ───────────────────────────────────────────────── */
+    .beats-page { padding-top: 0; min-height: 100vh; }
+
+    /* Filter bar */
+    .beats-filter-section {
+      padding: 1.75rem 0 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .beats-filter-inner {
+      display: flex; align-items: center; gap: 0.85rem;
+      flex-wrap: wrap; padding-bottom: 1.5rem;
+    }
+    .beats-filter-inner .search-wrap { flex: 1; min-width: 200px; max-width: 340px; }
+    .beats-filter-select {
+      padding: 0.6rem 2.2rem 0.6rem 0.9rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: var(--font-body);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      transition: var(--transition);
+      min-width: 160px;
+    }
+    .beats-filter-select:focus,
+    .beats-filter-select:hover { border-color: var(--gold); }
+    .beats-filter-select option { background: var(--bg2); color: var(--text); }
+
+    .exclusive-toggle-wrap {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.85rem; color: var(--text-muted);
+      cursor: pointer; user-select: none;
+      white-space: nowrap;
+    }
+    .exclusive-toggle-wrap input[type="checkbox"] {
+      accent-color: var(--gold);
+      width: 15px; height: 15px; cursor: pointer;
+    }
+    .exclusive-toggle-wrap:hover { color: var(--gold); }
+
+    .beats-count {
+      margin-left: auto;
+      font-size: 0.82rem; color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .beats-count strong { color: var(--gold); }
+
+    /* Grid section */
+    .beats-grid-section { padding: 2.5rem 0 5rem; }
+
+    /* Beats grid */
+    #beats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 1100px) { #beats-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px)  { #beats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 420px)  { #beats-grid { grid-template-columns: 1fr; } }
+
+    /* Beat card */
+    .beat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: var(--transition);
+      position: relative;
+    }
+    .beat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold);
+      box-shadow: var(--shadow-gold);
+    }
+
+    /* Cover image */
+    .beat-cover-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--bg3);
+      flex-shrink: 0;
+    }
+    .beat-cover-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .beat-card:hover .beat-cover-wrap img { transform: scale(1.05); }
+
+    /* SVG placeholder */
+    .beat-cover-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--bg3) 0%, rgba(212,160,23,0.06) 100%);
+    }
+    .beat-cover-placeholder svg { opacity: 0.25; }
+
+    /* Category badge on image */
+    .beat-category-badge {
+      position: absolute; top: 0.6rem; left: 0.6rem;
+      background: rgba(8,8,8,0.82);
+      border: 1px solid rgba(212,160,23,0.35);
+      color: var(--gold); font-size: 0.66rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.22rem 0.6rem; border-radius: 20px;
+      backdrop-filter: blur(4px);
+      font-family: var(--font-display);
+    }
+
+    /* Exclusive badge on image */
+    .beat-exclusive-badge {
+      position: absolute; top: 0.6rem; right: 0.6rem;
+      background: linear-gradient(135deg, #d4a017, #b8860b);
+      color: #000; font-size: 0.62rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.22rem 0.6rem; border-radius: 20px;
+      font-family: var(--font-display); font-weight: 700;
+    }
+
+    /* Play overlay on image */
+    .beat-play-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.45);
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .beat-card:hover .beat-play-overlay { opacity: 1; }
+    .beat-play-btn-overlay {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--gold); color: #000;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      transition: transform 0.2s ease;
+      box-shadow: 0 0 28px rgba(212,160,23,0.55);
+      border: none; cursor: pointer;
+    }
+    .beat-play-btn-overlay:hover { transform: scale(1.12); }
+    .beat-play-btn-overlay i { margin-left: 3px; }
+
+    /* Card body */
+    .beat-card-body {
+      padding: 1rem 1rem 1.1rem;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .beat-card-title {
+      font-family: var(--font-display);
+      font-size: 0.98rem; text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Chips row: BPM & key */
+    .beat-chips {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+    .beat-chip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.72rem;
+      padding: 0.18rem 0.55rem; border-radius: 20px;
+    }
+    .beat-chip i { font-size: 0.65rem; color: var(--gold); }
+
+    /* Price + actions row */
+    .beat-card-footer {
+      margin-top: auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+    .beat-price {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--gold);
+      letter-spacing: 0.03em;
+    }
+    .beat-price-free {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+    }
+    .beat-card-actions {
+      display: flex; gap: 0.4rem; align-items: center;
+    }
+    .beat-action-btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.38rem 0.75rem;
+      border-radius: var(--radius);
+      font-size: 0.78rem; font-family: var(--font-body);
+      cursor: pointer; transition: var(--transition);
+      white-space: nowrap; text-decoration: none;
+    }
+    .beat-action-btn-primary {
+      background: var(--gold); color: #000; border: none;
+      font-weight: 600;
+    }
+    .beat-action-btn-primary:hover {
+      background: var(--gold-light); color: #000;
+      transform: translateY(-1px);
+    }
+
+    /* Empty state */
+    .beats-empty {
+      grid-column: 1 / -1;
+      text-align: center; padding: 5rem 1rem; color: var(--text-muted);
+    }
+    .beats-empty i { font-size: 3.5rem; color: var(--border); margin-bottom: 1.25rem; display: block; }
+    .beats-empty h3 {
+      font-family: var(--font-display); font-size: 1.3rem; text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 0.5rem; color: var(--text);
+    }
+    .beats-empty p { font-size: 0.9rem; }
+
+    /* Sort select */
+    .beats-sort-select {
+      padding: 0.6rem 2.2rem 0.6rem 0.9rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: var(--font-body);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      transition: var(--transition);
+      min-width: 150px;
+    }
+    .beats-sort-select:focus,
+    .beats-sort-select:hover { border-color: var(--gold); }
+    .beats-sort-select option { background: var(--bg2); color: var(--text); }
+
+    /* Loader state within grid */
+    .beats-loading {
+      grid-column: 1 / -1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 4rem 1rem; gap: 1rem; color: var(--text-muted);
+    }
+
+    /* Section label */
+    .beats-section-label {
+      font-family: var(--font-display);
+      font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .beats-section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader-overlay" id="page-loader">
+  <div class="vinyl-loader">
+    <div class="vinyl-disc">
+      <div class="vinyl-label">
+        <img src="../img/logo.png" alt="Atamasta" />
+      </div>
+    </div>
+  </div>
+  <div class="loader-text">Cargando...</div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Navbar injected by JS -->
+
+<main class="beats-page">
+
+  <!-- ── Page Hero ───────────────────────────────────────────────────────── -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="page-hero-tag"><i class="fas fa-drum"></i> Tienda de Beats</span>
+      <h1>Beats</h1>
+      <p>Golden Fingaz Production</p>
+    </div>
+  </section>
+
+  <!-- ── Filter Bar ─────────────────────────────────────────────────────── -->
+  <section class="beats-filter-section">
+    <div class="container">
+      <div class="beats-filter-inner">
+
+        <!-- Search -->
+        <div class="search-wrap">
+          <i class="fas fa-search"></i>
+          <input
+            type="search"
+            id="beats-search"
+            class="search-input"
+            placeholder="Buscar beat..."
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Category filter -->
+        <select id="beats-category" class="beats-filter-select">
+          <option value="">Todas las categorías</option>
+        </select>
+
+        <!-- Exclusive toggle -->
+        <label class="exclusive-toggle-wrap">
+          <input type="checkbox" id="beats-exclusive" />
+          Solo exclusivos
+        </label>
+
+        <!-- Sort -->
+        <select id="beats-sort" class="beats-sort-select">
+          <option value="newest">Más recientes</option>
+          <option value="price-asc">Precio: menor</option>
+          <option value="price-desc">Precio: mayor</option>
+          <option value="plays">Más escuchados</option>
+          <option value="alpha">A → Z</option>
+        </select>
+
+        <!-- Count -->
+        <span class="beats-count"><strong id="beats-count-num">0</strong> beats</span>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Beats Grid ──────────────────────────────────────────────────────── -->
+  <section class="beats-grid-section">
+    <div class="container">
+      <p class="beats-section-label">Catálogo de beats</p>
+      <div id="beats-grid">
+        <div class="beats-loading">
+          <div class="loader-ring"></div>
+          <span>Cargando beats...</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="nav-logo">ATA<span>MASTA</span></a>
+        <p>Artista de hip-hop y rap de Medellín, Colombia. Producido por Golden Fingaz.</p>
+        <div class="about-socials" style="margin-top:1.25rem;">
+          <a href="https://www.instagram.com/atamastaoficial" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://open.spotify.com/artist/atamasta" target="_blank" rel="noopener" class="social-link" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
+          <a href="https://www.facebook.com/atamastaoficial" target="_blank" rel="noopener" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-title">Navegación</h4>
+        <ul class="footer-links">
+          <li><a href="../index.html">Inicio</a></li>
+          <li><a href="about.html">Artista</a></li>
+          <li><a href="discography.html">Discografía</a></li>
+          <li><a href="music.html">Música</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li><a href="beats.html">Beats</a></li>
+          <li><a href="contact.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Beats</h4>
+        <ul class="footer-links">
+          <li><a href="beats.html">Catálogo completo</a></li>
+          <li><a href="beats.html?category=Boom+Bap">Boom Bap</a></li>
+          <li><a href="beats.html?category=Trap">Trap</a></li>
+          <li><a href="beats.html?category=Jazz+Rap">Jazz Rap</a></li>
+          <li><a href="contact.html">Adquirir beat</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 Atamasta. Todos los derechos reservados.</span>
+      <span>Producido por <strong style="color:var(--gold)">Golden Fingaz</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let allBeats = [];
+let searchDebounce = null;
+
+// ── Cover placeholder SVG ──────────────────────────────────────────────────
+const BEAT_PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <circle cx="40" cy="40" r="30" stroke="#d4a017" stroke-width="2" fill="none"/>
+  <circle cx="40" cy="40" r="18" stroke="#d4a017" stroke-width="1.5" fill="none"/>
+  <circle cx="40" cy="40" r="5" fill="#d4a017"/>
+  <line x1="40" y1="10" x2="40" y2="22" stroke="#d4a017" stroke-width="1.5"/>
+  <line x1="40" y1="58" x2="40" y2="70" stroke="#d4a017" stroke-width="1.5"/>
+  <line x1="10" y1="40" x2="22" y2="40" stroke="#d4a017" stroke-width="1.5"/>
+  <line x1="58" y1="40" x2="70" y2="40" stroke="#d4a017" stroke-width="1.5"/>
+</svg>`;
+
+// ── Build a beat card ──────────────────────────────────────────────────────
+function buildBeatCard(beat) {
+  const coverHtml = beat.image_url
+    ? `<img src="${beat.image_url}" alt="${escapeHtml(beat.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'beat-cover-placeholder\\'>${BEAT_PLACEHOLDER_SVG}</div>'" />`
+    : `<div class="beat-cover-placeholder">${BEAT_PLACEHOLDER_SVG}</div>`;
+
+  const previewHtml = beat.audio_preview_url
+    ? `<button class="beat-play-btn-overlay" title="Escuchar preview" onclick="previewBeat(event, ${beat.id}, '${escapeHtml(beat.audio_preview_url)}')">
+         <i class="fas fa-play"></i>
+       </button>`
+    : '';
+
+  const exclusiveBadge = beat.is_exclusive
+    ? `<span class="beat-exclusive-badge"><i class="fas fa-star"></i> Exclusivo</span>`
+    : '';
+
+  const bpmChip = beat.bpm
+    ? `<span class="beat-chip"><i class="fas fa-tachometer-alt"></i>${beat.bpm} BPM</span>`
+    : '';
+
+  const keyChip = beat.musical_key
+    ? `<span class="beat-chip"><i class="fas fa-music"></i>${escapeHtml(beat.musical_key)}</span>`
+    : '';
+
+  const priceHtml = beat.price > 0
+    ? `<span class="beat-price">$${beat.price.toLocaleString('es-CO')}</span>`
+    : `<span class="beat-price-free">Consultar precio</span>`;
+
+  return `
+    <div class="beat-card" data-id="${beat.id}">
+      <div class="beat-cover-wrap">
+        ${coverHtml}
+        <span class="beat-category-badge">${escapeHtml(beat.category)}</span>
+        ${exclusiveBadge}
+        ${previewHtml ? `<div class="beat-play-overlay">${previewHtml}</div>` : ''}
+      </div>
+      <div class="beat-card-body">
+        <div class="beat-card-title">${escapeHtml(beat.title)}</div>
+        <div class="beat-chips">${bpmChip}${keyChip}</div>
+        <div class="beat-card-footer">
+          ${priceHtml}
+          <div class="beat-card-actions">
+            <a href="contact.html?beat=${encodeURIComponent(beat.title)}" class="beat-action-btn beat-action-btn-primary">
+              <i class="fas fa-shopping-cart"></i> Adquirir
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ── Preview beat ───────────────────────────────────────────────────────────
+function previewBeat(event, beatId, audioUrl) {
+  event.stopPropagation();
+  window.open(audioUrl, '_blank', 'noopener');
+  api.playBeat(beatId).catch(() => {});
+}
+
+// ── Sort beats ─────────────────────────────────────────────────────────────
+function sortBeats(beats) {
+  const sortVal = document.getElementById('beats-sort').value;
+  const arr = [...beats];
+  if (sortVal === 'price-asc')  arr.sort((a, b) => a.price - b.price);
+  if (sortVal === 'price-desc') arr.sort((a, b) => b.price - a.price);
+  if (sortVal === 'plays')      arr.sort((a, b) => b.play_count - a.play_count);
+  if (sortVal === 'alpha')      arr.sort((a, b) => a.title.localeCompare(b.title));
+  // 'newest' is default from API order
+  return arr;
+}
+
+// ── Render grid ────────────────────────────────────────────────────────────
+function renderBeats(beats) {
+  const grid = document.getElementById('beats-grid');
+  const countEl = document.getElementById('beats-count-num');
+
+  // Client-side exclusive filter
+  const exclusiveOnly = document.getElementById('beats-exclusive').checked;
+  let filtered = exclusiveOnly ? beats.filter(b => b.is_exclusive) : beats;
+
+  // Client-side sort
+  filtered = sortBeats(filtered);
+
+  countEl.textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="beats-empty">
+        <i class="fas fa-drum"></i>
+        <h3>No hay beats disponibles</h3>
+        <p>Vuelve pronto para ver nuevas producciones de Golden Fingaz.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(buildBeatCard).join('');
+}
+
+// ── Load beats from API ────────────────────────────────────────────────────
+async function loadBeats() {
+  const grid = document.getElementById('beats-grid');
+  grid.innerHTML = `<div class="beats-loading"><div class="loader-ring"></div><span>Cargando beats...</span></div>`;
+
+  try {
+    const params = new URLSearchParams();
+    params.set('available_only', 'true');
+
+    const search = document.getElementById('beats-search').value.trim();
+    if (search) params.set('q', search);
+
+    const category = document.getElementById('beats-category').value;
+    if (category) params.set('category', category);
+
+    allBeats = await api.getBeats(params.toString());
+    renderBeats(allBeats);
+  } catch (err) {
+    grid.innerHTML = `
+      <div class="beats-empty">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Error al cargar</h3>
+        <p>${err.message || 'No se pudo conectar con el servidor.'}</p>
+      </div>`;
+    document.getElementById('beats-count-num').textContent = '0';
+  }
+}
+
+// ── Load categories ────────────────────────────────────────────────────────
+async function loadCategories() {
+  try {
+    const cats = await api.getCategories();
+    const sel = document.getElementById('beats-category');
+    cats.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      sel.appendChild(opt);
+    });
+
+    // If URL has a category param, pre-select it
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCat = urlParams.get('category');
+    if (urlCat) {
+      sel.value = urlCat;
+    }
+  } catch (err) {
+    // categories unavailable — just skip
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  initSharedNavbar('beats', true);
+  initScrollReveal();
+
+  // Hide loader
+  const loader = document.getElementById('page-loader');
+  if (loader) {
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      setTimeout(() => loader.style.display = 'none', 400);
+    }, 600);
+  }
+
+  await loadCategories();
+  await loadBeats();
+
+  // Search — debounced
+  document.getElementById('beats-search').addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(loadBeats, 350);
+  });
+
+  // Category filter
+  document.getElementById('beats-category').addEventListener('change', loadBeats);
+
+  // Exclusive toggle — client-side filter only
+  document.getElementById('beats-exclusive').addEventListener('change', () => renderBeats(allBeats));
+
+  // Sort — client-side sort only
+  document.getElementById('beats-sort').addEventListener('change', () => renderBeats(allBeats));
+});
+</script>
+</body>
+</html>

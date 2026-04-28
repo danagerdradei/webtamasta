@@ -51,6 +51,7 @@ function buildNavbarHTML(isSubPage = false) {
       <li><a href="${pages}discography.html" data-page="discography"><i class="fas fa-compact-disc"></i> Discografía</a></li>
       <li><a href="${pages}music.html" data-page="music"><i class="fas fa-headphones"></i> Música</a></li>
       <li><a href="${pages}videos.html" data-page="videos"><i class="fas fa-film"></i> Videos</a></li>
+      <li><a href="${pages}beats.html" data-page="beats"><i class="fas fa-drum"></i> Beats</a></li>
       <li><a href="${pages}contact.html" data-page="contact"><i class="fas fa-envelope"></i> Contacto</a></li>
       <li class="nav-mobile-auth" id="nav-mobile-auth"></li>
     </ul>

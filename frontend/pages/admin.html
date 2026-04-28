@@ -90,6 +90,124 @@
   </div>
 </div>
 
+<!-- Beat Modal -->
+<div class="modal-overlay" id="beat-modal">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-header">
+      <h3 id="beat-modal-title">Nuevo beat</h3>
+      <button class="modal-close" onclick="closeBeatModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="beat-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Título</label>
+          <input class="form-input" id="bt-title" required placeholder="Nombre del beat" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoría</label>
+          <select class="form-input" id="bt-category" required>
+            <option value="" disabled selected>Seleccionar categoría</option>
+            <option>Boom Bap</option>
+            <option>Trap</option>
+            <option>Drill</option>
+            <option>UK Drill</option>
+            <option>Phonk</option>
+            <option>Lo-Fi Hip-Hop</option>
+            <option>G-Funk</option>
+            <option>East Coast</option>
+            <option>West Coast</option>
+            <option>Southern / Dirty South</option>
+            <option>Cloud Rap</option>
+            <option>Emo Rap / Sad Rap</option>
+            <option>Latin Trap</option>
+            <option>Afro Trap</option>
+            <option>R&amp;B / Neo Soul</option>
+            <option>Jazz Rap</option>
+            <option>Golden Era / Old School</option>
+            <option>Underground / Conscious</option>
+            <option>Gangsta Rap</option>
+            <option>Melodic Rap</option>
+            <option>Experimental / Abstract</option>
+            <option>Detroit Hip-Hop</option>
+            <option>Memphis Rap</option>
+            <option>Hyphy</option>
+            <option>Crunk</option>
+            <option>Instrumental Hip-Hop</option>
+            <option>New School</option>
+            <option>Afrobeats Fusion</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">BPM</label>
+          <input type="number" class="form-input" id="bt-bpm" min="40" max="300" placeholder="ej. 90" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Clave musical</label>
+          <select class="form-input" id="bt-key">
+            <option value="">Sin especificar</option>
+            <option>C Major</option>
+            <option>C Minor</option>
+            <option>C# Major</option>
+            <option>C# Minor</option>
+            <option>D Major</option>
+            <option>D Minor</option>
+            <option>D# Major</option>
+            <option>D# Minor</option>
+            <option>E Major</option>
+            <option>E Minor</option>
+            <option>F Major</option>
+            <option>F Minor</option>
+            <option>F# Major</option>
+            <option>F# Minor</option>
+            <option>G Major</option>
+            <option>G Minor</option>
+            <option>G# Major</option>
+            <option>G# Minor</option>
+            <option>A Major</option>
+            <option>A Minor</option>
+            <option>A# Major</option>
+            <option>A# Minor</option>
+            <option>B Major</option>
+            <option>B Minor</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Precio (USD)</label>
+          <input type="number" class="form-input" id="bt-price" min="0" step="0.01" placeholder="0.00" value="0" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tags (separados por coma)</label>
+          <input class="form-input" id="bt-tags" placeholder="boom bap, sample, dark" />
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">URL de audio preview</label>
+          <input class="form-input" id="bt-audio" placeholder="https://..." />
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">URL de imagen de portada</label>
+          <input class="form-input" id="bt-image" placeholder="https://..." />
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-input" id="bt-desc" rows="2" placeholder="Describe el beat..."></textarea>
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;">
+          <input type="checkbox" id="bt-available" style="width:auto;" checked />
+          <label for="bt-available" class="form-label" style="margin:0;">Disponible</label>
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;">
+          <input type="checkbox" id="bt-exclusive" style="width:auto;" />
+          <label for="bt-exclusive" class="form-label" style="margin:0;">Exclusivo</label>
+        </div>
+      </div>
+      <div id="beat-form-alert"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.75rem;" id="beat-form-btn">
+        <i class="fas fa-save"></i> Guardar beat
+      </button>
+    </form>
+  </div>
+</div>
+
 <nav class="navbar scrolled">
   <div class="container">
     <a href="../index.html" class="nav-logo">ATA<span>MASTA</span> <span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:0.15em;">ADMIN</span></a>
@@ -109,6 +227,9 @@
     </div>
     <div class="admin-menu-item" data-panel="albums" onclick="showPanel('albums')">
       <i class="fas fa-compact-disc"></i> Álbumes
+    </div>
+    <div class="admin-menu-item" data-panel="beats" onclick="showPanel('beats')">
+      <i class="fas fa-drum"></i> Beats
     </div>
     <div class="admin-menu-item" data-panel="messages" onclick="showPanel('messages')">
       <i class="fas fa-envelope"></i> Mensajes
@@ -181,6 +302,34 @@
       </div>
     </div>
 
+    <!-- Beats Panel -->
+    <div class="section-panel" id="panel-beats">
+      <div class="panel-title">Gestión de <span>Beats</span></div>
+      <div class="filter-bar">
+        <button class="btn btn-primary btn-sm" onclick="openBeatModal()"><i class="fas fa-plus"></i> Nuevo beat</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadAdminBeats()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Categoría</th>
+              <th>BPM</th>
+              <th>Clave</th>
+              <th>Precio</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="beats-tbody">
+            <tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Messages Panel -->
     <div class="section-panel" id="panel-messages">
       <div class="panel-title">Mensajes de <span>Contacto</span></div>
@@ -211,6 +360,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadStats();
   await loadUsers();
   await loadAdminAlbums();
+  await loadAdminBeats();
   await loadMessages();
 });
 
@@ -443,6 +593,119 @@ document.getElementById('album-form').addEventListener('submit', async e => {
   }
 });
 
+/* ── Beats ────────────────────────────────────────────────────────────────── */
+let editBeatId = null;
+
+async function loadAdminBeats() {
+  try {
+    const beats = await api.getBeats('available_only=false');
+    const tbody = document.getElementById('beats-tbody');
+    if (!beats.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin beats</td></tr>';
+      return;
+    }
+    tbody.innerHTML = beats.map(b => `
+      <tr>
+        <td>#${b.id}</td>
+        <td>
+          <strong>${b.title}</strong>
+          ${b.is_exclusive ? '<span class="badge badge-premium" style="font-size:0.65rem;margin-left:0.4rem;">Excl.</span>' : ''}
+        </td>
+        <td style="color:var(--text-muted);font-size:0.85rem;">${b.category}</td>
+        <td style="color:var(--text-muted);">${b.bpm || '—'}</td>
+        <td style="color:var(--text-muted);font-size:0.82rem;">${b.musical_key || '—'}</td>
+        <td style="color:var(--gold);">${b.price > 0 ? '$' + b.price.toLocaleString('es-CO') : 'Consultar'}</td>
+        <td>
+          <span class="badge ${b.is_available ? 'badge-active' : 'badge-banned'}">${b.is_available ? 'Activo' : 'Inactivo'}</span>
+        </td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn" onclick="editBeat(${b.id})"><i class="fas fa-edit"></i> Editar</button>
+            <button class="action-btn danger" onclick="deleteBeat(${b.id}, '${b.title.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) { toast('Error cargando beats: ' + err.message, 'error'); }
+}
+
+function openBeatModal(beat = null) {
+  editBeatId = beat ? beat.id : null;
+  document.getElementById('beat-modal-title').textContent = beat ? 'Editar beat' : 'Nuevo beat';
+  document.getElementById('bt-title').value = beat?.title || '';
+  document.getElementById('bt-category').value = beat?.category || '';
+  document.getElementById('bt-bpm').value = beat?.bpm || '';
+  document.getElementById('bt-key').value = beat?.musical_key || '';
+  document.getElementById('bt-price').value = beat?.price ?? 0;
+  document.getElementById('bt-tags').value = beat?.tags || '';
+  document.getElementById('bt-audio').value = beat?.audio_preview_url || '';
+  document.getElementById('bt-image').value = beat?.image_url || '';
+  document.getElementById('bt-desc').value = beat?.description || '';
+  document.getElementById('bt-available').checked = beat ? beat.is_available : true;
+  document.getElementById('bt-exclusive').checked = beat?.is_exclusive || false;
+  document.getElementById('beat-form-alert').innerHTML = '';
+  document.getElementById('beat-modal').classList.add('open');
+}
+
+function closeBeatModal() {
+  document.getElementById('beat-modal').classList.remove('open');
+  editBeatId = null;
+}
+
+async function editBeat(id) {
+  try {
+    const beat = await api.getBeat(id);
+    openBeatModal(beat);
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function deleteBeat(id, title) {
+  openConfirm(`¿Eliminar beat "${title}"?`, 'Esta acción no se puede deshacer.', async () => {
+    try {
+      await api.deleteBeat(id);
+      toast('Beat eliminado', 'success');
+      await loadAdminBeats();
+    } catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+document.getElementById('beat-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('beat-form-btn');
+  const alertEl = document.getElementById('beat-form-alert');
+  const body = {
+    title: document.getElementById('bt-title').value.trim(),
+    category: document.getElementById('bt-category').value,
+    bpm: document.getElementById('bt-bpm').value ? parseInt(document.getElementById('bt-bpm').value) : null,
+    musical_key: document.getElementById('bt-key').value || null,
+    price: parseFloat(document.getElementById('bt-price').value) || 0,
+    tags: document.getElementById('bt-tags').value.trim() || null,
+    audio_preview_url: document.getElementById('bt-audio').value.trim() || null,
+    image_url: document.getElementById('bt-image').value.trim() || null,
+    description: document.getElementById('bt-desc').value.trim() || null,
+    is_available: document.getElementById('bt-available').checked,
+    is_exclusive: document.getElementById('bt-exclusive').checked,
+  };
+  if (!body.title || !body.category) {
+    alertEl.innerHTML = '<div class="alert alert-error">Título y categoría son requeridos.</div>';
+    return;
+  }
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  try {
+    if (editBeatId) await api.updateBeat(editBeatId, body);
+    else await api.createBeat(body);
+    toast(editBeatId ? 'Beat actualizado' : 'Beat creado', 'success');
+    closeBeatModal();
+    await loadAdminBeats();
+  } catch (err) {
+    alertEl.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save"></i> Guardar beat';
+  }
+});
+
 /* ── Messages ─────────────────────────────────────────────────────────────── */
 async function loadMessages() {
   try {
@@ -510,7 +773,7 @@ function closeConfirm() { document.getElementById('confirm-modal').classList.rem
 function closeBanModal() { document.getElementById('ban-modal').classList.remove('open'); banUserId = null; }
 
 document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) { closeConfirm(); closeBanModal(); closeAlbumModal(); } });
+  m.addEventListener('click', e => { if (e.target === m) { closeConfirm(); closeBanModal(); closeAlbumModal(); closeBeatModal(); } });
 });
 </script>
 </body>

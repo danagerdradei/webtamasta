@@ -1,5 +1,5 @@
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, Text,
+    Column, Integer, String, Boolean, DateTime, Text, Float,
     ForeignKey, Enum as SAEnum, func
 )
 from sqlalchemy.orm import relationship
@@ -72,4 +72,22 @@ class ContactMessage(Base):
     subject = Column(String(200), nullable=False)
     message = Column(Text, nullable=False)
     is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Beat(Base):
+    __tablename__ = "beats"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    category = Column(String(100), nullable=False)
+    tags = Column(String(500), nullable=True)  # comma-separated
+    bpm = Column(Integer, nullable=True)
+    musical_key = Column(String(30), nullable=True)
+    price = Column(Float, default=0.0)
+    image_url = Column(String(500), nullable=True)
+    audio_preview_url = Column(String(500), nullable=True)
+    is_available = Column(Boolean, default=True)
+    is_exclusive = Column(Boolean, default=False)
+    play_count = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

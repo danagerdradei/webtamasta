@@ -46,4 +46,13 @@ const api = {
 
   // Contact
   sendContact: (body) => apiFetch('/api/contact', { method: 'POST', body: JSON.stringify(body) }),
+
+  // Beats
+  getBeats: (params = '') => apiFetch(`/api/beats${params ? '?' + params : ''}`),
+  getBeat: (id) => apiFetch(`/api/beats/${id}`),
+  getCategories: () => apiFetch('/api/beats/categories'),
+  createBeat: (body) => apiFetch('/api/beats', { method: 'POST', body: JSON.stringify(body) }),
+  updateBeat: (id, body) => apiFetch(`/api/beats/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteBeat: (id) => apiFetch(`/api/beats/${id}`, { method: 'DELETE' }),
+  playBeat: (id) => apiFetch(`/api/beats/${id}/play`, { method: 'POST' }),
 };

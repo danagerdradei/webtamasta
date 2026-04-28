@@ -141,3 +141,38 @@ class ContactOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ── Beats ─────────────────────────────────────────────────────────────────────
+
+class BeatCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    category: str
+    tags: Optional[str] = None
+    bpm: Optional[int] = None
+    musical_key: Optional[str] = None
+    price: float = 0.0
+    image_url: Optional[str] = None
+    audio_preview_url: Optional[str] = None
+    is_available: bool = True
+    is_exclusive: bool = False
+
+class BeatOut(BaseModel):
+    id: int
+    title: str
+    description: Optional[str] = None
+    category: str
+    tags: Optional[str] = None
+    bpm: Optional[int] = None
+    musical_key: Optional[str] = None
+    price: float
+    image_url: Optional[str] = None
+    audio_preview_url: Optional[str] = None
+    is_available: bool
+    is_exclusive: bool
+    play_count: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
