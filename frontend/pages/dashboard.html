@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil — Atamasta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<nav class="navbar scrolled">
+  <div class="container">
+    <a href="../index.html" class="nav-logo">ATA<span>MASTA</span></a>
+    <div class="nav-auth" id="nav-auth"></div>
+  </div>
+</nav>
+
+<div class="dashboard-page">
+  <div class="container" style="padding-top:2rem;">
+
+    <div id="profile-card" class="fade-in" style="max-width:600px; margin:0 auto;">
+      <div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; text-align:center;">
+        <div style="width:80px;height:80px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#000;margin:0 auto 1rem;" id="user-avatar-big">A</div>
+        <h2 id="user-display-name" style="font-size:1.8rem;"></h2>
+        <p id="user-email" style="color:var(--text-muted); margin-top:0.25rem;"></p>
+        <div id="user-role-badge" style="margin-top:0.75rem;"></div>
+        <p id="user-since" style="color:var(--text-muted); font-size:0.85rem; margin-top:0.5rem;"></p>
+
+        <div style="display:flex; gap:1rem; justify-content:center; margin-top:2rem; flex-wrap:wrap;">
+          <a href="../index.html" class="btn btn-primary"><i class="fas fa-home"></i> Ir a Inicio</a>
+          <button class="btn btn-secondary" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; margin-top:1.5rem;">
+        <h3 style="color:var(--gold); font-size:1rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem;">Tu Plan</h3>
+        <div id="plan-info"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = requireAuth('login.html');
+  if (!user) return;
+
+  updateNavAuth();
+
+  document.getElementById('user-avatar-big').textContent = user.username[0].toUpperCase();
+  document.getElementById('user-display-name').textContent = user.username;
+  document.getElementById('user-email').textContent = user.email;
+  document.getElementById('user-since').textContent = 'Miembro desde ' + formatDate(user.created_at);
+
+  const badgeMap = { admin: 'badge-admin', premium: 'badge-premium', free: 'badge-free' };
+  const labelMap = { admin: 'Administrador', premium: 'Premium', free: 'Gratuito' };
+  document.getElementById('user-role-badge').innerHTML = `<span class="badge ${badgeMap[user.role]}">${labelMap[user.role]}</span>`;
+
+  const planDiv = document.getElementById('plan-info');
+  if (user.role === 'premium') {
+    planDiv.innerHTML = `
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <i class="fas fa-crown" style="color:var(--gold);font-size:1.5rem;"></i>
+        <div>
+          <div style="font-weight:600;">Plan Premium</div>
+          <div style="color:var(--text-muted);font-size:0.85rem;">Acceso ilimitado a toda la discografía y contenido exclusivo.</div>
+        </div>
+      </div>`;
+  } else if (user.role === 'admin') {
+    planDiv.innerHTML = `
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <i class="fas fa-shield-halved" style="color:var(--gold);font-size:1.5rem;"></i>
+        <div>
+          <div style="font-weight:600;">Administrador</div>
+          <div style="color:var(--text-muted);font-size:0.85rem;">Acceso completo al panel de administración.</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;">
+        <a href="admin.html" class="btn btn-primary btn-sm"><i class="fas fa-cog"></i> Ir al panel de admin</a>
+      </div>`;
+  } else {
+    planDiv.innerHTML = `
+      <div style="display:flex;align-items:center;gap:1rem; margin-bottom:1rem;">
+        <i class="fas fa-user" style="color:var(--text-muted);font-size:1.5rem;"></i>
+        <div>
+          <div style="font-weight:600;">Plan Gratuito</div>
+          <div style="color:var(--text-muted);font-size:0.85rem;">Acceso a contenido gratuito. Actualiza a premium para más.</div>
+        </div>
+      </div>
+      <div style="background:rgba(212,160,23,0.07);border:1px dashed rgba(212,160,23,0.3);border-radius:var(--radius);padding:1rem;">
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">
+          <i class="fas fa-crown" style="color:var(--gold);"></i> Actualiza a Premium para acceder a toda la discografía, álbumes exclusivos y más.
+        </p>
+        <a href="#contact" class="btn btn-primary btn-sm"><i class="fas fa-crown"></i> Quiero ser Premium</a>
+      </div>`;
+  }
+
+  // Sync user from server
+  try {
+    const freshUser = await api.me();
+    setUser(freshUser);
+  } catch {}
+});
+</script>
+</body>
+</html>

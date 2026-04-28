@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin — Atamasta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    .admin-layout { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 64px); padding-top:64px; }
+    .admin-sidebar { background:var(--bg2); border-right:1px solid var(--border); padding:1.5rem 0; position:sticky; top:64px; height:calc(100vh - 64px); overflow-y:auto; }
+    .sidebar-logo { padding:0 1.5rem 1.5rem; border-bottom:1px solid var(--border); margin-bottom:1rem; }
+    .sidebar-logo span { font-family:var(--font-display); font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.15em; }
+    .admin-menu-item { display:flex; align-items:center; gap:0.75rem; padding:0.75rem 1.5rem; color:var(--text-muted); cursor:pointer; transition:var(--transition); border-left:3px solid transparent; font-size:0.9rem; }
+    .admin-menu-item:hover, .admin-menu-item.active { color:var(--gold); background:rgba(212,160,23,0.07); border-left-color:var(--gold); }
+    .admin-menu-item i { width:20px; text-align:center; }
+    .admin-main { padding:2rem; overflow:auto; }
+    .section-panel { display:none; }
+    .section-panel.active { display:block; }
+    .panel-title { font-size:1.5rem; margin-bottom:1.5rem; color:var(--text); }
+    .panel-title span { color:var(--gold); }
+    .filter-bar { display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center; }
+    .table-wrap { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; overflow-x:auto; }
+    .action-btn { background:none; border:1px solid var(--border); color:var(--text-muted); padding:0.3rem 0.6rem; border-radius:var(--radius); cursor:pointer; font-size:0.78rem; transition:var(--transition); }
+    .action-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .action-btn.danger:hover { border-color:var(--red); color:var(--red-light); }
+    @media(max-width:768px) { .admin-layout { grid-template-columns:1fr; } .admin-sidebar { position:static; height:auto; } }
+  </style>
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <h3 id="confirm-title">Confirmar acción</h3>
+      <button class="modal-close" onclick="closeConfirm()"><i class="fas fa-times"></i></button>
+    </div>
+    <p id="confirm-message" style="color:var(--text-muted); margin-bottom:1.5rem;"></p>
+    <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+      <button class="btn btn-secondary btn-sm" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn btn-danger btn-sm" id="confirm-ok-btn">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ban Reason Modal -->
+<div class="modal-overlay" id="ban-modal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>Banear usuario</h3>
+      <button class="modal-close" onclick="closeBanModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="color:var(--text-muted); margin-bottom:1rem;">Ingresa el motivo del baneo (visible para el usuario):</p>
+    <div class="form-group">
+      <textarea class="form-input" id="ban-reason-input" rows="3" placeholder="Motivo del baneo..."></textarea>
+    </div>
+    <div style="display:flex;gap:0.75rem;justify-content:flex-end; margin-top:1rem;">
+      <button class="btn btn-secondary btn-sm" onclick="closeBanModal()">Cancelar</button>
+      <button class="btn btn-danger btn-sm" id="ban-confirm-btn">Banear</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Album Modal -->
+<div class="modal-overlay" id="album-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="album-modal-title">Nuevo álbum</h3>
+      <button class="modal-close" onclick="closeAlbumModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="album-form">
+      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="alb-title" required /></div>
+      <div class="form-group"><label class="form-label">Año</label><input type="number" class="form-input" id="alb-year" min="2000" max="2030" required /></div>
+      <div class="form-group"><label class="form-label">URL de portada</label><input class="form-input" id="alb-cover" placeholder="https://..." /></div>
+      <div class="form-group"><label class="form-label">URL de Spotify</label><input class="form-input" id="alb-spotify" placeholder="https://open.spotify.com/..." /></div>
+      <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-input" id="alb-desc" rows="3"></textarea></div>
+      <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;">
+        <input type="checkbox" id="alb-premium" style="width:auto;" />
+        <label for="alb-premium" class="form-label" style="margin:0;">Contenido Premium</label>
+      </div>
+      <div id="album-form-alert"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;" id="album-form-btn">
+        <i class="fas fa-save"></i> Guardar álbum
+      </button>
+    </form>
+  </div>
+</div>
+
+<nav class="navbar scrolled">
+  <div class="container">
+    <a href="../index.html" class="nav-logo">ATA<span>MASTA</span> <span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:0.15em;">ADMIN</span></a>
+    <div class="nav-auth" id="nav-auth"></div>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo"><span>Panel de control</span></div>
+    <div class="admin-menu-item active" data-panel="dashboard" onclick="showPanel('dashboard')">
+      <i class="fas fa-chart-pie"></i> Dashboard
+    </div>
+    <div class="admin-menu-item" data-panel="users" onclick="showPanel('users')">
+      <i class="fas fa-users"></i> Usuarios
+    </div>
+    <div class="admin-menu-item" data-panel="albums" onclick="showPanel('albums')">
+      <i class="fas fa-compact-disc"></i> Álbumes
+    </div>
+    <div class="admin-menu-item" data-panel="messages" onclick="showPanel('messages')">
+      <i class="fas fa-envelope"></i> Mensajes
+      <span id="unread-badge" style="margin-left:auto;background:var(--red);color:#fff;font-size:0.7rem;padding:1px 6px;border-radius:10px;display:none;">0</span>
+    </div>
+    <div style="border-top:1px solid var(--border); margin-top:1rem; padding-top:1rem;">
+      <div class="admin-menu-item" onclick="window.open('../index.html','_blank')">
+        <i class="fas fa-globe"></i> Ver sitio
+      </div>
+      <div class="admin-menu-item" onclick="handleLogout()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+
+    <!-- Dashboard Panel -->
+    <div class="section-panel active" id="panel-dashboard">
+      <div class="panel-title">Dashboard <span>General</span></div>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="loader-ring" style="margin:0 auto;"></div></div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;" id="recent-activity">
+      </div>
+    </div>
+
+    <!-- Users Panel -->
+    <div class="section-panel" id="panel-users">
+      <div class="panel-title">Gestión de <span>Usuarios</span></div>
+      <div class="filter-bar">
+        <select class="form-input" id="role-filter" style="max-width:160px;" onchange="filterUsers()">
+          <option value="">Todos los roles</option>
+          <option value="admin">Admin</option>
+          <option value="premium">Premium</option>
+          <option value="free">Gratuito</option>
+        </select>
+        <select class="form-input" id="ban-filter" style="max-width:160px;" onchange="filterUsers()">
+          <option value="">Todos</option>
+          <option value="false">Activos</option>
+          <option value="true">Baneados</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="loadUsers()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Usuario</th><th>Email</th><th>Rol</th><th>Estado</th><th>Miembro desde</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"><tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Albums Panel -->
+    <div class="section-panel" id="panel-albums">
+      <div class="panel-title">Gestión de <span>Álbumes</span></div>
+      <div class="filter-bar">
+        <button class="btn btn-primary btn-sm" onclick="openAlbumModal()"><i class="fas fa-plus"></i> Nuevo álbum</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadAdminAlbums()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Título</th><th>Año</th><th>Tipo</th><th>Pistas</th><th>Acciones</th></tr></thead>
+          <tbody id="albums-tbody"><tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Messages Panel -->
+    <div class="section-panel" id="panel-messages">
+      <div class="panel-title">Mensajes de <span>Contacto</span></div>
+      <button class="btn btn-secondary btn-sm" onclick="loadMessages()" style="margin-bottom:1.5rem;"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Asunto</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="messages-tbody"><tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+let allUsers = [];
+let confirmCallback = null;
+let banUserId = null;
+let editAlbumId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = requireAdmin();
+  if (!user) return;
+  updateNavAuth();
+  await loadStats();
+  await loadUsers();
+  await loadAdminAlbums();
+  await loadMessages();
+});
+
+/* ── Panel navigation ─────────────────────────────────────────────────────── */
+function showPanel(name) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelector(`[data-panel="${name}"]`).classList.add('active');
+}
+
+/* ── Stats ────────────────────────────────────────────────────────────────── */
+async function loadStats() {
+  try {
+    const stats = await api.adminGetStats();
+    const grid = document.getElementById('stats-grid');
+    grid.innerHTML = `
+      <div class="stat-card"><div class="stat-number">${stats.total_users}</div><div class="stat-label">Usuarios totales</div></div>
+      <div class="stat-card"><div class="stat-number" style="color:#c39bd3">${stats.premium_users}</div><div class="stat-label">Premium</div></div>
+      <div class="stat-card"><div class="stat-number" style="color:#7fb3d3">${stats.free_users}</div><div class="stat-label">Gratuitos</div></div>
+      <div class="stat-card"><div class="stat-number" style="color:var(--red-light)">${stats.banned_users}</div><div class="stat-label">Baneados</div></div>
+      <div class="stat-card"><div class="stat-number">${stats.total_albums}</div><div class="stat-label">Álbumes</div></div>
+      <div class="stat-card"><div class="stat-number">${stats.total_songs}</div><div class="stat-label">Canciones</div></div>
+      <div class="stat-card"><div class="stat-number">${stats.total_messages}</div><div class="stat-label">Mensajes</div></div>
+      <div class="stat-card"><div class="stat-number" style="color:var(--red-light)">${stats.unread_messages}</div><div class="stat-label">Sin leer</div></div>
+    `;
+    // Update unread badge
+    if (stats.unread_messages > 0) {
+      const badge = document.getElementById('unread-badge');
+      badge.style.display = 'inline-block';
+      badge.textContent = stats.unread_messages;
+    }
+  } catch (err) {
+    toast('Error cargando estadísticas: ' + err.message, 'error');
+  }
+}
+
+/* ── Users ────────────────────────────────────────────────────────────────── */
+async function loadUsers() {
+  try {
+    allUsers = await api.adminGetUsers();
+    renderUsers(allUsers);
+  } catch (err) {
+    toast('Error cargando usuarios: ' + err.message, 'error');
+  }
+}
+
+function filterUsers() {
+  const role = document.getElementById('role-filter').value;
+  const banned = document.getElementById('ban-filter').value;
+  let filtered = allUsers;
+  if (role) filtered = filtered.filter(u => u.role === role);
+  if (banned !== '') filtered = filtered.filter(u => String(u.is_banned) === banned);
+  renderUsers(filtered);
+}
+
+function renderUsers(users) {
+  const tbody = document.getElementById('users-tbody');
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin usuarios</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td>#${u.id}</td>
+      <td><strong>${u.username}</strong></td>
+      <td style="color:var(--text-muted);">${u.email}</td>
+      <td><span class="badge badge-${u.role}">${u.role}</span></td>
+      <td>
+        ${u.is_banned
+          ? `<span class="badge badge-banned">Baneado</span>`
+          : `<span class="badge badge-active">Activo</span>`
+        }
+      </td>
+      <td style="color:var(--text-muted);">${formatDate(u.created_at)}</td>
+      <td>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+          ${u.role !== 'admin' ? `
+            <button class="action-btn" onclick="changeRole(${u.id}, '${u.role}')">
+              <i class="fas fa-user-tag"></i> Rol
+            </button>
+          ` : ''}
+          ${u.is_banned
+            ? `<button class="action-btn" onclick="unbanUser(${u.id})"><i class="fas fa-unlock"></i> Desbanear</button>`
+            : `<button class="action-btn danger" onclick="banUser(${u.id})"><i class="fas fa-ban"></i> Banear</button>`
+          }
+          ${u.role !== 'admin' ? `
+            <button class="action-btn danger" onclick="deleteUser(${u.id}, '${u.username}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          ` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function changeRole(userId, currentRole) {
+  const roles = ['free', 'premium'];
+  const newRole = roles.find(r => r !== currentRole) || 'free';
+  if (!confirm(`¿Cambiar rol a "${newRole}"?`)) return;
+  try {
+    await api.adminUpdateUser(userId, { role: newRole });
+    toast(`Rol actualizado a ${newRole}`, 'success');
+    await loadUsers();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+function banUser(userId) {
+  banUserId = userId;
+  document.getElementById('ban-reason-input').value = '';
+  document.getElementById('ban-modal').classList.add('open');
+  document.getElementById('ban-confirm-btn').onclick = async () => {
+    const reason = document.getElementById('ban-reason-input').value.trim() || 'Violación de términos de servicio';
+    try {
+      await api.adminUpdateUser(banUserId, { is_banned: true, ban_reason: reason });
+      toast('Usuario baneado', 'success');
+      closeBanModal();
+      await loadUsers();
+      await loadStats();
+    } catch (err) { toast(err.message, 'error'); }
+  };
+}
+
+async function unbanUser(userId) {
+  try {
+    await api.adminUpdateUser(userId, { is_banned: false, ban_reason: null });
+    toast('Usuario desbaneado', 'success');
+    await loadUsers();
+    await loadStats();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+function deleteUser(userId, username) {
+  openConfirm(`¿Eliminar usuario "${username}"?`, 'Esta acción no se puede deshacer.', async () => {
+    try {
+      await api.adminDeleteUser(userId);
+      toast('Usuario eliminado', 'success');
+      await loadUsers();
+      await loadStats();
+    } catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+/* ── Albums ───────────────────────────────────────────────────────────────── */
+async function loadAdminAlbums() {
+  try {
+    const albums = await api.getAlbums();
+    const tbody = document.getElementById('albums-tbody');
+    tbody.innerHTML = albums.map(a => `
+      <tr>
+        <td>#${a.id}</td>
+        <td><strong>${a.title}</strong></td>
+        <td>${a.year}</td>
+        <td><span class="badge ${a.is_premium ? 'badge-premium' : 'badge-free'}">${a.is_premium ? 'Premium' : 'Gratuito'}</span></td>
+        <td>${a.songs ? a.songs.length : '—'}</td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn" onclick="editAlbum(${a.id})"><i class="fas fa-edit"></i> Editar</button>
+            <button class="action-btn danger" onclick="deleteAlbum(${a.id}, '${a.title.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin álbumes</td></tr>';
+  } catch (err) { toast('Error cargando álbumes: ' + err.message, 'error'); }
+}
+
+function openAlbumModal(album = null) {
+  editAlbumId = album ? album.id : null;
+  document.getElementById('album-modal-title').textContent = album ? 'Editar álbum' : 'Nuevo álbum';
+  document.getElementById('alb-title').value = album?.title || '';
+  document.getElementById('alb-year').value = album?.year || new Date().getFullYear();
+  document.getElementById('alb-cover').value = album?.cover_url || '';
+  document.getElementById('alb-spotify').value = album?.spotify_url || '';
+  document.getElementById('alb-desc').value = album?.description || '';
+  document.getElementById('alb-premium').checked = album?.is_premium || false;
+  document.getElementById('album-form-alert').innerHTML = '';
+  document.getElementById('album-modal').classList.add('open');
+}
+function closeAlbumModal() { document.getElementById('album-modal').classList.remove('open'); editAlbumId = null; }
+
+async function editAlbum(id) {
+  try {
+    const album = await api.getAlbum(id);
+    openAlbumModal(album);
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function deleteAlbum(id, title) {
+  openConfirm(`¿Eliminar álbum "${title}"?`, 'Se eliminarán todas las canciones del álbum.', async () => {
+    try {
+      await api.deleteAlbum(id);
+      toast('Álbum eliminado', 'success');
+      await loadAdminAlbums();
+      await loadStats();
+    } catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+document.getElementById('album-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('album-form-btn');
+  const alertEl = document.getElementById('album-form-alert');
+  const body = {
+    title: document.getElementById('alb-title').value.trim(),
+    year: parseInt(document.getElementById('alb-year').value),
+    cover_url: document.getElementById('alb-cover').value.trim() || null,
+    spotify_url: document.getElementById('alb-spotify').value.trim() || null,
+    description: document.getElementById('alb-desc').value.trim() || null,
+    is_premium: document.getElementById('alb-premium').checked,
+  };
+  if (!body.title || !body.year) {
+    alertEl.innerHTML = '<div class="alert alert-error">Título y año son requeridos.</div>';
+    return;
+  }
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  try {
+    if (editAlbumId) await api.updateAlbum(editAlbumId, body);
+    else await api.createAlbum(body);
+    toast(editAlbumId ? 'Álbum actualizado' : 'Álbum creado', 'success');
+    closeAlbumModal();
+    await loadAdminAlbums();
+    await loadStats();
+  } catch (err) {
+    alertEl.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save"></i> Guardar álbum';
+  }
+});
+
+/* ── Messages ─────────────────────────────────────────────────────────────── */
+async function loadMessages() {
+  try {
+    const msgs = await api.adminGetMessages();
+    const tbody = document.getElementById('messages-tbody');
+    tbody.innerHTML = msgs.map(m => `
+      <tr style="${!m.is_read ? 'background:rgba(212,160,23,0.04);' : ''}">
+        <td>#${m.id}</td>
+        <td><strong>${m.name}</strong></td>
+        <td style="color:var(--text-muted);">${m.email}</td>
+        <td>${m.subject}</td>
+        <td style="color:var(--text-muted);">${formatDate(m.created_at)}</td>
+        <td><span class="badge ${m.is_read ? 'badge-free' : 'badge-active'}">${m.is_read ? 'Leído' : 'Nuevo'}</span></td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn" onclick="viewMessage(${m.id})" title="Ver mensaje">
+              <i class="fas fa-eye"></i>
+            </button>
+            ${!m.is_read ? `<button class="action-btn" onclick="markRead(${m.id})"><i class="fas fa-check"></i> Leído</button>` : ''}
+          </div>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin mensajes</td></tr>';
+
+    const unread = msgs.filter(m => !m.is_read).length;
+    const badge = document.getElementById('unread-badge');
+    badge.style.display = unread > 0 ? 'inline-block' : 'none';
+    badge.textContent = unread;
+  } catch (err) { toast('Error cargando mensajes: ' + err.message, 'error'); }
+}
+
+async function markRead(id) {
+  try { await api.adminMarkRead(id); await loadMessages(); } catch (err) { toast(err.message, 'error'); }
+}
+
+async function viewMessage(id) {
+  try {
+    const msgs = await api.adminGetMessages();
+    const m = msgs.find(x => x.id === id);
+    if (!m) return;
+    if (!m.is_read) await api.adminMarkRead(id).catch(() => {});
+    openConfirm(
+      `Mensaje de: ${m.name}`,
+      `De: ${m.email}\nAsunto: ${m.subject}\n\n${m.message}`,
+      null
+    );
+    document.getElementById('confirm-ok-btn').style.display = 'none';
+    await loadMessages();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+/* ── Modals helpers ──────────────────────────────────────────────────────── */
+function openConfirm(title, message, onConfirm) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-message').textContent = message;
+  const okBtn = document.getElementById('confirm-ok-btn');
+  okBtn.style.display = onConfirm ? 'inline-flex' : 'none';
+  confirmCallback = onConfirm;
+  document.getElementById('confirm-modal').classList.add('open');
+}
+document.getElementById('confirm-ok-btn').addEventListener('click', async () => {
+  if (confirmCallback) { closeConfirm(); await confirmCallback(); }
+});
+function closeConfirm() { document.getElementById('confirm-modal').classList.remove('open'); confirmCallback = null; }
+function closeBanModal() { document.getElementById('ban-modal').classList.remove('open'); banUserId = null; }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) { closeConfirm(); closeBanModal(); closeAlbumModal(); } });
+});
+</script>
+</body>
+</html>

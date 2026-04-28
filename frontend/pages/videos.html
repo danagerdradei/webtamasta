@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Videoclips — Atamasta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    /* ── Videos page extras ───────────────────────────────────────────────── */
+    .videos-page { padding-top: 0; min-height: 100vh; }
+
+    /* Featured video block */
+    .featured-video-section {
+      padding: 3rem 0;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+    }
+    .featured-video-label {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+    }
+    .featured-video-label::before {
+      content: '';
+      display: inline-block; width: 30px; height: 2px;
+      background: var(--gold);
+    }
+    .featured-video-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .featured-video-title span { color: var(--gold); }
+    .featured-embed-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+    .featured-embed-wrap iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; border: none;
+    }
+
+    /* Toolbar */
+    .videos-toolbar {
+      padding: 2rem 0 0;
+    }
+    .videos-toolbar-inner {
+      display: flex; align-items: center; gap: 1rem;
+      flex-wrap: wrap; padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .videos-toolbar-inner .search-wrap { flex: 1; min-width: 200px; max-width: 360px; }
+    .filter-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .video-count {
+      margin-left: auto;
+      font-size: 0.82rem; color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .video-count strong { color: var(--gold); }
+
+    /* Grid section */
+    .video-grid-section { padding: 2.5rem 0 5rem; }
+
+    /* Video card */
+    .video-card-2col {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .video-card-2col:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+      box-shadow: var(--shadow-gold);
+    }
+    .video-thumb-wrap {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 */
+      overflow: hidden;
+      background: var(--bg3);
+    }
+    .video-thumb-wrap img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .video-card-2col:hover .video-thumb-wrap img { transform: scale(1.05); }
+    .video-play-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.4);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .video-card-2col:hover .video-play-overlay { opacity: 1; }
+    .video-play-btn-overlay {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--gold); color: #000;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      transition: transform 0.2s ease;
+      box-shadow: 0 0 30px rgba(212,160,23,0.6);
+    }
+    .video-play-btn-overlay:hover { transform: scale(1.12); }
+    .video-coming-badge {
+      position: absolute; top: 0.6rem; left: 0.6rem;
+      background: rgba(8,8,8,0.85);
+      border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em;
+      padding: 0.25rem 0.6rem; border-radius: 20px; text-transform: uppercase;
+    }
+    .video-card-info {
+      padding: 1rem 1.1rem 1.1rem;
+    }
+    .video-card-title {
+      font-family: var(--font-display);
+      font-size: 1rem; text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 0.25rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .video-card-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+    .video-card-album { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+    .video-card-duration { white-space: nowrap; }
+    .video-yt-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: var(--gold); margin-top: 0.6rem;
+      transition: var(--transition);
+    }
+    .video-yt-link:hover { color: var(--gold-light); }
+
+    /* Empty state */
+    .videos-empty {
+      text-align: center; padding: 4rem 1rem; color: var(--text-muted);
+    }
+    .videos-empty i { font-size: 3rem; color: var(--border); margin-bottom: 1rem; display: block; }
+
+    /* Section label */
+    .grid-section-label {
+      font-family: var(--font-display);
+      font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .grid-section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* Video modal */
+    .video-modal-overlay {
+      position: fixed; inset: 0; z-index: 3000;
+      background: rgba(0,0,0,0.9); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .video-modal-overlay.open {
+      opacity: 1; pointer-events: all;
+    }
+    .video-modal-inner {
+      width: 100%; max-width: 900px;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .video-modal-overlay.open .video-modal-inner { transform: scale(1); }
+    .video-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .video-modal-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: calc(100% - 50px);
+    }
+    .video-modal-close {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1.6rem; cursor: pointer; line-height: 1;
+      flex-shrink: 0; padding: 4px;
+      transition: color 0.2s;
+    }
+    .video-modal-close:hover { color: var(--text); }
+    .video-modal-embed {
+      border-radius: var(--radius-lg); overflow: hidden;
+      border: 1px solid var(--border);
+      aspect-ratio: 16 / 9; position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+    .video-modal-embed iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; border: none;
+    }
+
+    @media (max-width: 768px) {
+      .video-grid-2col { grid-template-columns: 1fr; }
+      .videos-toolbar-inner .video-count { width: 100%; margin-left: 0; }
+    }
+    @media (max-width: 480px) {
+      .featured-embed-wrap { border-radius: var(--radius); }
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Navbar injected by JS -->
+
+<main class="videos-page">
+
+  <!-- ── Page Hero ───────────────────────────────────────────────────────── -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="page-hero-tag"><i class="fab fa-youtube"></i> YouTube</span>
+      <h1>Video<span>clips</span></h1>
+      <p>Todos los videoclips y producciones de Atamasta</p>
+    </div>
+  </section>
+
+  <!-- ── Featured Video ────────────────────────────────────────────────── -->
+  <section class="featured-video-section" id="featured-section">
+    <div class="container">
+      <p class="featured-video-label">Destacado</p>
+      <h2 class="featured-video-title" id="featured-title">Boombap<span>kistan</span></h2>
+      <div class="featured-embed-wrap">
+        <iframe
+          id="featured-iframe"
+          src="https://www.youtube.com/embed/hbHfP9hn6js?rel=0&modestbranding=1"
+          title="Boombapkistan — Atamasta"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Toolbar ────────────────────────────────────────────────────────── -->
+  <section class="videos-toolbar">
+    <div class="container">
+      <div class="videos-toolbar-inner">
+        <div class="search-wrap">
+          <i class="fas fa-search"></i>
+          <input
+            type="search"
+            id="video-search"
+            class="search-input"
+            placeholder="Buscar video..."
+            autocomplete="off"
+          />
+        </div>
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="all">Todos</button>
+          <button class="filter-pill" data-filter="video">Con video</button>
+          <button class="filter-pill" data-filter="live">Live/Cypher</button>
+        </div>
+        <span class="video-count"><strong id="video-count-num">0</strong> videos</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Video Grid ─────────────────────────────────────────────────────── -->
+  <section class="video-grid-section">
+    <div class="container">
+      <p class="grid-section-label">Todos los videos</p>
+      <div class="video-grid-2col" id="video-grid">
+        <!-- populated by JS -->
+      </div>
+      <div class="videos-empty" id="videos-empty" style="display:none;">
+        <i class="fas fa-film"></i>
+        <p>No se encontraron videos.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Video Modal ──────────────────────────────────────────────────────── -->
+<div class="video-modal-overlay" id="video-modal" role="dialog" aria-modal="true" aria-label="Reproducir video">
+  <div class="video-modal-inner">
+    <div class="video-modal-header">
+      <span class="video-modal-title" id="modal-video-title"></span>
+      <button class="video-modal-close" id="modal-close-btn" aria-label="Cerrar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="video-modal-embed">
+      <iframe
+        id="modal-iframe"
+        src=""
+        title="Video Atamasta"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+// ── Static known videos (fallback / always-show list) ──────────────────
+const STATIC_VIDEOS = [
+  {
+    id: 'static-boombapkistan',
+    title: 'Boombapkistan',
+    youtube_embed_id: 'hbHfP9hn6js',
+    album_name: 'Atamasta',
+    duration: null,
+    category: 'video',
+    coming: false,
+  },
+  {
+    id: 'static-molotov',
+    title: 'Molotov Rocket',
+    youtube_embed_id: 'HjHMqBeX9qI',
+    album_name: 'Atamasta',
+    duration: null,
+    category: 'video',
+    coming: false,
+  },
+];
+
+// ── State ───────────────────────────────────────────────────────────────
+let allVideos = [];
+let activeFilter = 'all';
+let searchQuery = '';
+
+// ── Helpers ─────────────────────────────────────────────────────────────
+function ytThumb(id) {
+  return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+}
+
+function buildVideoCard(v) {
+  const hasVideo = v.youtube_embed_id && !v.coming;
+  const thumbSrc = hasVideo ? ytThumb(v.youtube_embed_id) : `https://img.youtube.com/vi/${v.youtube_embed_id || '_'}/maxresdefault.jpg`;
+  const durationHtml = v.duration ? `<span class="video-card-duration">${formatDuration(v.duration)}</span>` : '';
+  const ytLinkHtml = hasVideo
+    ? `<a class="video-yt-link" href="https://www.youtube.com/watch?v=${v.youtube_embed_id}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fab fa-youtube"></i> Ver en YouTube</a>`
+    : '';
+  const comingBadge = v.coming ? `<span class="video-coming-badge">Video próximamente</span>` : '';
+
+  return `
+    <div class="video-card-2col" data-video-id="${v.youtube_embed_id || ''}" data-video-title="${v.title}" data-has-video="${hasVideo}">
+      <div class="video-thumb-wrap">
+        <img src="${thumbSrc}" alt="${v.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 9%22%3E%3Crect width=%2216%22 height=%229%22 fill=%22%231a1a1a%22/%3E%3C/svg%3E'" />
+        ${hasVideo ? `
+        <div class="video-play-overlay">
+          <div class="video-play-btn-overlay"><i class="fas fa-play" style="margin-left:4px;"></i></div>
+        </div>` : ''}
+        ${comingBadge}
+      </div>
+      <div class="video-card-info">
+        <div class="video-card-title">${v.title}</div>
+        <div class="video-card-meta">
+          <span class="video-card-album">${v.album_name || ''}</span>
+          ${durationHtml}
+        </div>
+        ${ytLinkHtml}
+      </div>
+    </div>`;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('video-grid');
+  const emptyEl = document.getElementById('videos-empty');
+  const countEl = document.getElementById('video-count-num');
+
+  let filtered = allVideos.filter(v => {
+    const matchSearch = !searchQuery || v.title.toLowerCase().includes(searchQuery);
+    const matchFilter = activeFilter === 'all'
+      || (activeFilter === 'video' && v.youtube_embed_id && !v.coming)
+      || (activeFilter === 'live' && v.category === 'live');
+    return matchSearch && matchFilter;
+  });
+
+  countEl.textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    emptyEl.style.display = '';
+  } else {
+    emptyEl.style.display = 'none';
+    grid.innerHTML = filtered.map(buildVideoCard).join('');
+    // Attach click handlers
+    grid.querySelectorAll('.video-card-2col[data-has-video="true"]').forEach(card => {
+      card.addEventListener('click', () => {
+        openModal(card.dataset.videoId, card.dataset.videoTitle);
+      });
+    });
+  }
+}
+
+// ── Modal ────────────────────────────────────────────────────────────────
+function openModal(videoId, title) {
+  if (!videoId) return;
+  const overlay = document.getElementById('video-modal');
+  document.getElementById('modal-iframe').src =
+    `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+  document.getElementById('modal-video-title').textContent = title || '';
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const overlay = document.getElementById('video-modal');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  // Stop video by clearing src
+  setTimeout(() => { document.getElementById('modal-iframe').src = ''; }, 300);
+}
+
+// ── Load data ─────────────────────────────────────────────────────────
+async function loadVideos() {
+  let dynamicVideos = [];
+  try {
+    const albums = await api.getAlbums();
+    if (Array.isArray(albums)) {
+      albums.forEach(album => {
+        if (!Array.isArray(album.songs)) return;
+        album.songs.forEach(song => {
+          if (song.youtube_embed_id) {
+            dynamicVideos.push({
+              id: `song-${song.id}`,
+              title: song.title,
+              youtube_embed_id: song.youtube_embed_id,
+              album_name: album.title,
+              duration: song.duration || null,
+              category: 'video',
+              coming: false,
+            });
+          }
+        });
+      });
+    }
+  } catch (e) {
+    // API unavailable — rely on static list
+  }
+
+  // Merge: prefer dynamic, deduplicate by youtube_embed_id
+  const seen = new Set(dynamicVideos.map(v => v.youtube_embed_id));
+  STATIC_VIDEOS.forEach(sv => {
+    if (!seen.has(sv.youtube_embed_id)) {
+      dynamicVideos.push(sv);
+      seen.add(sv.youtube_embed_id);
+    }
+  });
+
+  allVideos = dynamicVideos;
+  renderGrid();
+}
+
+// ── Init ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initSharedNavbar('videos', true);
+  initScrollReveal();
+
+  loadVideos();
+
+  // Search
+  const searchInput = document.getElementById('video-search');
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value.trim().toLowerCase();
+    renderGrid();
+  });
+
+  // Filter pills
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.dataset.filter;
+      renderGrid();
+    });
+  });
+
+  // Modal close
+  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+  document.getElementById('video-modal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('video-modal')) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+});
+</script>
+</body>
+</html>

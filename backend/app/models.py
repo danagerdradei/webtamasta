@@ -1,0 +1,75 @@
+from sqlalchemy import (
+    Column, Integer, String, Boolean, DateTime, Text,
+    ForeignKey, Enum as SAEnum, func
+)
+from sqlalchemy.orm import relationship
+import enum
+from .database import Base
+
+
+class UserRole(str, enum.Enum):
+    admin = "admin"
+    premium = "premium"
+    free = "free"
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), unique=True, index=True, nullable=False)
+    email = Column(String(100), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    role = Column(SAEnum(UserRole), default=UserRole.free, nullable=False)
+    is_active = Column(Boolean, default=True)
+    is_banned = Column(Boolean, default=False)
+    ban_reason = Column(Text, nullable=True)
+    avatar_url = Column(String(500), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class Album(Base):
+    __tablename__ = "albums"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    year = Column(Integer, nullable=False)
+    cover_url = Column(String(500), nullable=True)
+    description = Column(Text, nullable=True)
+    is_premium = Column(Boolean, default=False)
+    spotify_url = Column(String(500), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    songs = relationship("Song", back_populates="album", cascade="all, delete-orphan")
+
+
+class Song(Base):
+    __tablename__ = "songs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    album_id = Column(Integer, ForeignKey("albums.id"), nullable=False)
+    title = Column(String(200), nullable=False)
+    track_number = Column(Integer, nullable=False)
+    duration = Column(String(10), nullable=True)
+    audio_url = Column(String(500), nullable=True)
+    youtube_url = Column(String(500), nullable=True)
+    youtube_embed_id = Column(String(50), nullable=True)
+    lyrics = Column(Text, nullable=True)
+    is_premium = Column(Boolean, default=False)
+    play_count = Column(Integer, default=0)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    album = relationship("Album", back_populates="songs")
+
+
+class ContactMessage(Base):
+    __tablename__ = "contact_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(100), nullable=False)
+    subject = Column(String(200), nullable=False)
+    message = Column(Text, nullable=False)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

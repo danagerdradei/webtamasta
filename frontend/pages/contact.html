@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto — Atamasta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    /* ── Contact page extras ──────────────────────────────────────────────── */
+    .contact-page { padding-top: 0; min-height: 100vh; }
+
+    /* Marketing section */
+    .marketing-section { padding: 3.5rem 0 2rem; background: var(--bg); }
+    .marketing-section-label {
+      font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.5rem;
+    }
+    .marketing-section h2 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      text-transform: uppercase; margin-bottom: 2rem;
+    }
+    .marketing-section h2 span { color: var(--gold); }
+    .marketing-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+
+    /* Contact section */
+    .contact-main-section {
+      padding: 3.5rem 0 5rem;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+    .contact-grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* Contact info column */
+    .contact-info-col h2 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .contact-info-col h2 span { color: var(--gold); }
+    .contact-info-intro {
+      color: var(--text-muted); line-height: 1.7;
+      margin-bottom: 2rem; font-size: 0.95rem;
+    }
+    .contact-detail-list { margin-bottom: 2rem; }
+    .contact-detail {
+      display: flex; align-items: flex-start; gap: 0.9rem;
+      margin-bottom: 1rem; font-size: 0.9rem;
+    }
+    .contact-detail-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(212,160,23,0.1); border: 1px solid rgba(212,160,23,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 0.9rem; flex-shrink: 0;
+    }
+    .contact-detail-text { flex: 1; }
+    .contact-detail-label {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-muted); margin-bottom: 0.15rem;
+    }
+    .contact-detail-value { color: var(--text); }
+    .contact-detail-value a { color: var(--text); }
+    .contact-detail-value a:hover { color: var(--gold); }
+
+    .response-note {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.82rem; color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      background: rgba(212,160,23,0.05);
+      border: 1px solid rgba(212,160,23,0.15);
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+    }
+    .response-note i { color: var(--gold); flex-shrink: 0; }
+
+    /* Social links row */
+    .contact-socials-label {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.75rem;
+    }
+    .contact-socials {
+      display: flex; gap: 0.6rem; flex-wrap: wrap;
+    }
+
+    /* Contact form column */
+    .contact-form-col {}
+    .contact-form {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2rem 2.25rem;
+    }
+    .contact-form-heading {
+      font-family: var(--font-display);
+      font-size: 1.1rem; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 1.5rem;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+    }
+    .contact-form-heading span { color: var(--gold); }
+
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text); font-size: 0.95rem;
+      transition: var(--transition);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      font-family: var(--font-body);
+    }
+    .form-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,160,23,0.15);
+    }
+    .form-select option { background: var(--bg3); color: var(--text); }
+
+    .form-textarea {
+      width: 100%; resize: vertical;
+      padding: 0.75rem 1rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text); font-size: 0.95rem;
+      font-family: var(--font-body); line-height: 1.6;
+      transition: var(--transition);
+      outline: none;
+      min-height: 130px;
+    }
+    .form-textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,160,23,0.15);
+    }
+    .form-textarea::placeholder { color: var(--text-muted); }
+
+    .form-optional-tag {
+      font-size: 0.7rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-left: 0.4rem;
+    }
+
+    .submit-btn {
+      width: 100%; margin-top: 0.25rem;
+      padding: 0.875rem 1.75rem;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .submit-btn:disabled {
+      opacity: 0.6; cursor: not-allowed; transform: none !important;
+    }
+
+    /* Success state */
+    .form-success-message {
+      display: none;
+      text-align: center; padding: 2.5rem 1rem;
+    }
+    .form-success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(39,174,96,0.12); border: 2px solid rgba(39,174,96,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; color: #2ecc71;
+      margin: 0 auto 1.25rem;
+    }
+    .form-success-title {
+      font-family: var(--font-display); font-size: 1.4rem;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;
+    }
+    .form-success-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+    .form-success-back {
+      margin-top: 1.5rem;
+    }
+
+    /* Footer */
+    footer.footer { margin-top: 0; }
+
+    @media (max-width: 1024px) {
+      .contact-grid-2col { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .contact-form { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Navbar injected by JS -->
+
+<main class="contact-page">
+
+  <!-- ── Page Hero ─────────────────────────────────────────────────────── -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="page-hero-tag"><i class="fas fa-envelope"></i> Contacto &amp; Marketing</span>
+      <h1>Hable<span>mos</span></h1>
+      <p>Colaboraciones, booking, marketing y más</p>
+    </div>
+  </section>
+
+  <!-- ── Marketing Services ─────────────────────────────────────────── -->
+  <section class="marketing-section">
+    <div class="container">
+      <p class="marketing-section-label">Servicios</p>
+      <h2>¿En qué puedo <span>ayudarte</span>?</h2>
+      <div class="marketing-grid">
+
+        <div class="marketing-card reveal">
+          <span class="marketing-icon">🎤</span>
+          <h3 class="marketing-title">Booking Shows</h3>
+          <p class="marketing-desc">Disponible para shows, festivales y eventos en Colombia y Ecuador</p>
+        </div>
+
+        <div class="marketing-card reveal">
+          <span class="marketing-icon">🤝</span>
+          <h3 class="marketing-title">Colaboraciones</h3>
+          <p class="marketing-desc">Busco MC's, productores y artistas para colaborar en proyectos</p>
+        </div>
+
+        <div class="marketing-card reveal">
+          <span class="marketing-icon">📢</span>
+          <h3 class="marketing-title">Marketing Digital</h3>
+          <p class="marketing-desc">Campañas de promoción, redes sociales y distribución musical</p>
+        </div>
+
+        <div class="marketing-card reveal">
+          <span class="marketing-icon">🎵</span>
+          <h3 class="marketing-title">Licenciamiento</h3>
+          <p class="marketing-desc">Uso de beats y producciones de Golden Fingaz para proyectos</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact Section ───────────────────────────────────────────── -->
+  <section class="contact-main-section" id="contact">
+    <div class="container">
+      <div class="contact-grid-2col">
+
+        <!-- LEFT: Contact info -->
+        <div class="contact-info-col">
+          <h2>Infor<span>mación</span></h2>
+          <p class="contact-info-intro">
+            Puedes contactarme directamente por cualquiera de los canales disponibles o enviando el formulario.
+            Respondo a todas las consultas serias de colaboración y booking.
+          </p>
+
+          <div class="contact-detail-list">
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="contact-detail-text">
+                <div class="contact-detail-label">Ubicación</div>
+                <div class="contact-detail-value">Av 42#53 a 74 Niquia — Bello, Medellín, Antioquia</div>
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon"><i class="fab fa-instagram"></i></div>
+              <div class="contact-detail-text">
+                <div class="contact-detail-label">Instagram</div>
+                <div class="contact-detail-value">
+                  <a href="https://www.instagram.com/atamastaoficial" target="_blank" rel="noopener">@atamastaoficial</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon"><i class="fab fa-youtube"></i></div>
+              <div class="contact-detail-text">
+                <div class="contact-detail-label">YouTube</div>
+                <div class="contact-detail-value">
+                  <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener">@atamastaoficial8666</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <div class="contact-detail-icon"><i class="fab fa-spotify"></i></div>
+              <div class="contact-detail-text">
+                <div class="contact-detail-label">Spotify</div>
+                <div class="contact-detail-value">
+                  <a href="https://open.spotify.com/artist/atamasta" target="_blank" rel="noopener">Escuchar en Spotify</a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="response-note">
+            <i class="fas fa-clock"></i>
+            <span>Tiempo de respuesta: <strong>24–48 horas</strong> en días hábiles</span>
+          </div>
+
+          <p class="contact-socials-label">Redes sociales</p>
+          <div class="contact-socials">
+            <a href="https://www.instagram.com/atamastaoficial" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" aria-label="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://open.spotify.com/artist/atamasta" target="_blank" rel="noopener" class="social-link" aria-label="Spotify">
+              <i class="fab fa-spotify"></i>
+            </a>
+            <a href="https://www.facebook.com/atamastaoficial" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.threads.net/@atamastaoficial" target="_blank" rel="noopener" class="social-link" aria-label="Threads">
+              <i class="fab fa-threads"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- RIGHT: Contact form -->
+        <div class="contact-form-col">
+          <div class="contact-form">
+
+            <h3 class="contact-form-heading">Enviar <span>mensaje</span></h3>
+
+            <!-- Success message (hidden by default) -->
+            <div class="form-success-message" id="form-success">
+              <div class="form-success-icon"><i class="fas fa-check"></i></div>
+              <div class="form-success-title">Mensaje enviado</div>
+              <p class="form-success-text">
+                Gracias por escribir. Me pondré en contacto contigo en las próximas 24–48 horas.
+              </p>
+              <div class="form-success-back">
+                <button class="btn btn-secondary btn-sm" id="send-another-btn">
+                  <i class="fas fa-redo"></i> Enviar otro mensaje
+                </button>
+              </div>
+            </div>
+
+            <!-- Form -->
+            <form id="contact-form" novalidate>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="contact-name">Nombre completo <span style="color:var(--red-light)">*</span></label>
+                  <input
+                    type="text"
+                    id="contact-name"
+                    name="name"
+                    class="form-input"
+                    placeholder="Tu nombre"
+                    required
+                    autocomplete="name"
+                  />
+                  <div class="form-error" id="error-name" style="display:none;"><i class="fas fa-exclamation-circle"></i> Campo requerido</div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contact-email">Email <span style="color:var(--red-light)">*</span></label>
+                  <input
+                    type="email"
+                    id="contact-email"
+                    name="email"
+                    class="form-input"
+                    placeholder="tu@email.com"
+                    required
+                    autocomplete="email"
+                  />
+                  <div class="form-error" id="error-email" style="display:none;"><i class="fas fa-exclamation-circle"></i> Email inválido</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="contact-subject">Asunto <span style="color:var(--red-light)">*</span></label>
+                  <select id="contact-subject" name="subject" class="form-select form-input" required>
+                    <option value="" disabled selected>Selecciona un asunto</option>
+                    <option value="booking">Booking/Show</option>
+                    <option value="collab">Colaboración musical</option>
+                    <option value="marketing">Marketing digital</option>
+                    <option value="license">Licenciamiento de beat</option>
+                    <option value="press">Prensa/Media</option>
+                    <option value="other">Otro</option>
+                  </select>
+                  <div class="form-error" id="error-subject" style="display:none;"><i class="fas fa-exclamation-circle"></i> Selecciona un asunto</div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contact-company">
+                    Empresa/Proyecto
+                    <span class="form-optional-tag">(opcional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="contact-company"
+                    name="company"
+                    class="form-input"
+                    placeholder="Nombre de empresa o proyecto"
+                    autocomplete="organization"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="contact-message">Mensaje <span style="color:var(--red-light)">*</span></label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  class="form-textarea"
+                  rows="6"
+                  placeholder="Cuéntame en qué puedo ayudarte..."
+                  required
+                ></textarea>
+                <div class="form-error" id="error-message" style="display:none;"><i class="fas fa-exclamation-circle"></i> El mensaje es requerido</div>
+              </div>
+
+              <button type="submit" class="btn btn-primary submit-btn" id="submit-btn">
+                <i class="fas fa-paper-plane"></i> Enviar mensaje
+              </button>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="nav-logo">ATA<span>MASTA</span></a>
+        <p>Artista de hip-hop y rap de Medellín, Colombia. Producido por Golden Fingaz.</p>
+        <div class="about-socials" style="margin-top:1.25rem;">
+          <a href="https://www.instagram.com/atamastaoficial" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://open.spotify.com/artist/atamasta" target="_blank" rel="noopener" class="social-link" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
+          <a href="https://www.facebook.com/atamastaoficial" target="_blank" rel="noopener" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-title">Navegación</h4>
+        <ul class="footer-links">
+          <li><a href="../index.html">Inicio</a></li>
+          <li><a href="about.html">Artista</a></li>
+          <li><a href="discography.html">Discografía</a></li>
+          <li><a href="music.html">Música</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li><a href="contact.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Contacto</h4>
+        <ul class="footer-links">
+          <li><a href="https://www.instagram.com/atamastaoficial" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="https://open.spotify.com/artist/atamasta" target="_blank" rel="noopener">Spotify</a></li>
+          <li><a href="#contact" onclick="document.getElementById('contact-name').focus()">Formulario</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 Atamasta. Todos los derechos reservados.</span>
+      <span>Producido por <strong style="color:var(--gold)">Golden Fingaz</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+// ── Validation helpers ─────────────────────────────────────────────────
+function showFieldError(id, show) {
+  const errEl = document.getElementById('error-' + id);
+  const inputEl = document.getElementById('contact-' + id);
+  if (errEl) errEl.style.display = show ? 'flex' : 'none';
+  if (inputEl) inputEl.classList.toggle('error', show);
+}
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validateForm() {
+  const name    = document.getElementById('contact-name').value.trim();
+  const email   = document.getElementById('contact-email').value.trim();
+  const subject = document.getElementById('contact-subject').value;
+  const message = document.getElementById('contact-message').value.trim();
+
+  let valid = true;
+
+  if (!name) { showFieldError('name', true); valid = false; }
+  else showFieldError('name', false);
+
+  if (!email || !validateEmail(email)) { showFieldError('email', true); valid = false; }
+  else showFieldError('email', false);
+
+  if (!subject) { showFieldError('subject', true); valid = false; }
+  else showFieldError('subject', false);
+
+  if (!message) { showFieldError('message', true); valid = false; }
+  else showFieldError('message', false);
+
+  return valid;
+}
+
+// ── Clear errors on input ─────────────────────────────────────────────
+['name', 'email', 'subject', 'message'].forEach(field => {
+  const el = document.getElementById('contact-' + field);
+  if (el) {
+    el.addEventListener('input', () => showFieldError(field, false));
+    el.addEventListener('change', () => showFieldError(field, false));
+  }
+});
+
+// ── Form submission ────────────────────────────────────────────────────
+document.getElementById('contact-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  if (!validateForm()) return;
+
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+  const payload = {
+    name:    document.getElementById('contact-name').value.trim(),
+    email:   document.getElementById('contact-email').value.trim(),
+    subject: document.getElementById('contact-subject').value,
+    company: document.getElementById('contact-company').value.trim() || undefined,
+    message: document.getElementById('contact-message').value.trim(),
+  };
+
+  try {
+    await api.sendContact(payload);
+    // Show success state
+    document.getElementById('contact-form').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+    toast('Mensaje enviado correctamente', 'success');
+  } catch (err) {
+    toast(err.message || 'Error al enviar el mensaje. Intenta de nuevo.', 'error');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar mensaje';
+  }
+});
+
+// ── "Send another" button ──────────────────────────────────────────────
+document.getElementById('send-another-btn').addEventListener('click', () => {
+  document.getElementById('contact-form').reset();
+  document.getElementById('contact-form').style.display = 'block';
+  document.getElementById('form-success').style.display = 'none';
+  ['name', 'email', 'subject', 'message'].forEach(f => showFieldError(f, false));
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = false;
+  submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar mensaje';
+  document.getElementById('contact-name').focus();
+});
+
+// ── Init ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initSharedNavbar('contact', true);
+  initScrollReveal();
+});
+</script>
+</body>
+</html>

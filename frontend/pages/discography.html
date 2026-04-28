@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discografía — Atamasta</title>
+  <meta name="description" content="Toda la discografía de Atamasta — Golden Fingaz Production. Álbumes, EPs y sencillos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    /* ── Discography page extras ── */
+    .disc-section { padding: 3rem 0 5rem; }
+
+    /* Full album card — larger than home preview */
+    .disc-albums-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+    .disc-album-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+      position: relative;
+    }
+    .disc-album-card:hover {
+      border-color: var(--gold);
+      box-shadow: var(--shadow-gold);
+      transform: translateY(-6px);
+    }
+
+    /* Cover */
+    .disc-cover-wrap {
+      position: relative;
+      padding-top: 100%;
+      overflow: hidden;
+    }
+    .disc-cover-wrap img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .disc-album-card:hover .disc-cover-wrap img { transform: scale(1.05); }
+    .disc-cover-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.88) 35%, transparent 70%);
+      display: flex; align-items: flex-end; justify-content: flex-end;
+      padding: 1rem;
+      opacity: 0; transition: var(--transition);
+    }
+    .disc-album-card:hover .disc-cover-overlay { opacity: 1; }
+    .disc-overlay-actions {
+      display: flex; gap: 0.6rem;
+    }
+    .disc-overlay-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    .disc-overlay-btn.primary {
+      background: var(--gold); color: #000;
+    }
+    .disc-overlay-btn.primary:hover { background: var(--gold-light); transform: scale(1.1); }
+    .disc-overlay-btn.secondary {
+      background: rgba(255,255,255,0.15); color: #fff;
+      backdrop-filter: blur(6px);
+    }
+    .disc-overlay-btn.secondary:hover { background: rgba(255,255,255,0.25); }
+
+    /* Badge */
+    .disc-premium-badge {
+      position: absolute; top: 0.75rem; left: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000; font-size: 0.68rem; font-weight: 700;
+      border-radius: 20px; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+
+    /* Card body */
+    .disc-card-body { padding: 1.4rem; }
+    .disc-card-title {
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .disc-card-meta {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .disc-card-year { color: var(--gold); font-size: 0.9rem; font-weight: 600; }
+    .disc-card-tracks { color: var(--text-muted); font-size: 0.82rem; }
+    .disc-card-desc {
+      color: var(--text-muted); font-size: 0.87rem;
+      line-height: 1.6;
+      margin-bottom: 1.1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .disc-card-actions {
+      display: flex; gap: 0.6rem; flex-wrap: wrap;
+    }
+    .disc-card-actions .btn { flex: 1; min-width: 110px; justify-content: center; }
+    .btn-spotify {
+      background: #1DB954; color: #fff; border: none;
+    }
+    .btn-spotify:hover { background: #1ed760; color: #fff; transform: translateY(-2px); }
+
+    /* Inline tracklist */
+    .disc-tracklist {
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+    .disc-tracklist.open { display: block; }
+    .disc-tracklist-header {
+      padding: 0.75rem 1.4rem;
+      font-size: 0.72rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      background: var(--bg3);
+      display: grid;
+      grid-template-columns: 2rem 1fr 3rem 1.5rem;
+      gap: 0.75rem;
+    }
+    .disc-track-row {
+      display: grid;
+      grid-template-columns: 2rem 1fr 3rem 1.5rem;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.7rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .disc-track-row:last-child { border-bottom: none; }
+    .disc-track-row:hover { background: rgba(212,160,23,0.06); }
+    .disc-track-num { color: var(--text-muted); font-size: 0.82rem; text-align: center; }
+    .disc-track-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .disc-track-dur { color: var(--text-muted); font-size: 0.82rem; text-align: right; }
+    .disc-track-lock { color: var(--gold); font-size: 0.8rem; text-align: center; }
+
+    /* Tracklist toggle btn */
+    .btn-tracklist {
+      background: var(--bg3);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-tracklist:hover, .btn-tracklist.open {
+      color: var(--gold);
+      border-color: var(--gold);
+      background: rgba(212,160,23,0.07);
+    }
+
+    /* Toolbar row */
+    .disc-toolbar {
+      display: flex; align-items: center; gap: 1rem;
+      flex-wrap: wrap; margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .disc-toolbar .search-wrap { flex: 1; min-width: 220px; max-width: 400px; }
+    .filter-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .sort-select {
+      padding: 0.4rem 0.85rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text); border-radius: var(--radius);
+      font-size: 0.85rem; font-family: var(--font-body);
+      cursor: pointer; outline: none; transition: var(--transition);
+      margin-left: auto;
+    }
+    .sort-select:focus { border-color: var(--gold); }
+
+    /* Search results section (song search) */
+    #search-results {
+      display: none;
+      margin-bottom: 3rem;
+    }
+    #search-results.visible { display: block; }
+    .search-results-section-title {
+      font-size: 1rem; color: var(--gold);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .song-results-list {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .song-result-row {
+      display: grid;
+      grid-template-columns: 44px 1fr auto auto auto;
+      align-items: center; gap: 1rem;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .song-result-row:last-child { border-bottom: none; }
+    .song-result-row:hover { background: rgba(212,160,23,0.07); }
+    .song-result-cover {
+      width: 44px; height: 44px; border-radius: 6px;
+      object-fit: cover; background: var(--bg3);
+      flex-shrink: 0;
+    }
+    .song-result-info {}
+    .song-result-title { font-size: 0.92rem; font-weight: 500; }
+    .song-result-album { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
+    .song-result-dur { color: var(--text-muted); font-size: 0.82rem; white-space: nowrap; }
+    .song-result-lock { color: var(--gold); font-size: 0.85rem; }
+    .song-result-play {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--gold); color: #000; border: none;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; cursor: pointer; transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .song-result-play:hover { background: var(--gold-light); transform: scale(1.1); }
+
+    /* Empty / loading states */
+    .disc-empty {
+      grid-column: 1 / -1;
+      text-align: center; padding: 4rem 1rem;
+      color: var(--text-muted);
+    }
+    .disc-empty i { font-size: 3rem; color: var(--border); margin-bottom: 1rem; display: block; }
+    .disc-spinner {
+      grid-column: 1 / -1;
+      display: flex; justify-content: center; padding: 4rem;
+    }
+    .disc-spinner .loader-ring { width: 48px; height: 48px; }
+
+    @media (max-width: 768px) {
+      .disc-albums-grid { grid-template-columns: 1fr; }
+      .disc-toolbar { flex-direction: column; align-items: stretch; }
+      .disc-toolbar .search-wrap { max-width: 100%; }
+      .sort-select { margin-left: 0; }
+      .song-result-row { grid-template-columns: 40px 1fr auto auto; }
+      .song-result-lock { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader-overlay" id="page-loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Cargando</div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ══ NAVBAR (injected by JS) ══════════════════════════════════════════════ -->
+
+<!-- ══ PAGE HERO ════════════════════════════════════════════════════════════ -->
+<header class="page-hero">
+  <div class="container">
+    <div class="page-hero-tag">
+      <i class="fas fa-compact-disc"></i>
+      Catálogo Musical
+    </div>
+    <h1>Disco<span>grafía</span></h1>
+    <p>Todos los proyectos de Atamasta — Golden Fingaz Production</p>
+  </div>
+</header>
+
+<!-- ══ DISCOGRAPHY SECTION ══════════════════════════════════════════════════ -->
+<section class="disc-section">
+  <div class="container">
+
+    <!-- Toolbar -->
+    <div class="disc-toolbar" id="toolbar">
+      <!-- Search -->
+      <div class="search-wrap" style="position:relative;">
+        <i class="fas fa-search"></i>
+        <input
+          type="search"
+          class="search-input"
+          id="disc-search"
+          placeholder="Buscar álbum o canción..."
+          autocomplete="off"
+          aria-label="Buscar álbum o canción"
+        />
+        <!-- Dropdown for inline song hints while typing -->
+        <div class="search-results-dropdown" id="search-dropdown" role="listbox"></div>
+      </div>
+
+      <!-- Filter pills -->
+      <div class="filter-pills" role="group" aria-label="Filtrar por tipo">
+        <button class="filter-pill active" data-filter="all">Todos</button>
+        <button class="filter-pill" data-filter="free">Gratuito</button>
+        <button class="filter-pill" data-filter="premium">Premium</button>
+      </div>
+
+      <!-- Sort -->
+      <select class="sort-select" id="sort-select" aria-label="Ordenar álbumes">
+        <option value="newest">Más reciente</option>
+        <option value="oldest">Más antiguo</option>
+      </select>
+    </div>
+
+    <!-- Song search results (full list, shown below toolbar) -->
+    <div id="search-results" aria-live="polite">
+      <div class="search-results-section-title">
+        <i class="fas fa-music"></i>
+        Resultados de búsqueda
+        <span id="search-count" style="color:var(--text-muted); font-weight:400; font-size:0.85rem; margin-left:0.5rem;"></span>
+      </div>
+      <div class="song-results-list" id="song-results-list"></div>
+    </div>
+
+    <!-- Albums grid -->
+    <div class="disc-albums-grid" id="albums-container">
+      <div class="disc-spinner">
+        <div class="loader-ring"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="padding-top:1rem; border-top:1px solid var(--border);">
+      <span>© <span id="footer-year"></span> Atamasta — Golden Fingaz Production</span>
+      <span style="color:var(--text-muted); font-size:0.75rem;">Todos los derechos reservados</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ SCRIPTS ═══════════════════════════════════════════════════════════════ -->
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+/* ── State ───────────────────────────────────────────────────────────────── */
+let allAlbums = [];
+let activeFilter = 'all';
+let activeSort   = 'newest';
+let searchDebounceTimer = null;
+
+/* ── Init ────────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', async () => {
+  initSharedNavbar('discography', true);
+  initScrollReveal();
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+  await loadAlbums();
+  bindToolbar();
+  hideLoader();
+});
+
+/* ── Data fetching ───────────────────────────────────────────────────────── */
+async function loadAlbums() {
+  try {
+    allAlbums = await api.getAlbums();
+    renderGrid(allAlbums);
+  } catch (err) {
+    document.getElementById('albums-container').innerHTML = `
+      <div class="disc-empty">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>No se pudieron cargar los álbumes. Intenta de nuevo más tarde.</p>
+      </div>`;
+    toast('Error al cargar la discografía', 'error');
+  }
+}
+
+/* ── Rendering ───────────────────────────────────────────────────────────── */
+function renderGrid(albums) {
+  const container = document.getElementById('albums-container');
+  if (!albums || albums.length === 0) {
+    container.innerHTML = `
+      <div class="disc-empty">
+        <i class="fas fa-compact-disc"></i>
+        <p>No hay álbumes que coincidan con los filtros seleccionados.</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = albums.map(album => buildAlbumCard(album)).join('');
+
+  // Bind tracklist toggle buttons after render
+  container.querySelectorAll('.btn-tracklist').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cardId = btn.dataset.albumId;
+      const tracklist = document.getElementById(`tracklist-${cardId}`);
+      if (!tracklist) return;
+      const isOpen = tracklist.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.innerHTML = isOpen
+        ? '<i class="fas fa-chevron-up"></i> Ocultar'
+        : '<i class="fas fa-list-ul"></i> Ver tracklist';
+    });
+  });
+}
+
+function buildAlbumCard(album) {
+  const isPremium = album.is_premium;
+  const coverUrl  = album.cover_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(album.title)}&size=400&background=1a1a1a&color=d4a017&bold=true&format=svg`;
+  const year      = album.year || (album.created_at ? new Date(album.created_at).getFullYear() : '');
+  const songs     = album.songs || [];
+  const trackCount = songs.length || album.track_count || 0;
+
+  const spotifyBtn = album.spotify_url
+    ? `<a href="${escHtml(album.spotify_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-spotify btn-sm">
+        <i class="fab fa-spotify"></i> Spotify
+       </a>`
+    : '';
+
+  const premiumBadge = isPremium
+    ? `<div class="disc-premium-badge"><i class="fas fa-crown"></i> Premium</div>`
+    : '';
+
+  const tracklistRows = songs.length > 0
+    ? songs.map((song, i) => {
+        const dur  = song.duration ? formatDuration(song.duration) : '—';
+        const lock = song.is_premium
+          ? `<i class="fas fa-lock disc-track-lock" title="Premium"></i>`
+          : '';
+        return `
+          <div class="disc-track-row" data-song-id="${song.id}" data-album-id="${album.id}">
+            <span class="disc-track-num">${i + 1}</span>
+            <span class="disc-track-title">${escHtml(song.title)}</span>
+            <span class="disc-track-dur">${dur}</span>
+            <span class="disc-track-lock">${lock}</span>
+          </div>`;
+      }).join('')
+    : `<div style="padding:1rem 1.4rem; color:var(--text-muted); font-size:0.85rem;">Sin canciones disponibles.</div>`;
+
+  return `
+    <article class="disc-album-card reveal" id="album-card-${album.id}">
+      <div class="disc-cover-wrap">
+        <img src="${escHtml(coverUrl)}" alt="Portada de ${escHtml(album.title)}" loading="lazy" />
+        <div class="disc-cover-overlay">
+          <div class="disc-overlay-actions">
+            <button class="disc-overlay-btn primary" onclick="goToPlayer(${album.id})" title="Escuchar">
+              <i class="fas fa-play"></i>
+            </button>
+            ${album.spotify_url ? `
+            <a href="${escHtml(album.spotify_url)}" target="_blank" rel="noopener noreferrer"
+               class="disc-overlay-btn secondary" title="Abrir en Spotify" onclick="event.stopPropagation()">
+              <i class="fab fa-spotify"></i>
+            </a>` : ''}
+          </div>
+        </div>
+        ${premiumBadge}
+      </div>
+
+      <div class="disc-card-body">
+        <h2 class="disc-card-title" title="${escHtml(album.title)}">${escHtml(album.title)}</h2>
+        <div class="disc-card-meta">
+          ${year ? `<span class="disc-card-year">${year}</span>` : ''}
+          <span class="disc-card-tracks"><i class="fas fa-music" style="margin-right:0.3rem;font-size:0.75rem;"></i>${trackCount} ${trackCount === 1 ? 'canción' : 'canciones'}</span>
+        </div>
+        ${album.description ? `<p class="disc-card-desc">${escHtml(album.description)}</p>` : ''}
+
+        <div class="disc-card-actions">
+          <button class="btn btn-tracklist btn-sm" data-album-id="${album.id}">
+            <i class="fas fa-list-ul"></i> Ver tracklist
+          </button>
+          <a href="music.html?album=${album.id}" class="btn btn-primary btn-sm">
+            <i class="fas fa-headphones"></i> Escuchar
+          </a>
+          ${spotifyBtn}
+        </div>
+      </div>
+
+      <!-- Inline tracklist -->
+      <div class="disc-tracklist" id="tracklist-${album.id}">
+        <div class="disc-tracklist-header">
+          <span>#</span>
+          <span>Título</span>
+          <span style="text-align:right;">Dur.</span>
+          <span></span>
+        </div>
+        ${tracklistRows}
+      </div>
+    </article>`;
+}
+
+/* ── Toolbar binding ────────────────────────────────────────────────────── */
+function bindToolbar() {
+  // Filter pills
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.dataset.filter;
+      applyFiltersAndSort();
+    });
+  });
+
+  // Sort
+  document.getElementById('sort-select').addEventListener('change', (e) => {
+    activeSort = e.target.value;
+    applyFiltersAndSort();
+  });
+
+  // Search input
+  const searchInput = document.getElementById('disc-search');
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchDebounceTimer);
+    const q = searchInput.value.trim();
+
+    if (!q) {
+      closeDropdown();
+      hideSearchResults();
+      return;
+    }
+
+    searchDebounceTimer = setTimeout(() => performSearch(q), 300);
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('disc-search').contains(e.target)) {
+      closeDropdown();
+    }
+  });
+
+  // Tracklist rows: click to go to player
+  document.getElementById('albums-container').addEventListener('click', (e) => {
+    const row = e.target.closest('.disc-track-row');
+    if (row) {
+      const albumId = row.dataset.albumId;
+      const songId  = row.dataset.songId;
+      if (albumId) window.location.href = `music.html?album=${albumId}${songId ? '&song=' + songId : ''}`;
+    }
+  });
+}
+
+/* ── Filter + Sort ───────────────────────────────────────────────────────── */
+function applyFiltersAndSort() {
+  let filtered = [...allAlbums];
+
+  if (activeFilter === 'premium') {
+    filtered = filtered.filter(a => a.is_premium);
+  } else if (activeFilter === 'free') {
+    filtered = filtered.filter(a => !a.is_premium);
+  }
+
+  filtered.sort((a, b) => {
+    const ya = a.year || (a.created_at ? new Date(a.created_at).getFullYear() : 0);
+    const yb = b.year || (b.created_at ? new Date(b.created_at).getFullYear() : 0);
+    return activeSort === 'newest' ? yb - ya : ya - yb;
+  });
+
+  renderGrid(filtered);
+  initScrollReveal();
+}
+
+/* ── Search ──────────────────────────────────────────────────────────────── */
+async function performSearch(q) {
+  // Show inline dropdown hints
+  const dropdown = document.getElementById('search-dropdown');
+  dropdown.innerHTML = '<div class="search-no-results"><i class="fas fa-spinner fa-spin"></i> Buscando...</div>';
+  dropdown.classList.add('open');
+
+  try {
+    const results = await apiFetch('/api/albums/search?q=' + encodeURIComponent(q));
+    renderDropdown(results, q);
+    renderSongResults(results, q);
+  } catch {
+    dropdown.innerHTML = '<div class="search-no-results">Error al buscar. Intenta de nuevo.</div>';
+    hideSearchResults();
+  }
+}
+
+function renderDropdown(songs, q) {
+  const dropdown = document.getElementById('search-dropdown');
+  if (!songs || songs.length === 0) {
+    dropdown.innerHTML = `<div class="search-no-results">Sin resultados para "${escHtml(q)}"</div>`;
+    return;
+  }
+
+  const top = songs.slice(0, 6);
+  dropdown.innerHTML = top.map(song => {
+    const album = findAlbumForSong(song);
+    const coverUrl = (album && album.cover_url) ? escHtml(album.cover_url) : '';
+    const lock = song.is_premium ? '<i class="fas fa-lock search-result-lock" title="Premium"></i>' : '';
+    return `
+      <div class="search-result-item" role="option" data-album-id="${song.album_id || (album && album.id) || ''}" data-song-id="${song.id}">
+        ${coverUrl
+          ? `<img class="search-result-cover" src="${coverUrl}" alt="" loading="lazy" />`
+          : `<div class="search-result-cover" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-music" style="color:var(--gold);font-size:0.9rem;"></i></div>`}
+        <div style="flex:1;min-width:0;">
+          <div class="search-result-title">${escHtml(song.title)}</div>
+          <div class="search-result-album">${album ? escHtml(album.title) : (song.album_title ? escHtml(song.album_title) : '—')}</div>
+        </div>
+        ${song.duration ? `<span style="color:var(--text-muted);font-size:0.78rem;white-space:nowrap;">${formatDuration(song.duration)}</span>` : ''}
+        ${lock}
+      </div>`;
+  }).join('');
+
+  // Bind dropdown clicks
+  dropdown.querySelectorAll('.search-result-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const albumId = item.dataset.albumId;
+      const songId  = item.dataset.songId;
+      if (albumId) window.location.href = `music.html?album=${albumId}${songId ? '&song=' + songId : ''}`;
+    });
+  });
+}
+
+function renderSongResults(songs, q) {
+  const section = document.getElementById('search-results');
+  const list    = document.getElementById('song-results-list');
+
+  if (!songs || songs.length === 0) {
+    list.innerHTML = `<div style="padding:1.5rem;text-align:center;color:var(--text-muted);">
+      <i class="fas fa-search" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;opacity:0.4;"></i>
+      Sin resultados para "${escHtml(q)}"
+    </div>`;
+    document.getElementById('search-count').textContent = '';
+    section.classList.add('visible');
+    return;
+  }
+
+  document.getElementById('search-count').textContent = `(${songs.length} ${songs.length === 1 ? 'canción' : 'canciones'})`;
+
+  list.innerHTML = songs.map(song => {
+    const album   = findAlbumForSong(song);
+    const coverUrl = (album && album.cover_url) ? escHtml(album.cover_url) : '';
+    const dur     = song.duration ? formatDuration(song.duration) : '—';
+    const lock    = song.is_premium ? '<span class="song-result-lock"><i class="fas fa-lock" title="Premium"></i></span>' : '<span></span>';
+    const albumTitle = album ? escHtml(album.title) : (song.album_title ? escHtml(song.album_title) : '—');
+    const albumId = song.album_id || (album && album.id) || '';
+
+    return `
+      <div class="song-result-row" data-album-id="${albumId}" data-song-id="${song.id}">
+        ${coverUrl
+          ? `<img class="song-result-cover" src="${coverUrl}" alt="" loading="lazy" />`
+          : `<div class="song-result-cover" style="display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:6px;"><i class="fas fa-music" style="color:var(--gold);font-size:0.85rem;"></i></div>`}
+        <div class="song-result-info">
+          <div class="song-result-title">${escHtml(song.title)}</div>
+          <div class="song-result-album">${albumTitle}</div>
+        </div>
+        <span class="song-result-dur">${dur}</span>
+        ${lock}
+        <button class="song-result-play" title="Ir al reproductor">
+          <i class="fas fa-play"></i>
+        </button>
+      </div>`;
+  }).join('');
+
+  // Bind click anywhere on row (or play btn) → navigate to player
+  list.querySelectorAll('.song-result-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const albumId = row.dataset.albumId;
+      const songId  = row.dataset.songId;
+      if (albumId) window.location.href = `music.html?album=${albumId}${songId ? '&song=' + songId : ''}`;
+    });
+  });
+
+  section.classList.add('visible');
+}
+
+function hideSearchResults() {
+  document.getElementById('search-results').classList.remove('visible');
+  document.getElementById('song-results-list').innerHTML = '';
+  document.getElementById('search-count').textContent = '';
+}
+
+function closeDropdown() {
+  document.getElementById('search-dropdown').classList.remove('open');
+}
+
+/* ── Helpers ─────────────────────────────────────────────────────────────── */
+function goToPlayer(albumId) {
+  window.location.href = `music.html?album=${albumId}`;
+}
+
+function findAlbumForSong(song) {
+  if (!song.album_id) return null;
+  return allAlbums.find(a => a.id === song.album_id) || null;
+}
+
+function escHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+</script>
+</body>
+</html>

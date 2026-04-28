@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atamasta — MC &amp; Beatmaker | Rap Latinoamericano</title>
+  <meta name="description" content="Atamasta, AKA Golden Fingaz. MC y Beatmaker Colombo-Ecuatoriano. Representando el Rap Latinoamericano desde Medellín." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader-overlay" id="page-loader">
+  <div class="vinyl-loader">
+    <div class="vinyl-disc">
+      <div class="vinyl-label">
+        <img src="img/logo.png" alt="Atamasta" />
+      </div>
+    </div>
+  </div>
+  <div class="loader-text">Cargando...</div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Navbar injected by JS -->
+
+<!-- ══ HERO BANNER ════════════════════════════════════════════════════════════ -->
+<section class="home-hero" style="
+  max-height: 400px;
+  min-height: 320px;
+  height: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(212,160,23,0.18) 0%, rgba(192,57,43,0.10) 40%, rgba(8,8,8,0.0) 100%), var(--bg2);
+  border-bottom: 1px solid var(--border);
+  margin-top: 64px;
+">
+  <!-- Subtle grid texture -->
+  <div aria-hidden="true" style="
+    position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(212,160,23,0.025) 60px, rgba(212,160,23,0.025) 61px),
+                repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(212,160,23,0.025) 60px, rgba(212,160,23,0.025) 61px);
+  "></div>
+
+  <div class="container" style="position: relative; z-index: 2; width: 100%;">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+
+      <!-- Left: text -->
+      <div style="flex: 1; min-width: 260px;">
+        <div class="hero-tag" style="margin-bottom: 1rem; animation: fadeInDown 0.7s ease both;">
+          MC &amp; Beatmaker
+        </div>
+        <h1 style="
+          font-family: var(--font-display);
+          font-size: clamp(2.4rem, 6vw, 4.2rem);
+          line-height: 0.95;
+          text-transform: uppercase;
+          font-weight: 900;
+          margin-bottom: 0.75rem;
+          animation: fadeInUp 0.7s ease 0.15s both;
+        ">
+          <span style="color: var(--gold); display: block;">Atamasta</span>
+          <span style="color: var(--text-muted); font-size: 0.45em; letter-spacing: 0.2em; display: block;">AKA &ldquo;Golden Fingaz&rdquo;</span>
+        </h1>
+        <p style="
+          color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;
+          max-width: 400px; margin-bottom: 1.25rem;
+          animation: fadeInUp 0.7s ease 0.3s both;
+        ">
+          Colombo-Ecuatoriano. Boom bap puro. El alter ego del último INCA de los Andes,
+          Atahualpa. Representando el Rap Latinoamericano desde Medellín.
+        </p>
+
+        <!-- Social row -->
+        <div class="about-socials" style="margin-top: 0; animation: fadeInUp 0.7s ease 0.45s both;">
+          <a href="https://www.instagram.com/atamastaoficial/" target="_blank" rel="noopener" class="social-link" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" title="YouTube">
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a href="https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM" target="_blank" rel="noopener" class="social-link" title="Spotify">
+            <i class="fab fa-spotify"></i>
+          </a>
+          <a href="https://www.facebook.com/OficialAtamasta" target="_blank" rel="noopener" class="social-link" title="Facebook">
+            <i class="fab fa-facebook"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: vinyl record with logo -->
+      <div aria-hidden="true" style="
+        flex-shrink: 0;
+        width: clamp(160px, 22vw, 280px);
+        height: clamp(160px, 22vw, 280px);
+        border-radius: 50%;
+        background: conic-gradient(from 0deg,
+          #1c1c1c 0deg, #0d0d0d 15deg, #1c1c1c 30deg, #0d0d0d 45deg,
+          #1c1c1c 60deg, #0d0d0d 75deg, #1c1c1c 90deg, #0d0d0d 105deg,
+          #1c1c1c 120deg, #0d0d0d 135deg, #1c1c1c 150deg, #0d0d0d 165deg,
+          #1c1c1c 180deg, #0d0d0d 195deg, #1c1c1c 210deg, #0d0d0d 225deg,
+          #1c1c1c 240deg, #0d0d0d 255deg, #1c1c1c 270deg, #0d0d0d 285deg,
+          #1c1c1c 300deg, #0d0d0d 315deg, #1c1c1c 330deg, #0d0d0d 345deg,
+          #1c1c1c 360deg);
+        border: 3px solid rgba(212,160,23,0.4);
+        box-shadow: 0 0 60px rgba(212,160,23,0.2), 0 0 120px rgba(212,160,23,0.08);
+        display: flex; align-items: center; justify-content: center;
+        animation: spin 18s linear infinite;
+      ">
+        <img
+          src="img/logo.png"
+          alt="Atamasta"
+          style="
+            width: 54%;
+            height: 54%;
+            border-radius: 50%;
+            display: block;
+            animation: spin 18s linear infinite reverse;
+          "
+        />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS BAR ══════════════════════════════════════════════════════════════ -->
+<div style="
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 0;
+">
+  <div class="container">
+    <div style="display: flex; gap: 0; align-items: stretch; flex-wrap: wrap;">
+      <div id="stat-albums-bar" style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem; border-right: 1px solid var(--border);">
+        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);" id="stat-albums">—</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Álbumes</div>
+      </div>
+      <div id="stat-songs-bar" style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem; border-right: 1px solid var(--border);">
+        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);" id="stat-songs">—</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Canciones</div>
+      </div>
+      <div style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem; border-right: 1px solid var(--border);">
+        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);">577</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Suscriptores YT</div>
+      </div>
+      <div style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem;">
+        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);">30K+</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Visualizaciones</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ÚLTIMO LANZAMIENTO ════════════════════════════════════════════════════ -->
+<section class="home-featured">
+  <div class="container">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <h2 class="section-title" style="font-size: clamp(1.2rem, 3vw, 1.8rem);">Último <span>Lanzamiento</span></h2>
+      <a href="pages/discography.html" class="btn btn-secondary btn-sm">
+        Ver toda la discografía <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Latest release card (populated by JS) -->
+    <div class="home-latest-release" id="latest-release">
+      <!-- Loading state -->
+      <div style="
+        width: 200px; height: 200px;
+        border-radius: var(--radius-lg);
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+      ">
+        <div class="loader-ring" style="width: 36px; height: 36px; border-width: 2px;"></div>
+      </div>
+      <div>
+        <div class="home-release-label">Cargando...</div>
+        <div class="home-release-title" style="color: var(--text-muted);">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ QUICK NAVIGATION ══════════════════════════════════════════════════════ -->
+<section style="padding: 3rem 0; background: var(--bg);">
+  <div class="container">
+    <div style="margin-bottom: 1.5rem;">
+      <h2 class="section-title reveal" style="font-size: clamp(1.2rem, 3vw, 1.8rem);">Explorar</h2>
+    </div>
+    <div class="quick-nav-grid reveal">
+      <a href="pages/discography.html" class="quick-nav-card">
+        <i class="fas fa-compact-disc"></i>
+        <span>Discografía</span>
+        <p class="quick-nav-desc">Todos los álbumes y proyectos</p>
+      </a>
+      <a href="pages/music.html" class="quick-nav-card">
+        <i class="fas fa-headphones"></i>
+        <span>Música</span>
+        <p class="quick-nav-desc">Escuchar canciones en streaming</p>
+      </a>
+      <a href="pages/videos.html" class="quick-nav-card">
+        <i class="fas fa-film"></i>
+        <span>Videos</span>
+        <p class="quick-nav-desc">Videoclips en YouTube</p>
+      </a>
+      <a href="pages/contact.html" class="quick-nav-card">
+        <i class="fas fa-envelope"></i>
+        <span>Contacto</span>
+        <p class="quick-nav-desc">Bookings, colaboraciones y más</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ÚLTIMOS VIDEOS ════════════════════════════════════════════════════════ -->
+<section style="padding: 3rem 0; background: var(--bg2);">
+  <div class="container">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <h2 class="section-title reveal" style="font-size: clamp(1.2rem, 3vw, 1.8rem);">Últimos <span>Videos</span></h2>
+      <a href="pages/videos.html" class="btn btn-secondary btn-sm">
+        Ver todos <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div style="
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    " id="home-video-grid">
+      <!-- Populated by JS; fallback static cards shown if API unavailable -->
+      <div class="video-card reveal">
+        <div class="video-thumb-wrap">
+          <iframe
+            src="https://www.youtube.com/embed?listType=user_uploads&list=atamastaoficial8666&index=0"
+            title="Video Atamasta"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Ver canal completo en YouTube</div>
+          <div class="video-views"><i class="fab fa-youtube" style="color:var(--gold);"></i> @atamastaoficial8666</div>
+        </div>
+      </div>
+
+      <div class="video-card reveal" style="animation-delay: 0.1s;">
+        <div class="video-thumb-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/videoseries?list=PLrandom"
+            title="Video Atamasta 2"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Atamasta — Rap Latinoamericano</div>
+          <div class="video-views"><i class="fas fa-eye" style="color:var(--gold);"></i> Boom Bap</div>
+        </div>
+      </div>
+
+      <div class="video-card reveal" style="animation-delay: 0.2s;">
+        <div style="
+          padding-top: 56.25%; position: relative;
+          background: linear-gradient(135deg, rgba(212,160,23,0.1), var(--bg3));
+          display: flex; align-items: center; justify-content: center;
+        ">
+          <div style="
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 0.75rem;
+          ">
+            <a
+              href="https://www.youtube.com/@atamastaoficial8666"
+              target="_blank" rel="noopener"
+              style="
+                display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+                color: var(--gold); text-decoration: none;
+              "
+            >
+              <i class="fab fa-youtube" style="font-size: 2.5rem;"></i>
+              <span style="font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Ver canal</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">@atamastaoficial8666</span>
+            </a>
+          </div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Canal de YouTube Oficial</div>
+          <div class="video-views"><i class="fas fa-users" style="color:var(--gold);"></i> 577 suscriptores · 30K+ vistas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size: 1.5rem;">ATA<span style="color: var(--gold);">MASTA</span></div>
+        <p>MC &amp; Beatmaker Colombo-Ecuatoriano. Boom bap puro. Representando el Hip Hop Latino desde Medellín.</p>
+        <div class="about-socials" style="margin-top: 1.25rem;">
+          <a href="https://www.instagram.com/atamastaoficial/" target="_blank" rel="noopener" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM" target="_blank" rel="noopener" class="social-link" title="Spotify"><i class="fab fa-spotify"></i></a>
+          <a href="https://www.facebook.com/OficialAtamasta" target="_blank" rel="noopener" class="social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-title">Navegación</div>
+        <ul class="footer-links">
+          <li><a href="pages/about.html">Artista</a></li>
+          <li><a href="pages/discography.html">Discografía</a></li>
+          <li><a href="pages/music.html">Música</a></li>
+          <li><a href="pages/videos.html">Videos</a></li>
+          <li><a href="pages/contact.html">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-title">Cuenta</div>
+        <ul class="footer-links">
+          <li><a href="pages/register.html">Registrarse</a></li>
+          <li><a href="pages/login.html">Iniciar sesión</a></li>
+          <li><a href="pages/dashboard.html">Mi perfil</a></li>
+        </ul>
+        <div class="footer-title" style="margin-top: 1.5rem;">Plataformas</div>
+        <ul class="footer-links">
+          <li><a href="https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM" target="_blank" rel="noopener">Spotify</a></li>
+          <li><a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2024 Atamasta. Todos los derechos reservados.</span>
+      <span style="color: var(--gold);">Golden Fingaz Production</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/navbar.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Inject shared navbar
+  initSharedNavbar('home', false);
+
+  // 2. Init scroll reveal
+  initScrollReveal();
+
+  // 3. Load albums from API
+  try {
+    const albums = await api.getAlbums();
+
+    // Stats bar
+    if (albums && albums.length) {
+      document.getElementById('stat-albums').textContent = albums.length;
+      const totalSongs = albums.reduce((acc, a) => acc + (a.songs ? a.songs.length : (a.track_count || 0)), 0);
+      document.getElementById('stat-songs').textContent = totalSongs || '—';
+
+      // Populate "Último Lanzamiento" with the first (newest) album
+      const latest = albums[0];
+      const coverSrc = latest.cover_url || `https://via.placeholder.com/200x200/111111/d4a017?text=${encodeURIComponent(latest.title || 'ALBUM')}`;
+      const songCount = latest.songs ? latest.songs.length : (latest.track_count || 0);
+      const isPremium = latest.is_premium || false;
+
+      document.getElementById('latest-release').innerHTML = `
+        <img
+          src="${coverSrc}"
+          alt="${latest.title || 'Último álbum'}"
+          class="home-album-cover"
+          onerror="this.src='https://via.placeholder.com/200x200/111111/d4a017?text=ALBUM'"
+        />
+        <div>
+          <div class="home-release-label">
+            <i class="fas fa-star" style="font-size:0.65rem;"></i> Último lanzamiento
+          </div>
+          <div class="home-release-title">${latest.title || 'Sin título'}</div>
+          <div class="home-release-year">${latest.year || ''} ${isPremium ? '<span style="display:inline-block;padding:0.15rem 0.55rem;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;font-size:0.7rem;border-radius:20px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;vertical-align:middle;">Premium</span>' : ''}</div>
+          ${latest.description ? `<p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6;max-width:480px;margin-bottom:1.25rem;">${latest.description}</p>` : ''}
+          <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.25rem;">
+            <i class="fas fa-music" style="color:var(--gold);margin-right:0.35rem;"></i>
+            ${songCount} ${songCount === 1 ? 'canción' : 'canciones'}
+          </div>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <a href="pages/music.html" class="btn btn-primary btn-sm">
+              <i class="fas fa-play"></i> Escuchar ahora
+            </a>
+            <a href="pages/discography.html" class="btn btn-secondary btn-sm">
+              <i class="fas fa-compact-disc"></i> Ver discografía
+            </a>
+          </div>
+        </div>
+      `;
+    } else {
+      document.getElementById('latest-release').innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:2rem;">
+          <i class="fas fa-compact-disc" style="font-size:2rem;color:var(--border);display:block;margin-bottom:0.75rem;"></i>
+          No hay lanzamientos disponibles aún.
+        </div>
+      `;
+    }
+  } catch (err) {
+    console.warn('No se pudo cargar la discografía:', err.message);
+    document.getElementById('latest-release').innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:2rem;">
+        <i class="fas fa-wifi" style="font-size:1.8rem;color:var(--border);display:block;margin-bottom:0.75rem;"></i>
+        No se pudo conectar al servidor. <a href="pages/discography.html" style="color:var(--gold);">Ver discografía</a>
+      </div>
+    `;
+  }
+
+  // 4. Hide loader
+  hideLoader();
+});
+</script>
+</body>
+</html>
