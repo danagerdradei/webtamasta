@@ -32,103 +32,52 @@
 <!-- Navbar injected by JS -->
 
 <!-- ══ HERO BANNER ════════════════════════════════════════════════════════════ -->
-<section class="home-hero" style="
-  max-height: 400px;
-  min-height: 320px;
-  height: 400px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: linear-gradient(135deg, rgba(212,160,23,0.18) 0%, rgba(192,57,43,0.10) 40%, rgba(8,8,8,0.0) 100%), var(--bg2);
-  border-bottom: 1px solid var(--border);
-  margin-top: 64px;
-">
-  <!-- Subtle grid texture -->
-  <div aria-hidden="true" style="
-    position: absolute; inset: 0; pointer-events: none;
-    background: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(212,160,23,0.025) 60px, rgba(212,160,23,0.025) 61px),
-                repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(212,160,23,0.025) 60px, rgba(212,160,23,0.025) 61px);
-  "></div>
+<section class="home-hero">
 
-  <div class="container" style="position: relative; z-index: 2; width: 100%;">
-    <div class="home-hero-inner" style="display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+  <!-- Banner image with Ken Burns -->
+  <div class="hero-bg-layer" aria-hidden="true">
+    <img src="img/banner.jpg" alt="" class="hero-bg-img" />
+  </div>
+  <!-- Dark gradient overlay -->
+  <div class="hero-gradient-overlay" aria-hidden="true"></div>
+  <!-- Film grain texture -->
+  <div class="hero-grain" aria-hidden="true"></div>
 
-      <!-- Left: text -->
-      <div style="flex: 1; min-width: 260px;">
-        <div class="hero-tag" style="margin-bottom: 1rem; animation: fadeInDown 0.7s ease both;">
-          MC &amp; Beatmaker
-        </div>
-        <h1 style="
-          font-family: var(--font-display);
-          font-size: clamp(2.4rem, 6vw, 4.2rem);
-          line-height: 0.95;
-          text-transform: uppercase;
-          font-weight: 900;
-          margin-bottom: 0.75rem;
-          animation: fadeInUp 0.7s ease 0.15s both;
-        ">
-          <span style="color: var(--gold); display: block;">Atamasta</span>
-          <span style="color: var(--text-muted); font-size: 0.45em; letter-spacing: 0.2em; display: block;">AKA &ldquo;Golden Fingaz&rdquo;</span>
+  <div class="container hero-container">
+    <div class="home-hero-inner">
+
+      <!-- Left: text block -->
+      <div class="hero-text">
+        <div class="hero-tag hero-anim-1">MC &amp; Beatmaker</div>
+        <h1 class="hero-title">
+          <span class="hero-name">Atamasta</span>
+          <span class="hero-aka">AKA &ldquo;Golden Fingaz&rdquo;</span>
         </h1>
-        <p style="
-          color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;
-          max-width: 400px; margin-bottom: 1.25rem;
-          animation: fadeInUp 0.7s ease 0.3s both;
-        ">
+        <p class="hero-desc">
           Colombo-Ecuatoriano. Boom bap puro. El alter ego del último INCA de los Andes,
           Atahualpa. Representando el Rap Latinoamericano desde Medellín.
         </p>
-
-        <!-- Social row -->
-        <div class="about-socials" style="margin-top: 0; animation: fadeInUp 0.7s ease 0.45s both;">
-          <a href="https://www.instagram.com/atamastaoficial/" target="_blank" rel="noopener" class="social-link" title="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" title="YouTube">
-            <i class="fab fa-youtube"></i>
-          </a>
-          <a href="https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM" target="_blank" rel="noopener" class="social-link" title="Spotify">
-            <i class="fab fa-spotify"></i>
-          </a>
-          <a href="https://www.facebook.com/OficialAtamasta" target="_blank" rel="noopener" class="social-link" title="Facebook">
-            <i class="fab fa-facebook"></i>
-          </a>
+        <div class="about-socials hero-anim-4">
+          <a href="https://www.instagram.com/atamastaoficial/" target="_blank" rel="noopener" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM" target="_blank" rel="noopener" class="social-link" title="Spotify"><i class="fab fa-spotify"></i></a>
+          <a href="https://www.facebook.com/OficialAtamasta" target="_blank" rel="noopener" class="social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
         </div>
       </div>
 
-      <!-- Right: vinyl record with logo -->
-      <div aria-hidden="true" class="hero-vinyl" style="
-        flex-shrink: 0;
-        width: clamp(160px, 22vw, 280px);
-        height: clamp(160px, 22vw, 280px);
-        border-radius: 50%;
-        background: conic-gradient(from 0deg,
-          #1c1c1c 0deg, #0d0d0d 15deg, #1c1c1c 30deg, #0d0d0d 45deg,
-          #1c1c1c 60deg, #0d0d0d 75deg, #1c1c1c 90deg, #0d0d0d 105deg,
-          #1c1c1c 120deg, #0d0d0d 135deg, #1c1c1c 150deg, #0d0d0d 165deg,
-          #1c1c1c 180deg, #0d0d0d 195deg, #1c1c1c 210deg, #0d0d0d 225deg,
-          #1c1c1c 240deg, #0d0d0d 255deg, #1c1c1c 270deg, #0d0d0d 285deg,
-          #1c1c1c 300deg, #0d0d0d 315deg, #1c1c1c 330deg, #0d0d0d 345deg,
-          #1c1c1c 360deg);
-        border: 3px solid rgba(212,160,23,0.4);
-        box-shadow: 0 0 60px rgba(212,160,23,0.2), 0 0 120px rgba(212,160,23,0.08);
-        display: flex; align-items: center; justify-content: center;
-        animation: spin 18s linear infinite;
-      ">
-        <img
-          src="img/logo.png"
-          alt="Atamasta"
-          style="
-            width: 54%;
-            height: 54%;
-            border-radius: 50%;
-            display: block;
-            animation: spin 18s linear infinite reverse;
-          "
-        />
+      <!-- Right: spinning vinyl with logo -->
+      <div class="hero-vinyl-wrap" aria-hidden="true">
+        <div class="hero-vinyl">
+          <img src="img/logo.png" alt="Atamasta" class="hero-vinyl-logo" />
+        </div>
       </div>
 
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <span>Explorar</span>
+      <i class="fas fa-chevron-down"></i>
     </div>
   </div>
 </section>
