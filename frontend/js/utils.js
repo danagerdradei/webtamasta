@@ -61,6 +61,10 @@ function updateNavAuth() {
   const authArea = document.getElementById('nav-auth');
   if (!authArea) return;
 
+  const isSubPage = window.location.pathname.includes('/pages/');
+  const base = isSubPage ? '' : 'pages/';
+  const adminHref = isSubPage ? 'admin.html' : 'pages/admin.html';
+
   if (user) {
     const initial = user.username ? user.username[0].toUpperCase() : 'U';
     authArea.innerHTML = `
@@ -69,13 +73,13 @@ function updateNavAuth() {
         <span>${user.username}</span>
         ${user.role === 'admin' ? '<span class="badge badge-admin">Admin</span>' : user.role === 'premium' ? '<span class="badge badge-premium">Premium</span>' : ''}
       </div>
-      ${user.role === 'admin' ? '<a href="admin.html" class="btn btn-secondary btn-sm">Panel</a>' : ''}
+      ${user.role === 'admin' ? `<a href="${adminHref}" class="btn btn-secondary btn-sm">Panel</a>` : ''}
       <button class="btn btn-sm" style="background:var(--bg3);color:var(--text-muted);" onclick="handleLogout()">Salir</button>
     `;
   } else {
     authArea.innerHTML = `
-      <a href="pages/login.html" class="btn btn-secondary btn-sm">Iniciar sesión</a>
-      <a href="pages/register.html" class="btn btn-primary btn-sm">Registrarse</a>
+      <a href="${base}login.html" class="btn btn-secondary btn-sm">Iniciar sesión</a>
+      <a href="${base}register.html" class="btn btn-primary btn-sm">Registrarse</a>
     `;
   }
 }
