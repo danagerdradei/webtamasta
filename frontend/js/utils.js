@@ -1,4 +1,4 @@
-/* Shared utilities */
+﻿/* Shared utilities */
 
 function toast(message, type = 'info') {
   const container = document.getElementById('toast-container') || (() => {
@@ -166,7 +166,7 @@ function initParticles(canvasId) {
     particles.forEach(p => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(212,160,23,${p.opacity})`;
+      ctx.fillStyle = `rgba(168,184,200,${p.opacity})`;
       ctx.fill();
       p.x += p.vx; p.y += p.vy;
       if (p.x < 0 || p.x > canvas.width) p.vx *= -1;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -114,7 +114,7 @@
     .beat-cover-placeholder {
       width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, var(--bg3) 0%, rgba(212,160,23,0.06) 100%);
+      background: linear-gradient(135deg, var(--bg3) 0%, rgba(168,184,200,0.06) 100%);
     }
     .beat-cover-placeholder svg { opacity: 0.25; }
 
@@ -122,7 +122,7 @@
     .beat-category-badge {
       position: absolute; top: 0.6rem; left: 0.6rem;
       background: rgba(8,8,8,0.82);
-      border: 1px solid rgba(212,160,23,0.35);
+      border: 1px solid rgba(168,184,200,0.35);
       color: var(--gold); font-size: 0.66rem;
       letter-spacing: 0.1em; text-transform: uppercase;
       padding: 0.22rem 0.6rem; border-radius: 20px;
@@ -133,7 +133,7 @@
     /* Exclusive badge on image */
     .beat-exclusive-badge {
       position: absolute; top: 0.6rem; right: 0.6rem;
-      background: linear-gradient(135deg, #d4a017, #b8860b);
+      background: linear-gradient(135deg, #a8b8c8, #687888);
       color: #000; font-size: 0.62rem;
       letter-spacing: 0.12em; text-transform: uppercase;
       padding: 0.22rem 0.6rem; border-radius: 20px;
@@ -154,7 +154,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem;
       transition: transform 0.2s ease;
-      box-shadow: 0 0 28px rgba(212,160,23,0.55);
+      box-shadow: 0 0 28px rgba(168,184,200,0.55);
       border: none; cursor: pointer;
     }
     .beat-play-btn-overlay:hover { transform: scale(1.12); }
@@ -421,13 +421,13 @@ let searchDebounce = null;
 
 // ── Cover placeholder SVG ──────────────────────────────────────────────────
 const BEAT_PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
-  <circle cx="40" cy="40" r="30" stroke="#d4a017" stroke-width="2" fill="none"/>
-  <circle cx="40" cy="40" r="18" stroke="#d4a017" stroke-width="1.5" fill="none"/>
-  <circle cx="40" cy="40" r="5" fill="#d4a017"/>
-  <line x1="40" y1="10" x2="40" y2="22" stroke="#d4a017" stroke-width="1.5"/>
-  <line x1="40" y1="58" x2="40" y2="70" stroke="#d4a017" stroke-width="1.5"/>
-  <line x1="10" y1="40" x2="22" y2="40" stroke="#d4a017" stroke-width="1.5"/>
-  <line x1="58" y1="40" x2="70" y2="40" stroke="#d4a017" stroke-width="1.5"/>
+  <circle cx="40" cy="40" r="30" stroke="#a8b8c8" stroke-width="2" fill="none"/>
+  <circle cx="40" cy="40" r="18" stroke="#a8b8c8" stroke-width="1.5" fill="none"/>
+  <circle cx="40" cy="40" r="5" fill="#a8b8c8"/>
+  <line x1="40" y1="10" x2="40" y2="22" stroke="#a8b8c8" stroke-width="1.5"/>
+  <line x1="40" y1="58" x2="40" y2="70" stroke="#a8b8c8" stroke-width="1.5"/>
+  <line x1="10" y1="40" x2="22" y2="40" stroke="#a8b8c8" stroke-width="1.5"/>
+  <line x1="58" y1="40" x2="70" y2="40" stroke="#a8b8c8" stroke-width="1.5"/>
 </svg>`;
 
 // ── Build a beat card ──────────────────────────────────────────────────────

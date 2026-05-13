@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -145,7 +145,7 @@
       transition: background 0.2s;
     }
     .disc-track-row:last-child { border-bottom: none; }
-    .disc-track-row:hover { background: rgba(212,160,23,0.06); }
+    .disc-track-row:hover { background: rgba(168,184,200,0.06); }
     .disc-track-num { color: var(--text-muted); font-size: 0.82rem; text-align: center; }
     .disc-track-title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .disc-track-dur { color: var(--text-muted); font-size: 0.82rem; text-align: right; }
@@ -160,7 +160,7 @@
     .btn-tracklist:hover, .btn-tracklist.open {
       color: var(--gold);
       border-color: var(--gold);
-      background: rgba(212,160,23,0.07);
+      background: rgba(168,184,200,0.07);
     }
 
     /* Toolbar row */
@@ -208,7 +208,7 @@
       transition: background 0.2s;
     }
     .song-result-row:last-child { border-bottom: none; }
-    .song-result-row:hover { background: rgba(212,160,23,0.07); }
+    .song-result-row:hover { background: rgba(168,184,200,0.07); }
     .song-result-cover {
       width: 44px; height: 44px; border-radius: 6px;
       object-fit: cover; background: var(--bg3);
@@ -410,7 +410,7 @@ function renderGrid(albums) {
 
 function buildAlbumCard(album) {
   const isPremium = album.is_premium;
-  const coverUrl  = album.cover_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(album.title)}&size=400&background=1a1a1a&color=d4a017&bold=true&format=svg`;
+  const coverUrl  = album.cover_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(album.title)}&size=400&background=1a1a1a&color=a8b8c8&bold=true&format=svg`;
   const year      = album.year || (album.created_at ? new Date(album.created_at).getFullYear() : '');
   const songs     = album.songs || [];
   const trackCount = songs.length || album.track_count || 0;
