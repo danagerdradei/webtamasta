@@ -2,22 +2,22 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --gold: #d4a017;
-  --gold-light: #f0c040;
-  --gold-dark: #a07810;
+  --gold: #a8b8c8;
+  --gold-light: #d0dce8;
+  --gold-dark: #687888;
   --red: #c0392b;
   --red-light: #e74c3c;
-  --bg: #080808;
-  --bg2: #111111;
-  --bg3: #1a1a1a;
-  --bg4: #222222;
-  --text: #f0f0f0;
-  --text-muted: #888888;
-  --border: #2a2a2a;
+  --bg: #060809;
+  --bg2: #0e1214;
+  --bg3: #161b1e;
+  --bg4: #1e2428;
+  --text: #f0f2f4;
+  --text-muted: #7a8a98;
+  --border: #242c34;
   --radius: 8px;
   --radius-lg: 16px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.6);
-  --shadow-gold: 0 0 30px rgba(212,160,23,0.3);
+  --shadow: 0 4px 24px rgba(0,0,0,0.7);
+  --shadow-gold: 0 0 30px rgba(168,184,200,0.25);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --font-display: 'Oswald', 'Impact', sans-serif;
   --font-body: 'Inter', 'Segoe UI', sans-serif;

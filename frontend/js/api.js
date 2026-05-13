@@ -1,12 +1,12 @@
 /* Centralised API client */
 const API_BASE = 'http://localhost:8000';
 
-function getToken() { return localStorage.getItem('atamasta_token'); }
-function setToken(t) { localStorage.setItem('atamasta_token', t); }
-function removeToken() { localStorage.removeItem('atamasta_token'); }
-function getUser() { try { return JSON.parse(localStorage.getItem('atamasta_user') || 'null'); } catch { return null; } }
-function setUser(u) { localStorage.setItem('atamasta_user', JSON.stringify(u)); }
-function removeUser() { localStorage.removeItem('atamasta_user'); }
+function getToken() { return localStorage.getItem('latintunes_token'); }
+function setToken(t) { localStorage.setItem('latintunes_token', t); }
+function removeToken() { localStorage.removeItem('latintunes_token'); }
+function getUser() { try { return JSON.parse(localStorage.getItem('latintunes_user') || 'null'); } catch { return null; } }
+function setUser(u) { localStorage.setItem('latintunes_user', JSON.stringify(u)); }
+function removeUser() { localStorage.removeItem('latintunes_user'); }
 
 async function apiFetch(path, options = {}) {
   const token = getToken();
@@ -55,4 +55,32 @@ const api = {
   updateBeat: (id, body) => apiFetch(`/api/beats/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteBeat: (id) => apiFetch(`/api/beats/${id}`, { method: 'DELETE' }),
   playBeat: (id) => apiFetch(`/api/beats/${id}/play`, { method: 'POST' }),
+
+  // Services
+  getServices: (activeOnly = true) => apiFetch(`/api/services?active_only=${activeOnly}`),
+  getService: (id) => apiFetch(`/api/services/${id}`),
+  getServiceCategories: () => apiFetch('/api/services/categories'),
+  createService: (body) => apiFetch('/api/services', { method: 'POST', body: JSON.stringify(body) }),
+  updateService: (id, body) => apiFetch(`/api/services/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteService: (id) => apiFetch(`/api/services/${id}`, { method: 'DELETE' }),
+
+  // Packages
+  getPackages: (activeOnly = true) => apiFetch(`/api/services/packages/all?active_only=${activeOnly}`),
+  createPackage: (body) => apiFetch('/api/services/packages', { method: 'POST', body: JSON.stringify(body) }),
+  updatePackage: (id, body) => apiFetch(`/api/services/packages/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deletePackage: (id) => apiFetch(`/api/services/packages/${id}`, { method: 'DELETE' }),
+
+  // Equipment
+  getEquipment: (availableOnly = false) => apiFetch(`/api/equipment?available_only=${availableOnly}`),
+  getEquipmentItem: (id) => apiFetch(`/api/equipment/${id}`),
+  getEquipmentCategories: () => apiFetch('/api/equipment/categories'),
+  createEquipment: (body) => apiFetch('/api/equipment', { method: 'POST', body: JSON.stringify(body) }),
+  updateEquipment: (id, body) => apiFetch(`/api/equipment/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteEquipment: (id) => apiFetch(`/api/equipment/${id}`, { method: 'DELETE' }),
+
+  // Bookings
+  createBooking: (body) => apiFetch('/api/bookings', { method: 'POST', body: JSON.stringify(body) }),
+  adminGetBookings: (status = '') => apiFetch(`/api/bookings${status ? '?status=' + status : ''}`),
+  adminUpdateBooking: (id, body) => apiFetch(`/api/bookings/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  adminDeleteBooking: (id) => apiFetch(`/api/bookings/${id}`, { method: 'DELETE' }),
 };

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Iniciar sesión — Atamasta</title>
+  <title>Iniciar sesión — LatinTunes</title>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="../css/main.css" />
@@ -15,9 +15,9 @@
 <nav class="navbar scrolled" id="navbar">
   <div class="container">
     <a href="../index.html" class="nav-logo-wrap">
-    <img src="../img/logo.png" alt="Atamasta" style="width:34px;height:34px;border-radius:50%;display:block;flex-shrink:0;" />
-    <span class="nav-logo-text">ATA<span>MASTA</span></span>
-  </a>
+      <img src="../img/LatinTunes.jpeg" alt="LatinTunes" style="width:34px;height:34px;border-radius:50%;display:block;flex-shrink:0;object-fit:cover;" />
+      <span class="nav-logo-text">LATIN<span>TUNES</span></span>
+    </a>
     <div class="nav-auth" id="nav-auth"></div>
   </div>
 </nav>
@@ -26,9 +26,11 @@
   <div class="container">
     <div class="auth-card fade-in">
       <div class="auth-logo">
-        <img src="../img/logo.png" alt="Atamasta" style="width:80px;height:80px;border-radius:50%;margin:0 auto 1rem;display:block;border:2px solid rgba(212,160,23,0.4);box-shadow:0 0 30px rgba(212,160,23,0.2);" />
-        <h1>ATA<span>MASTA</span></h1>
-        <p>Inicia sesión para acceder al contenido exclusivo</p>
+        <img src="../img/LatinTunes.jpeg" alt="LatinTunes"
+          style="width:90px;height:90px;border-radius:50%;margin:0 auto 1rem;display:block;object-fit:cover;
+                 border:2px solid rgba(168,184,200,0.4);box-shadow:0 0 30px rgba(168,184,200,0.15);" />
+        <h1>LATIN<span>TUNES</span></h1>
+        <p>Accede a tu cuenta del estudio</p>
       </div>
 
       <div id="auth-alert"></div>
@@ -71,7 +73,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   updateNavAuth();
 
-  // Redirect if already logged in
   const user = getUser();
   if (user) { window.location.href = user.role === 'admin' ? 'admin.html' : '../index.html'; return; }
 
@@ -104,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await api.login({ email, password });
       setToken(res.access_token);
       setUser(res.user);
-      toast('Bienvenido de vuelta, ' + res.user.username + '!', 'success');
+      toast('Bienvenido, ' + res.user.username + '!', 'success');
       setTimeout(() => {
         window.location.href = res.user.role === 'admin' ? 'admin.html' : '../index.html';
       }, 800);

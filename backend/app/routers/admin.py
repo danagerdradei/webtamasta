@@ -69,6 +69,11 @@ def get_stats(db: Session = Depends(get_db), _: models.User = Depends(require_ad
         "total_songs": db.query(models.Song).count(),
         "total_messages": db.query(models.ContactMessage).count(),
         "unread_messages": db.query(models.ContactMessage).filter(models.ContactMessage.is_read == False).count(),
+        "total_services": db.query(models.Service).count(),
+        "total_equipment": db.query(models.Equipment).count(),
+        "total_bookings": db.query(models.Booking).count(),
+        "pending_bookings": db.query(models.Booking).filter(models.Booking.status == models.BookingStatus.pending).count(),
+        "total_packages": db.query(models.ServicePackage).count(),
     }
 
 

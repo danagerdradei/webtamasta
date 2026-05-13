@@ -81,7 +81,7 @@ class Beat(Base):
     title = Column(String(200), nullable=False)
     description = Column(Text, nullable=True)
     category = Column(String(100), nullable=False)
-    tags = Column(String(500), nullable=True)  # comma-separated
+    tags = Column(String(500), nullable=True)
     bpm = Column(Integer, nullable=True)
     musical_key = Column(String(30), nullable=True)
     price = Column(Float, default=0.0)
@@ -91,3 +91,92 @@ class Beat(Base):
     is_exclusive = Column(Boolean, default=False)
     play_count = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+# ── Studio models ──────────────────────────────────────────────────────────────
+
+class ServiceCategory(str, enum.Enum):
+    vocal_recording = "vocal_recording"
+    beat_creation = "beat_creation"
+    mixing = "mixing"
+    mastering = "mastering"
+    multimedia = "multimedia"
+    equipment_rental = "equipment_rental"
+    mobile_recording = "mobile_recording"
+
+
+class Service(Base):
+    __tablename__ = "services"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    category = Column(SAEnum(ServiceCategory), nullable=False)
+    price_from = Column(Float, nullable=True)
+    duration_hours = Column(Float, nullable=True)
+    image_url = Column(String(500), nullable=True)
+    features = Column(Text, nullable=True)  # JSON array as string
+    is_active = Column(Boolean, default=True)
+    sort_order = Column(Integer, default=0)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    bookings = relationship("Booking", back_populates="service")
+
+
+class ServicePackage(Base):
+    __tablename__ = "service_packages"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    services_included = Column(Text, nullable=True)  # JSON array as string
+    original_price = Column(Float, default=0.0)
+    discounted_price = Column(Float, default=0.0)
+    discount_pct = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    is_featured = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Equipment(Base):
+    __tablename__ = "equipment"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    category = Column(String(100), nullable=True)
+    brand = Column(String(100), nullable=True)
+    daily_rate = Column(Float, default=0.0)
+    weekly_rate = Column(Float, default=0.0)
+    deposit_amount = Column(Float, default=0.0)
+    image_url = Column(String(500), nullable=True)
+    is_available = Column(Boolean, default=True)
+    quantity_total = Column(Integer, default=1)
+    quantity_available = Column(Integer, default=1)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class BookingStatus(str, enum.Enum):
+    pending = "pending"
+    confirmed = "confirmed"
+    in_progress = "in_progress"
+    completed = "completed"
+    cancelled = "cancelled"
+
+
+class Booking(Base):
+    __tablename__ = "bookings"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    client_name = Column(String(100), nullable=False)
+    client_email = Column(String(100), nullable=False)
+    client_phone = Column(String(30), nullable=True)
+    service_id = Column(Integer, ForeignKey("services.id"), nullable=True)
+    service_type = Column(String(100), nullable=True)
+    booking_date = Column(DateTime(timezone=True), nullable=False)
+    duration_hours = Column(Float, default=1.0)
+    status = Column(SAEnum(BookingStatus), default=BookingStatus.pending)
+    notes = Column(Text, nullable=True)
+    total_price = Column(Float, default=0.0)
+    admin_notes = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", backref="bookings")
+    service = relationship("Service", back_populates="bookings")

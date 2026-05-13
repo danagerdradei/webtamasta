@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registrarse — Atamasta</title>
+  <title>Registrarse — LatinTunes</title>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="../css/main.css" />
@@ -14,7 +14,10 @@
 
 <nav class="navbar scrolled">
   <div class="container">
-    <a href="../index.html" class="nav-logo">ATA<span>MASTA</span></a>
+    <a href="../index.html" class="nav-logo-wrap">
+      <img src="../img/LatinTunes.jpeg" alt="LatinTunes" style="width:34px;height:34px;border-radius:50%;display:block;flex-shrink:0;object-fit:cover;" />
+      <span class="nav-logo-text">LATIN<span>TUNES</span></span>
+    </a>
     <div class="nav-auth" id="nav-auth"></div>
   </div>
 </nav>
@@ -23,17 +26,20 @@
   <div class="container">
     <div class="auth-card fade-in">
       <div class="auth-logo">
-        <h1>ATA<span>MASTA</span></h1>
-        <p>Crea tu cuenta gratis y accede a contenido exclusivo</p>
+        <img src="../img/LatinTunes.jpeg" alt="LatinTunes"
+          style="width:90px;height:90px;border-radius:50%;margin:0 auto 1rem;display:block;object-fit:cover;
+                 border:2px solid rgba(168,184,200,0.4);box-shadow:0 0 30px rgba(168,184,200,0.15);" />
+        <h1>LATIN<span>TUNES</span></h1>
+        <p>Crea tu cuenta y reserva sesiones de estudio</p>
       </div>
 
       <!-- Benefits -->
       <div style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; margin-bottom:1.5rem;">
         <div style="color:var(--gold); font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Beneficios de registrarse</div>
         <ul style="list-style:none; color:var(--text-muted); font-size:0.85rem; display:flex; flex-direction:column; gap:0.4rem;">
-          <li><i class="fas fa-check" style="color:var(--gold); margin-right:0.5rem;"></i>Acceso a discografía completa</li>
-          <li><i class="fas fa-check" style="color:var(--gold); margin-right:0.5rem;"></i>Reproductor de música integrado</li>
-          <li><i class="fas fa-check" style="color:var(--gold); margin-right:0.5rem;"></i>Novedades y contenido exclusivo</li>
+          <li><i class="fas fa-check" style="color:var(--gold); margin-right:0.5rem;"></i>Reserva sesiones de grabación online</li>
+          <li><i class="fas fa-check" style="color:var(--gold); margin-right:0.5rem;"></i>Acceso a catálogo de beats exclusivos</li>
+          <li><i class="fas fa-check" style="color:var(--gold); margin-right:0.5rem;"></i>Historial de proyectos y descuentos</li>
         </ul>
       </div>
 

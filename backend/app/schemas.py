@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional, List
 from datetime import datetime
-from .models import UserRole
+from .models import UserRole, ServiceCategory, BookingStatus
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
@@ -172,6 +172,139 @@ class BeatOut(BaseModel):
     is_available: bool
     is_exclusive: bool
     play_count: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ── Services ──────────────────────────────────────────────────────────────────
+
+class ServiceCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    category: ServiceCategory
+    price_from: Optional[float] = None
+    duration_hours: Optional[float] = None
+    image_url: Optional[str] = None
+    features: Optional[str] = None
+    is_active: bool = True
+    sort_order: int = 0
+
+
+class ServiceOut(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    category: ServiceCategory
+    price_from: Optional[float] = None
+    duration_hours: Optional[float] = None
+    image_url: Optional[str] = None
+    features: Optional[str] = None
+    is_active: bool
+    sort_order: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ── Service Packages ──────────────────────────────────────────────────────────
+
+class ServicePackageCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    services_included: Optional[str] = None
+    original_price: float = 0.0
+    discounted_price: float = 0.0
+    discount_pct: int = 0
+    is_active: bool = True
+    is_featured: bool = False
+
+
+class ServicePackageOut(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    services_included: Optional[str] = None
+    original_price: float
+    discounted_price: float
+    discount_pct: int
+    is_active: bool
+    is_featured: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ── Equipment ─────────────────────────────────────────────────────────────────
+
+class EquipmentCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    category: Optional[str] = None
+    brand: Optional[str] = None
+    daily_rate: float = 0.0
+    weekly_rate: float = 0.0
+    deposit_amount: float = 0.0
+    image_url: Optional[str] = None
+    is_available: bool = True
+    quantity_total: int = 1
+    quantity_available: int = 1
+
+
+class EquipmentOut(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    category: Optional[str] = None
+    brand: Optional[str] = None
+    daily_rate: float
+    weekly_rate: float
+    deposit_amount: float
+    image_url: Optional[str] = None
+    is_available: bool
+    quantity_total: int
+    quantity_available: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ── Bookings ──────────────────────────────────────────────────────────────────
+
+class BookingCreate(BaseModel):
+    client_name: str
+    client_email: EmailStr
+    client_phone: Optional[str] = None
+    service_id: Optional[int] = None
+    service_type: Optional[str] = None
+    booking_date: datetime
+    duration_hours: float = 1.0
+    notes: Optional[str] = None
+
+
+class BookingAdminUpdate(BaseModel):
+    status: Optional[BookingStatus] = None
+    admin_notes: Optional[str] = None
+    total_price: Optional[float] = None
+
+
+class BookingOut(BaseModel):
+    id: int
+    client_name: str
+    client_email: str
+    client_phone: Optional[str] = None
+    service_id: Optional[int] = None
+    service_type: Optional[str] = None
+    booking_date: datetime
+    duration_hours: float
+    status: BookingStatus
+    notes: Optional[str] = None
+    total_price: float
+    admin_notes: Optional[str] = None
     created_at: datetime
 
     class Config:

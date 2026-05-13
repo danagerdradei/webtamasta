@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from .database import engine, Base
 from .config import settings
-from .routers import auth, albums, admin, contact, beats
+from .routers import auth, albums, admin, contact, beats, services, equipment, bookings
 from . import models
 
 
@@ -16,7 +16,7 @@ def seed_initial_data():
         # Admin user
         if not db.query(models.User).filter(models.User.email == settings.ADMIN_EMAIL).first():
             db.add(models.User(
-                username="atamasta_admin",
+                username="latintunes_admin",
                 email=settings.ADMIN_EMAIL,
                 hashed_password=hash_password(settings.ADMIN_PASSWORD),
                 role=models.UserRole.admin,
@@ -25,26 +25,26 @@ def seed_initial_data():
             print(f"[seed] Admin created: {settings.ADMIN_EMAIL}")
 
         # Visitor test user
-        if not db.query(models.User).filter(models.User.email == "visitante@atamasta.com").first():
+        if not db.query(models.User).filter(models.User.email == "visitante@latintunes.com").first():
             db.add(models.User(
                 username="visitante",
-                email="visitante@atamasta.com",
+                email="visitante@latintunes.com",
                 hashed_password=hash_password("Visitante@123"),
                 role=models.UserRole.free,
             ))
             db.commit()
-            print("[seed] Visitor test user created: visitante@atamasta.com")
+            print("[seed] Visitor test user created: visitante@latintunes.com")
 
         # Premium test user
-        if not db.query(models.User).filter(models.User.email == "premium@atamasta.com").first():
+        if not db.query(models.User).filter(models.User.email == "premium@latintunes.com").first():
             db.add(models.User(
-                username="fan_premium",
-                email="premium@atamasta.com",
+                username="cliente_premium",
+                email="premium@latintunes.com",
                 hashed_password=hash_password("Premium@123"),
                 role=models.UserRole.premium,
             ))
             db.commit()
-            print("[seed] Premium test user created: premium@atamasta.com")
+            print("[seed] Premium test user created: premium@latintunes.com")
 
         if db.query(models.Album).count() == 0:
             albums_data = [
@@ -102,9 +102,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Atamasta API",
-    description="Backend for Atamasta Official website",
-    version="1.0.0",
+    title="LatinTunes API",
+    description="Backend for LatinTunes — Productora Musical",
+    version="2.0.0",
     lifespan=lifespan,
 )
 
@@ -121,8 +121,11 @@ app.include_router(albums.router)
 app.include_router(admin.router)
 app.include_router(contact.router)
 app.include_router(beats.router)
+app.include_router(services.router)
+app.include_router(equipment.router)
+app.include_router(bookings.router)
 
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "service": "Atamasta API"}
+    return {"status": "ok", "service": "LatinTunes API"}
