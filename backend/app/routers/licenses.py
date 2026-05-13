@@ -15,7 +15,7 @@ def generate_license_number() -> str:
     return f"LT-{datetime.datetime.utcnow().strftime('%Y%m')}-{uuid.uuid4().hex[:8].upper()}"
 
 
-@router.get("/", response_model=List[schemas.LicenseOut])
+@router.get("", response_model=List[schemas.LicenseOut])
 def list_licenses(
     status: Optional[str] = None,
     skip: int = 0,
@@ -53,7 +53,7 @@ def verify_license(license_number: str, db: Session = Depends(get_db)):
     return lic
 
 
-@router.post("/", response_model=schemas.LicenseOut, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=schemas.LicenseOut, status_code=status.HTTP_201_CREATED)
 def create_license(
     data: schemas.LicenseCreate,
     db: Session = Depends(get_db),
