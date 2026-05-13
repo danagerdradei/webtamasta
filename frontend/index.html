@@ -72,7 +72,7 @@
       <!-- Right: spinning vinyl with logo -->
       <div class="hero-vinyl-wrap" aria-hidden="true">
         <div class="hero-vinyl">
-          <img src="img/LatinTunes.jpeg" alt="LatinTunes" class="hero-vinyl-logo" />
+          <img src="img/LatinTunesWhite.jpeg" alt="LatinTunes" class="hero-vinyl-logo" />
         </div>
       </div>
 
@@ -88,174 +88,127 @@
 </section>
 
 <!-- ══ STATS BAR ══════════════════════════════════════════════════════════════ -->
-<div style="
-  background: var(--bg3);
-  border-bottom: 1px solid var(--border);
-  padding: 0.9rem 0;
-">
+<div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:0.9rem 0;">
   <div class="container">
-    <div style="display: flex; gap: 0; align-items: stretch; flex-wrap: wrap;">
-      <div id="stat-albums-bar" style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem; border-right: 1px solid var(--border);">
-        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);" id="stat-albums">—</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Álbumes</div>
+    <div style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap;">
+      <div style="flex:1;min-width:110px;text-align:center;padding:0.5rem 1rem;border-right:1px solid var(--border);">
+        <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--gold);">7</div>
+        <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;">Servicios</div>
       </div>
-      <div id="stat-songs-bar" style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem; border-right: 1px solid var(--border);">
-        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);" id="stat-songs">—</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Canciones</div>
+      <div style="flex:1;min-width:110px;text-align:center;padding:0.5rem 1rem;border-right:1px solid var(--border);">
+        <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--gold);">2018</div>
+        <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;">Desde</div>
       </div>
-      <div style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem; border-right: 1px solid var(--border);">
-        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);">577</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Suscriptores YT</div>
+      <div style="flex:1;min-width:110px;text-align:center;padding:0.5rem 1rem;border-right:1px solid var(--border);">
+        <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--gold);">MDE</div>
+        <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;">Medellín</div>
       </div>
-      <div style="flex: 1; min-width: 120px; text-align: center; padding: 0.5rem 1rem;">
-        <div style="font-family: var(--font-display); font-size: 1.6rem; color: var(--gold);">30K+</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;">Visualizaciones</div>
+      <div style="flex:1;min-width:110px;text-align:center;padding:0.5rem 1rem;">
+        <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--gold);">24H</div>
+        <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;">Respuesta</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ ÚLTIMO LANZAMIENTO ════════════════════════════════════════════════════ -->
-<section class="home-featured">
+<!-- ══ SERVICIOS DESTACADOS ═══════════════════════════════════════════════════ -->
+<section style="padding:3.5rem 0;background:var(--bg2);border-top:1px solid var(--border);">
   <div class="container">
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-      <h2 class="section-title" style="font-size: clamp(1.2rem, 3vw, 1.8rem);">Último <span>Lanzamiento</span></h2>
-      <a href="pages/discography.html" class="btn btn-secondary btn-sm">
-        Ver toda la discografía <i class="fas fa-arrow-right"></i>
-      </a>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
+      <h2 class="section-title reveal" style="font-size:clamp(1.3rem,3vw,2rem);">Nuestros <span>Servicios</span></h2>
+      <a href="pages/services.html" class="btn btn-secondary btn-sm">Ver todos <i class="fas fa-arrow-right"></i></a>
     </div>
-
-    <!-- Latest release card (populated by JS) -->
-    <div class="home-latest-release" id="latest-release">
-      <!-- Loading state -->
-      <div style="
-        width: 200px; height: 200px;
-        border-radius: var(--radius-lg);
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-      ">
-        <div class="loader-ring" style="width: 36px; height: 36px; border-width: 2px;"></div>
-      </div>
-      <div>
-        <div class="home-release-label">Cargando...</div>
-        <div class="home-release-title" style="color: var(--text-muted);">—</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ QUICK NAVIGATION ══════════════════════════════════════════════════════ -->
-<section style="padding: 3rem 0; background: var(--bg);">
-  <div class="container">
-    <div style="margin-bottom: 1.5rem;">
-      <h2 class="section-title reveal" style="font-size: clamp(1.2rem, 3vw, 1.8rem);">Explorar</h2>
-    </div>
-    <div class="quick-nav-grid reveal">
-      <a href="pages/discography.html" class="quick-nav-card">
-        <i class="fas fa-compact-disc"></i>
-        <span>Discografía</span>
-        <p class="quick-nav-desc">Todos los álbumes y proyectos</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;" class="reveal">
+      <a href="pages/booking.html?service=vocal_recording" style="text-decoration:none;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;transition:var(--transition);" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+          <i class="fas fa-microphone-alt" style="font-size:1.8rem;color:var(--gold);margin-bottom:0.75rem;display:block;"></i>
+          <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.3rem;">Captación de Voces</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Desde $50.000/h</div>
+        </div>
       </a>
-      <a href="pages/music.html" class="quick-nav-card">
-        <i class="fas fa-headphones"></i>
-        <span>Música</span>
-        <p class="quick-nav-desc">Escuchar canciones en streaming</p>
+      <a href="pages/booking.html?service=beat_creation" style="text-decoration:none;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;transition:var(--transition);" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+          <i class="fas fa-drum" style="font-size:1.8rem;color:var(--gold);margin-bottom:0.75rem;display:block;"></i>
+          <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.3rem;">Creación de Beats</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Desde $80.000</div>
+        </div>
       </a>
-      <a href="pages/videos.html" class="quick-nav-card">
-        <i class="fas fa-film"></i>
-        <span>Videos</span>
-        <p class="quick-nav-desc">Videoclips en YouTube</p>
+      <a href="pages/booking.html?service=mixing" style="text-decoration:none;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;transition:var(--transition);" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+          <i class="fas fa-sliders-h" style="font-size:1.8rem;color:var(--gold);margin-bottom:0.75rem;display:block;"></i>
+          <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.3rem;">Mezcla</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Desde $120.000</div>
+        </div>
       </a>
-      <a href="pages/contact.html" class="quick-nav-card">
-        <i class="fas fa-envelope"></i>
-        <span>Contacto</span>
-        <p class="quick-nav-desc">Bookings, colaboraciones y más</p>
+      <a href="pages/booking.html?service=mastering" style="text-decoration:none;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;transition:var(--transition);" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+          <i class="fas fa-compact-disc" style="font-size:1.8rem;color:var(--gold);margin-bottom:0.75rem;display:block;"></i>
+          <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.3rem;">Masterización</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Desde $60.000</div>
+        </div>
+      </a>
+      <a href="pages/booking.html?service=multimedia" style="text-decoration:none;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;transition:var(--transition);" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+          <i class="fas fa-film" style="font-size:1.8rem;color:var(--gold);margin-bottom:0.75rem;display:block;"></i>
+          <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.3rem;">Multimedia</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Desde $150.000</div>
+        </div>
+      </a>
+      <a href="pages/equipment.html" style="text-decoration:none;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;transition:var(--transition);" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+          <i class="fas fa-microphone" style="font-size:1.8rem;color:var(--gold);margin-bottom:0.75rem;display:block;"></i>
+          <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.3rem;">Alquiler Equipos</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Desde $30.000/día</div>
+        </div>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ══ ÚLTIMOS VIDEOS ════════════════════════════════════════════════════════ -->
-<section style="padding: 3rem 0; background: var(--bg2);">
+<!-- ══ ¿POR QUÉ LATINTUNES? ═══════════════════════════════════════════════════ -->
+<section style="padding:3.5rem 0;background:var(--bg);">
   <div class="container">
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-      <h2 class="section-title reveal" style="font-size: clamp(1.2rem, 3vw, 1.8rem);">Últimos <span>Videos</span></h2>
-      <a href="pages/videos.html" class="btn btn-secondary btn-sm">
-        Ver todos <i class="fas fa-arrow-right"></i>
-      </a>
+    <div class="section-header reveal" style="margin-bottom:2rem;">
+      <h2 class="section-title">¿Por qué <span>LatinTunes?</span></h2>
+      <p class="section-subtitle">Más de 7 años dándole voz a la música latina</p>
     </div>
-
-    <div style="
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
-    " id="home-video-grid">
-      <!-- Populated by JS; fallback static cards shown if API unavailable -->
-      <div class="video-card reveal">
-        <div class="video-thumb-wrap">
-          <iframe
-            src="https://www.youtube.com/embed?listType=user_uploads&list=atamastaoficial8666&index=0"
-            title="Video Atamasta"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <div class="video-info">
-          <div class="video-title">Ver canal completo en YouTube</div>
-          <div class="video-views"><i class="fab fa-youtube" style="color:var(--gold);"></i> @atamastaoficial8666</div>
-        </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;" class="reveal">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;">
+        <i class="fas fa-shield-alt" style="color:var(--gold);font-size:1.4rem;margin-bottom:0.75rem;display:block;"></i>
+        <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.4rem;">Equipos Profesionales</div>
+        <p style="font-size:0.83rem;color:var(--text-muted);line-height:1.6;">Micrófonos de condensador, interfaces de alto rango y monitores calibrados.</p>
       </div>
-
-      <div class="video-card reveal" style="animation-delay: 0.1s;">
-        <div class="video-thumb-wrap">
-          <iframe
-            src="https://www.youtube.com/embed/videoseries?list=PLrandom"
-            title="Video Atamasta 2"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <div class="video-info">
-          <div class="video-title">Atamasta — Rap Latinoamericano</div>
-          <div class="video-views"><i class="fas fa-eye" style="color:var(--gold);"></i> Boom Bap</div>
-        </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;">
+        <i class="fas fa-map-marker-alt" style="color:var(--gold);font-size:1.4rem;margin-bottom:0.75rem;display:block;"></i>
+        <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.4rem;">Grabación Móvil</div>
+        <p style="font-size:0.83rem;color:var(--text-muted);line-height:1.6;">Llevamos el estudio a tu ubicación en Medellín y área metropolitana.</p>
       </div>
-
-      <div class="video-card reveal" style="animation-delay: 0.2s;">
-        <div style="
-          padding-top: 56.25%; position: relative;
-          background: linear-gradient(135deg, rgba(168,184,200,0.1), var(--bg3));
-          display: flex; align-items: center; justify-content: center;
-        ">
-          <div style="
-            position: absolute; inset: 0;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 0.75rem;
-          ">
-            <a
-              href="https://www.youtube.com/@atamastaoficial8666"
-              target="_blank" rel="noopener"
-              style="
-                display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-                color: var(--gold); text-decoration: none;
-              "
-            >
-              <i class="fab fa-youtube" style="font-size: 2.5rem;"></i>
-              <span style="font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Ver canal</span>
-              <span style="font-size: 0.75rem; color: var(--text-muted);">@atamastaoficial8666</span>
-            </a>
-          </div>
-        </div>
-        <div class="video-info">
-          <div class="video-title">Canal de YouTube Oficial</div>
-          <div class="video-views"><i class="fas fa-users" style="color:var(--gold);"></i> 577 suscriptores · 30K+ vistas</div>
-        </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;">
+        <i class="fas fa-clock" style="color:var(--gold);font-size:1.4rem;margin-bottom:0.75rem;display:block;"></i>
+        <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.4rem;">Respuesta en 24H</div>
+        <p style="font-size:0.83rem;color:var(--text-muted);line-height:1.6;">Confirmamos tu reserva en menos de 24 horas. Sin esperas largas.</p>
       </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;">
+        <i class="fas fa-tags" style="color:var(--gold);font-size:1.4rem;margin-bottom:0.75rem;display:block;"></i>
+        <div style="font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;color:var(--text);margin-bottom:0.4rem;">Paquetes con Descuento</div>
+        <p style="font-size:0.83rem;color:var(--text-muted);line-height:1.6;">Combina servicios y ahorra hasta 30% con nuestros planes especiales.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA CENTRAL ════════════════════════════════════════════════════════════ -->
+<section style="padding:4rem 0;background:var(--bg2);border-top:1px solid var(--border);text-align:center;">
+  <div class="container reveal">
+    <h2 style="font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.8rem);text-transform:uppercase;margin-bottom:0.75rem;">
+      Tu proyecto merece <span style="color:var(--gold);">sonar profesional</span>
+    </h2>
+    <p style="color:var(--text-muted);margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;">
+      Reserva tu sesión hoy y déjanos llevar tu música al siguiente nivel. Atendemos en estudio y a domicilio.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="pages/booking.html" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Reservar Sesión</a>
+      <a href="pages/packages.html" class="btn btn-secondary"><i class="fas fa-tags"></i> Ver Paquetes</a>
     </div>
   </div>
 </section>
@@ -265,45 +218,41 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="nav-logo" style="font-size: 1.5rem;">ATA<span style="color: var(--gold);">MASTA</span></div>
-        <p>MC &amp; Beatmaker Colombo-Ecuatoriano. Boom bap puro. Representando el Hip Hop Latino desde Medellín.</p>
-        <div class="about-socials" style="margin-top: 1.25rem;">
-          <a href="https://www.instagram.com/atamastaoficial/" target="_blank" rel="noopener" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
-          <a href="https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM" target="_blank" rel="noopener" class="social-link" title="Spotify"><i class="fab fa-spotify"></i></a>
-          <a href="https://www.facebook.com/OficialAtamasta" target="_blank" rel="noopener" class="social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
+        <div class="nav-logo-wrap" style="margin-bottom:0.75rem;">
+          <img src="img/LatinTunes.jpeg" alt="LatinTunes" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+          <span style="font-family:var(--font-display);font-size:1.2rem;">LATIN<span style="color:var(--gold);">TUNES</span></span>
+        </div>
+        <p>Productora Musical Profesional. Captación de voces, beats, mezcla, masterización y multimedia desde Medellín.</p>
+        <div class="about-socials" style="margin-top:1.25rem;">
+          <a href="#" target="_blank" rel="noopener" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" target="_blank" rel="noopener" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="#" target="_blank" rel="noopener" class="social-link" title="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="#" target="_blank" rel="noopener" class="social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
         </div>
       </div>
-
       <div>
-        <div class="footer-title">Navegación</div>
+        <div class="footer-title">Servicios</div>
         <ul class="footer-links">
-          <li><a href="pages/about.html">Artista</a></li>
-          <li><a href="pages/discography.html">Discografía</a></li>
-          <li><a href="pages/music.html">Música</a></li>
-          <li><a href="pages/videos.html">Videos</a></li>
-          <li><a href="pages/contact.html">Contacto</a></li>
+          <li><a href="pages/services.html">Portafolio</a></li>
+          <li><a href="pages/booking.html">Reservar Sesión</a></li>
+          <li><a href="pages/equipment.html">Alquiler de Equipos</a></li>
+          <li><a href="pages/packages.html">Paquetes y Planes</a></li>
+          <li><a href="pages/beats.html">Tienda de Beats</a></li>
         </ul>
       </div>
-
       <div>
-        <div class="footer-title">Cuenta</div>
+        <div class="footer-title">Estudio</div>
         <ul class="footer-links">
+          <li><a href="pages/about.html">Nosotros</a></li>
+          <li><a href="pages/contact.html">Contacto</a></li>
+          <li><a href="pages/login.html">Iniciar Sesión</a></li>
           <li><a href="pages/register.html">Registrarse</a></li>
-          <li><a href="pages/login.html">Iniciar sesión</a></li>
-          <li><a href="pages/dashboard.html">Mi perfil</a></li>
-        </ul>
-        <div class="footer-title" style="margin-top: 1.5rem;">Plataformas</div>
-        <ul class="footer-links">
-          <li><a href="https://open.spotify.com/artist/0pKlzt6G9f8KCTVXr8SUyM" target="_blank" rel="noopener">Spotify</a></li>
-          <li><a href="https://www.youtube.com/@atamastaoficial8666" target="_blank" rel="noopener">YouTube</a></li>
         </ul>
       </div>
     </div>
-
     <div class="footer-bottom">
-      <span>&copy; 2024 Atamasta. Todos los derechos reservados.</span>
-      <span style="color: var(--gold);">Golden Fingaz Production</span>
+      <span>&copy; 2025 LatinTunes. Todos los derechos reservados.</span>
+      <span style="color:var(--gold);">Productora Musical Profesional</span>
     </div>
   </div>
 </footer>
@@ -312,76 +261,9 @@
 <script src="js/utils.js"></script>
 <script src="js/navbar.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Inject shared navbar
+document.addEventListener('DOMContentLoaded', () => {
   initSharedNavbar('home', false);
-
-  // 2. Init scroll reveal
   initScrollReveal();
-
-  // 3. Load albums from API
-  try {
-    const albums = await api.getAlbums();
-
-    // Stats bar
-    if (albums && albums.length) {
-      document.getElementById('stat-albums').textContent = albums.length;
-      const totalSongs = albums.reduce((acc, a) => acc + (a.songs ? a.songs.length : (a.track_count || 0)), 0);
-      document.getElementById('stat-songs').textContent = totalSongs || '—';
-
-      // Populate "Último Lanzamiento" with the first (newest) album
-      const latest = albums[0];
-      const coverSrc = latest.cover_url || '';
-      const songCount = latest.songs ? latest.songs.length : (latest.track_count || 0);
-      const isPremium = latest.is_premium || false;
-
-      document.getElementById('latest-release').innerHTML = `
-        <img
-          src="${coverSrc}"
-          alt="${latest.title || 'Último álbum'}"
-          class="home-album-cover"
-          onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23111%22/%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2255%22 fill=%22none%22 stroke=%22%23a8b8c8%22 stroke-width=%222%22 opacity=%22.4%22/%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2210%22 fill=%22%23a8b8c8%22 opacity=%22.4%22/%3E%3C/svg%3E'"
-        />
-        <div>
-          <div class="home-release-label">
-            <i class="fas fa-star" style="font-size:0.65rem;"></i> Último lanzamiento
-          </div>
-          <div class="home-release-title">${latest.title || 'Sin título'}</div>
-          <div class="home-release-year">${latest.year || ''} ${isPremium ? '<span style="display:inline-block;padding:0.15rem 0.55rem;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;font-size:0.7rem;border-radius:20px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;vertical-align:middle;">Premium</span>' : ''}</div>
-          ${latest.description ? `<p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6;max-width:480px;margin-bottom:1.25rem;">${latest.description}</p>` : ''}
-          <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.25rem;">
-            <i class="fas fa-music" style="color:var(--gold);margin-right:0.35rem;"></i>
-            ${songCount} ${songCount === 1 ? 'canción' : 'canciones'}
-          </div>
-          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-            <a href="pages/music.html" class="btn btn-primary btn-sm">
-              <i class="fas fa-play"></i> Escuchar ahora
-            </a>
-            <a href="pages/discography.html" class="btn btn-secondary btn-sm">
-              <i class="fas fa-compact-disc"></i> Ver discografía
-            </a>
-          </div>
-        </div>
-      `;
-    } else {
-      document.getElementById('latest-release').innerHTML = `
-        <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:2rem;">
-          <i class="fas fa-compact-disc" style="font-size:2rem;color:var(--border);display:block;margin-bottom:0.75rem;"></i>
-          No hay lanzamientos disponibles aún.
-        </div>
-      `;
-    }
-  } catch (err) {
-    console.warn('No se pudo cargar la discografía:', err.message);
-    document.getElementById('latest-release').innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:2rem;">
-        <i class="fas fa-wifi" style="font-size:1.8rem;color:var(--border);display:block;margin-bottom:0.75rem;"></i>
-        No se pudo conectar al servidor. <a href="pages/discography.html" style="color:var(--gold);">Ver discografía</a>
-      </div>
-    `;
-  }
-
-  // 4. Hide loader
   hideLoader();
 });
 </script>
