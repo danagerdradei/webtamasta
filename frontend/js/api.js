@@ -83,4 +83,12 @@ const api = {
   adminGetBookings: (status = '') => apiFetch(`/api/bookings${status ? '?status=' + status : ''}`),
   adminUpdateBooking: (id, body) => apiFetch(`/api/bookings/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   adminDeleteBooking: (id) => apiFetch(`/api/bookings/${id}`, { method: 'DELETE' }),
+
+  // Licenses
+  adminGetLicenses: (status = '') => apiFetch(`/api/licenses${status ? '?status=' + status : ''}`),
+  getLicense: (id) => apiFetch(`/api/licenses/${id}`),
+  verifyLicense: (number) => apiFetch(`/api/licenses/verify/${number}`),
+  createLicense: (body) => apiFetch('/api/licenses', { method: 'POST', body: JSON.stringify(body) }),
+  updateLicense: (id, body) => apiFetch(`/api/licenses/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteLicense: (id) => apiFetch(`/api/licenses/${id}`, { method: 'DELETE' }),
 };

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Servicios — LatinTunes Productora Musical</title>
+  <meta name="description" content="Portafolio de servicios de LatinTunes: captación de voces, creación de beats, mezcla, masterización, multimedia y grabación móvil." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.75rem;
+      margin-top: 2.5rem;
+    }
+    .service-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .service-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon {
+      width: 64px; height: 64px;
+      background: rgba(168,184,200,0.1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; color: var(--gold);
+      margin-bottom: 1.25rem;
+      transition: var(--transition);
+    }
+    .service-card:hover .service-icon { background: rgba(168,184,200,0.18); border-color: var(--gold); }
+    .service-name { font-family: var(--font-display); font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; color: var(--text); }
+    .service-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.25rem; flex: 1; }
+    .service-features { list-style: none; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .service-features li { color: var(--text-muted); font-size: 0.84rem; display: flex; align-items: center; gap: 0.5rem; }
+    .service-features li i { color: var(--gold); font-size: 0.75rem; flex-shrink: 0; }
+    .service-price { font-family: var(--font-display); font-size: 1.1rem; color: var(--gold); margin-bottom: 1.25rem; }
+    .service-price span { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-body); font-weight: 400; }
+    .mobile-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--gold); color: var(--bg);
+      font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.6rem;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    @media (max-width: 768px) { .services-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="loader-overlay" id="page-loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Servicios</div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-tag"><i class="fas fa-music"></i> Portafolio</div>
+    <h1>Nuestros <span>Servicios</span></h1>
+    <p>Soluciones profesionales para tu proyecto musical</p>
+  </div>
+</section>
+
+<!-- ══ SERVICIOS ══════════════════════════════════════════════════════════════ -->
+<section style="padding: 4rem 0; background: var(--bg);">
+  <div class="container">
+
+    <div class="services-grid" id="services-grid">
+
+      <!-- Captación de Voces -->
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fas fa-microphone-alt"></i></div>
+        <div class="service-name">Captación de Voces</div>
+        <div class="service-desc">Grabación vocal profesional en cabina insonorizada con equipos de alta gama. Capturamos cada matiz de tu voz con la máxima fidelidad.</div>
+        <ul class="service-features">
+          <li><i class="fas fa-check-circle"></i> Cabina insonorizada</li>
+          <li><i class="fas fa-check-circle"></i> Micrófonos de condensador</li>
+          <li><i class="fas fa-check-circle"></i> Monitoreo en tiempo real</li>
+          <li><i class="fas fa-check-circle"></i> Múltiples tomas incluidas</li>
+        </ul>
+        <div class="service-price">Desde $50.000 COP <span>/ hora</span></div>
+        <a href="booking.html?service=vocal_recording" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Reservar sesión
+        </a>
+      </div>
+
+      <!-- Creación de Beats -->
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fas fa-drum"></i></div>
+        <div class="service-name">Creación de Beats</div>
+        <div class="service-desc">Producción de beats personalizados en cualquier género: Hip Hop, Trap, Reggaetón, Latin, R&B y más. Beats únicos hechos a medida para tu estilo.</div>
+        <ul class="service-features">
+          <li><i class="fas fa-check-circle"></i> Géneros: Hip-Hop, Trap, Latin...</li>
+          <li><i class="fas fa-check-circle"></i> Licencia incluida</li>
+          <li><i class="fas fa-check-circle"></i> Stems disponibles</li>
+          <li><i class="fas fa-check-circle"></i> Revisiones incluidas</li>
+        </ul>
+        <div class="service-price">Desde $80.000 COP <span>/ beat</span></div>
+        <a href="booking.html?service=beat_creation" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Solicitar beat
+        </a>
+      </div>
+
+      <!-- Mezcla -->
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fas fa-sliders-h"></i></div>
+        <div class="service-name">Mezcla</div>
+        <div class="service-desc">Equilibramos y potenciamos todos los elementos de tu canción. Balance de frecuencias, dinámica, efectos y espacio estéreo para un sonido profesional.</div>
+        <ul class="service-features">
+          <li><i class="fas fa-check-circle"></i> Hasta 40 pistas</li>
+          <li><i class="fas fa-check-circle"></i> EQ y compresión avanzada</li>
+          <li><i class="fas fa-check-circle"></i> Efectos y procesamiento</li>
+          <li><i class="fas fa-check-circle"></i> 2 revisiones incluidas</li>
+        </ul>
+        <div class="service-price">Desde $120.000 COP <span>/ canción</span></div>
+        <a href="booking.html?service=mixing" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Solicitar mezcla
+        </a>
+      </div>
+
+      <!-- Masterización -->
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fas fa-compact-disc"></i></div>
+        <div class="service-name">Masterización</div>
+        <div class="service-desc">El toque final que lleva tu música a los estándares de distribución en plataformas: Spotify, Apple Music, YouTube y más. Sonido competitivo a nivel mundial.</div>
+        <ul class="service-features">
+          <li><i class="fas fa-check-circle"></i> Estándares internacionales</li>
+          <li><i class="fas fa-check-circle"></i> Optimizado para streaming</li>
+          <li><i class="fas fa-check-circle"></i> Entrega en múltiples formatos</li>
+          <li><i class="fas fa-check-circle"></i> 1 revisión incluida</li>
+        </ul>
+        <div class="service-price">Desde $60.000 COP <span>/ canción</span></div>
+        <a href="booking.html?service=mastering" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Solicitar masterización
+        </a>
+      </div>
+
+      <!-- Multimedia -->
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fas fa-film"></i></div>
+        <div class="service-name">Multimedia</div>
+        <div class="service-desc">Producción de contenido visual para redes sociales: reels, cortos, lyric videos, visualizers y material audiovisual para potenciar tu presencia digital.</div>
+        <ul class="service-features">
+          <li><i class="fas fa-check-circle"></i> Reels para Instagram/TikTok</li>
+          <li><i class="fas fa-check-circle"></i> Cortos para YouTube</li>
+          <li><i class="fas fa-check-circle"></i> Lyric videos</li>
+          <li><i class="fas fa-check-circle"></i> Edición y post-producción</li>
+        </ul>
+        <div class="service-price">Desde $150.000 COP <span>/ video</span></div>
+        <a href="booking.html?service=multimedia" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Solicitar multimedia
+        </a>
+      </div>
+
+      <!-- Grabación Móvil -->
+      <div class="service-card reveal">
+        <span class="mobile-badge"><i class="fas fa-map-marker-alt"></i> A domicilio</span>
+        <div class="service-icon"><i class="fas fa-truck"></i></div>
+        <div class="service-name">Grabación Móvil</div>
+        <div class="service-desc">Llevamos el estudio hasta tu ubicación. Ideal para eventos, sesiones en exteriores, iglesias, colegios o cualquier espacio donde necesites grabación profesional.</div>
+        <ul class="service-features">
+          <li><i class="fas fa-check-circle"></i> Equipo portátil profesional</li>
+          <li><i class="fas fa-check-circle"></i> Cobertura Medellín y área metro</li>
+          <li><i class="fas fa-check-circle"></i> Setup rápido en 30 min</li>
+          <li><i class="fas fa-check-circle"></i> Ideal para eventos</li>
+        </ul>
+        <div class="service-price">Desde $200.000 COP <span>/ sesión</span></div>
+        <a href="booking.html?service=mobile_recording" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Agendar desplazamiento
+        </a>
+      </div>
+
+      <!-- Alquiler de Equipos -->
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fas fa-headphones-alt"></i></div>
+        <div class="service-name">Alquiler de Equipos</div>
+        <div class="service-desc">Renta equipos de grabación profesionales por día o semana: micrófonos, interfaces, monitores, auriculares y más. Depósito de garantía requerido.</div>
+        <ul class="service-features">
+          <li><i class="fas fa-check-circle"></i> Micrófonos de condensador</li>
+          <li><i class="fas fa-check-circle"></i> Interfaces de audio</li>
+          <li><i class="fas fa-check-circle"></i> Monitores y auriculares</li>
+          <li><i class="fas fa-check-circle"></i> Tarifas día / semana</li>
+        </ul>
+        <div class="service-price">Desde $30.000 COP <span>/ día</span></div>
+        <a href="equipment.html" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-eye"></i> Ver catálogo de equipos
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ PAQUETES CTA ══════════════════════════════════════════════════════════ -->
+<section style="padding:4rem 0;background:var(--bg2);border-top:1px solid var(--border);text-align:center;">
+  <div class="container">
+    <div class="reveal">
+      <h2 style="font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);text-transform:uppercase;margin-bottom:0.75rem;">
+        ¿Quieres <span style="color:var(--gold);">ahorrar más?</span>
+      </h2>
+      <p style="color:var(--text-muted);margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;">
+        Elige uno de nuestros paquetes combinados y obtén descuentos de hasta el 30% al contratar múltiples servicios.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="packages.html" class="btn btn-primary"><i class="fas fa-tags"></i> Ver Paquetes y Planes</a>
+        <a href="contact.html" class="btn btn-secondary"><i class="fas fa-envelope"></i> Consultar precio especial</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo-wrap" style="margin-bottom:0.75rem;">
+          <img src="../img/LatinTunes.jpeg" alt="LatinTunes" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+          <span style="font-family:var(--font-display);font-size:1.2rem;">LATIN<span style="color:var(--gold);">TUNES</span></span>
+        </div>
+        <p>Productora Musical Profesional. Captación de voces, beats, mezcla, masterización y multimedia.</p>
+      </div>
+      <div>
+        <div class="footer-title">Servicios</div>
+        <ul class="footer-links">
+          <li><a href="services.html">Portafolio</a></li>
+          <li><a href="booking.html">Reservar Sesión</a></li>
+          <li><a href="equipment.html">Alquiler de Equipos</a></li>
+          <li><a href="packages.html">Paquetes y Planes</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Estudio</div>
+        <ul class="footer-links">
+          <li><a href="beats.html">Tienda de Beats</a></li>
+          <li><a href="about.html">Nosotros</a></li>
+          <li><a href="contact.html">Contacto</a></li>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 LatinTunes. Todos los derechos reservados.</span>
+      <span style="color:var(--gold);">Productora Musical Profesional</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initSharedNavbar('services', true);
+  initScrollReveal();
+  hideLoader();
+});
+</script>
+</body>
+</html>

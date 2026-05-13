@@ -180,3 +180,40 @@ class Booking(Base):
 
     user = relationship("User", backref="bookings")
     service = relationship("Service", back_populates="bookings")
+
+
+class LicenseType(str, enum.Enum):
+    basic = "basic"           # Non-exclusive, limited use
+    standard = "standard"     # Non-exclusive, broader use
+    exclusive = "exclusive"   # Full exclusive rights
+    sync = "sync"             # Sync/video use
+    custom = "custom"         # Custom terms
+
+
+class LicenseStatus(str, enum.Enum):
+    active = "active"
+    expired = "expired"
+    revoked = "revoked"
+    pending = "pending"
+
+
+class License(Base):
+    __tablename__ = "licenses"
+    id = Column(Integer, primary_key=True, index=True)
+    license_number = Column(String(50), unique=True, nullable=False, index=True)
+    beat_id = Column(Integer, ForeignKey("beats.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    client_name = Column(String(100), nullable=False)
+    client_email = Column(String(100), nullable=False)
+    beat_title = Column(String(200), nullable=True)
+    license_type = Column(SAEnum(LicenseType), default=LicenseType.basic)
+    status = Column(SAEnum(LicenseStatus), default=LicenseStatus.active)
+    price_paid = Column(Float, default=0.0)
+    issued_date = Column(DateTime(timezone=True), server_default=func.now())
+    expiry_date = Column(DateTime(timezone=True), nullable=True)
+    terms = Column(Text, nullable=True)
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    beat = relationship("Beat", backref="licenses")
+    user = relationship("User", backref="licenses")

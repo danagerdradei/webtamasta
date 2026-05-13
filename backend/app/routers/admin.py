@@ -74,6 +74,8 @@ def get_stats(db: Session = Depends(get_db), _: models.User = Depends(require_ad
         "total_bookings": db.query(models.Booking).count(),
         "pending_bookings": db.query(models.Booking).filter(models.Booking.status == models.BookingStatus.pending).count(),
         "total_packages": db.query(models.ServicePackage).count(),
+        "total_licenses": db.query(models.License).count(),
+        "active_licenses": db.query(models.License).filter(models.License.status == models.LicenseStatus.active).count(),
     }
 
 

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alquiler de Equipos — LatinTunes</title>
+  <meta name="description" content="Alquila equipos de grabación profesionales en LatinTunes: micrófonos, interfaces, monitores, auriculares y más. Tarifas por día y semana." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    .eq-filter-bar { display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .eq-pill { background:var(--bg3); border:1px solid var(--border); color:var(--text-muted); padding:0.4rem 1rem; border-radius:20px; font-size:0.82rem; cursor:pointer; transition:var(--transition); }
+    .eq-pill:hover, .eq-pill.active { background:rgba(168,184,200,0.15); border-color:var(--gold); color:var(--gold); }
+    .eq-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; }
+    .eq-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; transition:var(--transition); }
+    .eq-card:hover { border-color:var(--gold); transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,0.4); }
+    .eq-card-img { width:100%; height:160px; object-fit:cover; background:var(--bg3); display:flex; align-items:center; justify-content:center; font-size:3rem; color:var(--border); }
+    .eq-card-body { padding:1.25rem; }
+    .eq-category { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); margin-bottom:0.4rem; }
+    .eq-name { font-family:var(--font-display); font-size:1.05rem; text-transform:uppercase; color:var(--text); margin-bottom:0.25rem; }
+    .eq-brand { color:var(--text-muted); font-size:0.82rem; margin-bottom:0.75rem; }
+    .eq-rates { display:flex; gap:1rem; margin-bottom:1rem; }
+    .eq-rate { flex:1; background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:0.5rem; text-align:center; }
+    .eq-rate-label { font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; }
+    .eq-rate-value { font-family:var(--font-display); font-size:1rem; color:var(--gold); }
+    .eq-avail { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.78rem; margin-bottom:0.75rem; }
+    .eq-avail.yes { color:#4caf50; }
+    .eq-avail.no { color:var(--red-light); }
+    .eq-empty { text-align:center; padding:4rem 2rem; color:var(--text-muted); grid-column:1/-1; }
+    @media(max-width:768px){ .eq-grid{ grid-template-columns:1fr 1fr; } }
+    @media(max-width:480px){ .eq-grid{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="loader-overlay" id="page-loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Equipos</div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-tag"><i class="fas fa-microphone"></i> Renta profesional</div>
+    <h1>Alquiler de <span>Equipos</span></h1>
+    <p>Equipos de grabación profesional por día o semana</p>
+  </div>
+</section>
+
+<!-- ══ INFO BANNER ══════════════════════════════════════════════════════════ -->
+<div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:1rem 0;">
+  <div class="container">
+    <div style="display:flex;gap:2rem;flex-wrap:wrap;align-items:center;justify-content:center;font-size:0.85rem;color:var(--text-muted);">
+      <span><i class="fas fa-shield-alt" style="color:var(--gold);margin-right:0.4rem;"></i>Depósito de garantía requerido</span>
+      <span><i class="fas fa-truck" style="color:var(--gold);margin-right:0.4rem;"></i>Entrega a domicilio disponible</span>
+      <span><i class="fas fa-clock" style="color:var(--gold);margin-right:0.4rem;"></i>Mínimo 1 día de alquiler</span>
+      <span><i class="fas fa-phone-alt" style="color:var(--gold);margin-right:0.4rem;"></i>Reserva con 24h de anticipación</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CATÁLOGO ══════════════════════════════════════════════════════════════ -->
+<section style="padding:4rem 0;background:var(--bg);">
+  <div class="container">
+
+    <div class="eq-filter-bar" id="eq-filter-bar">
+      <button class="eq-pill active" data-cat="">Todos</button>
+    </div>
+
+    <div class="eq-grid" id="eq-grid">
+      <div class="eq-empty"><div class="loader-ring" style="margin:0 auto 1rem;"></div>Cargando equipos...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══════════════════════════════════════════════════════════════════ -->
+<section style="padding:3.5rem 0;background:var(--bg2);border-top:1px solid var(--border);text-align:center;">
+  <div class="container reveal">
+    <h2 style="font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2.2rem);text-transform:uppercase;margin-bottom:0.75rem;">
+      ¿No encuentras el equipo que buscas?
+    </h2>
+    <p style="color:var(--text-muted);margin-bottom:1.75rem;max-width:480px;margin-left:auto;margin-right:auto;">Escríbenos y buscamos la solución para tu proyecto.</p>
+    <a href="contact.html" class="btn btn-primary"><i class="fas fa-envelope"></i> Contáctanos</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo-wrap" style="margin-bottom:0.75rem;">
+          <img src="../img/LatinTunes.jpeg" alt="LatinTunes" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+          <span style="font-family:var(--font-display);font-size:1.2rem;">LATIN<span style="color:var(--gold);">TUNES</span></span>
+        </div>
+        <p>Productora Musical Profesional. Equipos de calidad para tus sesiones.</p>
+      </div>
+      <div>
+        <div class="footer-title">Servicios</div>
+        <ul class="footer-links">
+          <li><a href="services.html">Portafolio</a></li>
+          <li><a href="booking.html">Reservar Sesión</a></li>
+          <li><a href="packages.html">Paquetes y Planes</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Estudio</div>
+        <ul class="footer-links">
+          <li><a href="about.html">Nosotros</a></li>
+          <li><a href="contact.html">Contacto</a></li>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 LatinTunes. Todos los derechos reservados.</span>
+      <span style="color:var(--gold);">Productora Musical Profesional</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+const CAT_ICONS = {
+  'Micrófonos':'fa-microphone-alt','Interfaces de Audio':'fa-plug','Monitores':'fa-volume-up',
+  'Auriculares':'fa-headphones','Controladores MIDI':'fa-keyboard','Instrumentos':'fa-guitar',
+  'Procesadores / Outboard':'fa-sliders-h','Cables y Accesorios':'fa-plug','Iluminación':'fa-lightbulb','Cámaras / Video':'fa-video'
+};
+let allEq = [];
+let activeFilter = '';
+
+function fmtCOP(v){ return v > 0 ? '$' + v.toLocaleString('es-CO') : 'Consultar'; }
+
+function renderEq(list){
+  const grid = document.getElementById('eq-grid');
+  if (!list.length){
+    grid.innerHTML = '<div class="eq-empty"><i class="fas fa-search" style="font-size:2.5rem;margin-bottom:1rem;display:block;"></i>Sin equipos en esta categoría.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(eq => `
+    <div class="eq-card">
+      <div class="eq-card-img">
+        ${eq.image_url
+          ? `<img src="${eq.image_url}" alt="${eq.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" /><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:3rem;color:var(--border);"><i class="fas ${CAT_ICONS[eq.category]||'fa-music'}"></i></div>`
+          : `<i class="fas ${CAT_ICONS[eq.category]||'fa-music'}"></i>`
+        }
+      </div>
+      <div class="eq-card-body">
+        <div class="eq-category">${eq.category || 'Equipo'}</div>
+        <div class="eq-name">${eq.name}</div>
+        ${eq.brand ? `<div class="eq-brand"><i class="fas fa-tag" style="margin-right:0.3rem;"></i>${eq.brand}</div>` : ''}
+        <div class="eq-avail ${eq.is_available && eq.quantity_available > 0 ? 'yes' : 'no'}">
+          <i class="fas fa-circle" style="font-size:0.5rem;"></i>
+          ${eq.is_available && eq.quantity_available > 0 ? `Disponible (${eq.quantity_available} uds)` : 'No disponible'}
+        </div>
+        <div class="eq-rates">
+          <div class="eq-rate"><div class="eq-rate-label">Por día</div><div class="eq-rate-value">${fmtCOP(eq.daily_rate)}</div></div>
+          <div class="eq-rate"><div class="eq-rate-label">Por semana</div><div class="eq-rate-value">${fmtCOP(eq.weekly_rate)}</div></div>
+        </div>
+        <a href="booking.html?service=equipment_rental" class="btn btn-primary" style="width:100%;font-size:0.85rem;">
+          <i class="fas fa-calendar-check"></i> Solicitar alquiler
+        </a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterEq(cat){
+  activeFilter = cat;
+  document.querySelectorAll('.eq-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === cat));
+  renderEq(cat ? allEq.filter(e => e.category === cat) : allEq);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initSharedNavbar('equipment', true);
+  hideLoader();
+
+  try {
+    const [cats, eq] = await Promise.all([api.getEquipmentCategories(), api.getEquipment()]);
+    allEq = eq;
+
+    // Build category pills
+    const bar = document.getElementById('eq-filter-bar');
+    const used = [...new Set(eq.map(e => e.category).filter(Boolean))];
+    used.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'eq-pill';
+      btn.dataset.cat = cat;
+      btn.textContent = cat;
+      btn.onclick = () => filterEq(cat);
+      bar.appendChild(btn);
+    });
+    bar.querySelector('[data-cat=""]').onclick = () => filterEq('');
+
+    renderEq(allEq);
+  } catch (err) {
+    document.getElementById('eq-grid').innerHTML =
+      '<div class="eq-empty"><i class="fas fa-exclamation-triangle" style="font-size:2rem;margin-bottom:1rem;display:block;color:var(--red-light);"></i>No se pudo cargar el catálogo. <a href="contact.html">Contáctanos directamente.</a></div>';
+  }
+});
+</script>
+</body>
+</html>

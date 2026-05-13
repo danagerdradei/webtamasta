@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paquetes y Planes — LatinTunes</title>
+  <meta name="description" content="Paquetes combinados de LatinTunes con hasta 30% de descuento: grabación + mezcla + masterización y más. Elige el plan ideal para tu proyecto." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    .pkg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.75rem;
+    }
+    .pkg-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: var(--transition);
+    }
+    .pkg-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .pkg-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(168,184,200,0.06) 0%, var(--bg2) 100%);
+    }
+    .pkg-featured-badge {
+      position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: var(--bg);
+      font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
+      padding: 0.2rem 1.2rem; border-radius: 0 0 8px 8px;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+    .pkg-discount-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(76,175,80,0.15); border: 1px solid rgba(76,175,80,0.4);
+      color: #4caf50; font-size: 0.75rem; font-weight: 700;
+      padding: 0.2rem 0.65rem; border-radius: 20px;
+    }
+    .pkg-name {
+      font-family: var(--font-display); font-size: 1.3rem;
+      text-transform: uppercase; color: var(--text);
+      margin-bottom: 0.5rem; margin-top: 0.5rem;
+    }
+    .pkg-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.7; margin-bottom: 1.25rem; flex: 1; }
+    .pkg-services {
+      list-style: none; margin-bottom: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .pkg-services li {
+      display: flex; align-items: center; gap: 0.5rem;
+      color: var(--text-muted); font-size: 0.84rem;
+    }
+    .pkg-services li i { color: var(--gold); font-size: 0.72rem; flex-shrink: 0; }
+    .pkg-pricing { margin-bottom: 1.5rem; }
+    .pkg-original { color: var(--text-muted); font-size: 0.85rem; text-decoration: line-through; margin-bottom: 0.2rem; }
+    .pkg-price {
+      font-family: var(--font-display); font-size: 1.8rem;
+      color: var(--gold); line-height: 1;
+    }
+    .pkg-price span { font-family: var(--font-body); font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+    .pkg-savings {
+      display: inline-block; margin-top: 0.4rem;
+      background: rgba(76,175,80,0.1); color: #4caf50;
+      font-size: 0.78rem; padding: 0.15rem 0.5rem; border-radius: 4px;
+    }
+    .pkg-empty { text-align: center; padding: 4rem 2rem; color: var(--text-muted); grid-column: 1/-1; }
+    .compare-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+    .compare-table th, .compare-table td {
+      padding: 0.75rem 1rem; text-align: center;
+      border: 1px solid var(--border); font-size: 0.86rem;
+    }
+    .compare-table th {
+      background: var(--bg3); color: var(--gold);
+      font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .compare-table td:first-child { text-align: left; color: var(--text-muted); }
+    .compare-table td { color: var(--text-muted); }
+    .compare-table .check { color: #4caf50; font-size: 1rem; }
+    .compare-table .dash { color: var(--border); }
+    .compare-table tr:hover td { background: rgba(168,184,200,0.03); }
+    @media (max-width: 768px) { .pkg-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="loader-overlay" id="page-loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Paquetes</div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-tag"><i class="fas fa-tags"></i> Planes y precios</div>
+    <h1>Paquetes y <span>Planes</span></h1>
+    <p>Combina servicios y ahorra hasta un 30% en tu proyecto musical</p>
+  </div>
+</section>
+
+<!-- ══ VENTAJAS ══════════════════════════════════════════════════════════════ -->
+<div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:1rem 0;">
+  <div class="container">
+    <div style="display:flex;gap:2rem;flex-wrap:wrap;align-items:center;justify-content:center;font-size:0.85rem;color:var(--text-muted);">
+      <span><i class="fas fa-percentage" style="color:var(--gold);margin-right:0.4rem;"></i>Hasta 30% de descuento</span>
+      <span><i class="fas fa-check-circle" style="color:var(--gold);margin-right:0.4rem;"></i>Servicios combinados</span>
+      <span><i class="fas fa-headset" style="color:var(--gold);margin-right:0.4rem;"></i>Asesoría personalizada</span>
+      <span><i class="fas fa-star" style="color:var(--gold);margin-right:0.4rem;"></i>Precio especial garantizado</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAQUETES DINÁMICOS ════════════════════════════════════════════════════ -->
+<section style="padding:4rem 0;background:var(--bg);">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:2.5rem;">
+      <h2 class="section-title">Nuestros <span>Paquetes</span></h2>
+      <p class="section-subtitle">Diseñados para maximizar tu inversión</p>
+    </div>
+    <div class="pkg-grid" id="pkg-grid">
+      <div class="pkg-empty"><div class="loader-ring" style="margin:0 auto 1rem;"></div>Cargando paquetes...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PAQUETES ESTÁTICOS (fallback) ════════════════════════════════════════ -->
+<section id="static-packages" style="padding:0 0 4rem;background:var(--bg);display:none;">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:2.5rem;">
+      <p class="section-subtitle" style="color:var(--gold);">Planes recomendados</p>
+    </div>
+    <div class="pkg-grid">
+
+      <!-- Starter -->
+      <div class="pkg-card reveal">
+        <div class="pkg-discount-badge">10% OFF</div>
+        <div class="pkg-name">Starter</div>
+        <div class="pkg-desc">Para artistas que están comenzando. Graba tu primera canción con calidad profesional.</div>
+        <ul class="pkg-services">
+          <li><i class="fas fa-check-circle"></i> 2h Captación de Voces</li>
+          <li><i class="fas fa-check-circle"></i> Mezcla básica</li>
+          <li><i class="fas fa-check-circle"></i> Archivo WAV final</li>
+        </ul>
+        <div class="pkg-pricing">
+          <div class="pkg-original">$200.000 COP</div>
+          <div class="pkg-price">$180.000 <span>COP</span></div>
+          <div class="pkg-savings"><i class="fas fa-piggy-bank"></i> Ahorras $20.000</div>
+        </div>
+        <a href="booking.html?service=vocal_recording" class="btn btn-secondary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Solicitar
+        </a>
+      </div>
+
+      <!-- Pro -->
+      <div class="pkg-card featured reveal">
+        <div class="pkg-featured-badge"><i class="fas fa-star"></i> Más popular</div>
+        <div class="pkg-discount-badge">20% OFF</div>
+        <div class="pkg-name">Pro Studio</div>
+        <div class="pkg-desc">El paquete más completo para una producción terminada y lista para distribución digital.</div>
+        <ul class="pkg-services">
+          <li><i class="fas fa-check-circle"></i> 4h Captación de Voces</li>
+          <li><i class="fas fa-check-circle"></i> Mezcla profesional</li>
+          <li><i class="fas fa-check-circle"></i> Masterización</li>
+          <li><i class="fas fa-check-circle"></i> Stems y archivos finales</li>
+        </ul>
+        <div class="pkg-pricing">
+          <div class="pkg-original">$480.000 COP</div>
+          <div class="pkg-price">$384.000 <span>COP</span></div>
+          <div class="pkg-savings"><i class="fas fa-piggy-bank"></i> Ahorras $96.000</div>
+        </div>
+        <a href="booking.html?service=vocal_recording" class="btn btn-primary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Solicitar
+        </a>
+      </div>
+
+      <!-- Full Production -->
+      <div class="pkg-card reveal">
+        <div class="pkg-discount-badge">30% OFF</div>
+        <div class="pkg-name">Full Production</div>
+        <div class="pkg-desc">Producción completa desde cero: beat personalizado, grabación, mezcla, master y video para redes.</div>
+        <ul class="pkg-services">
+          <li><i class="fas fa-check-circle"></i> Beat personalizado</li>
+          <li><i class="fas fa-check-circle"></i> 6h Captación de Voces</li>
+          <li><i class="fas fa-check-circle"></i> Mezcla y Masterización</li>
+          <li><i class="fas fa-check-circle"></i> Video/Reel para redes</li>
+        </ul>
+        <div class="pkg-pricing">
+          <div class="pkg-original">$700.000 COP</div>
+          <div class="pkg-price">$490.000 <span>COP</span></div>
+          <div class="pkg-savings"><i class="fas fa-piggy-bank"></i> Ahorras $210.000</div>
+        </div>
+        <a href="booking.html?service=vocal_recording" class="btn btn-secondary" style="width:100%;">
+          <i class="fas fa-calendar-check"></i> Solicitar
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ TABLA COMPARATIVA ══════════════════════════════════════════════════════ -->
+<section style="padding:4rem 0;background:var(--bg2);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:2rem;">
+      <h2 class="section-title">¿Qué <span>incluye</span> cada plan?</h2>
+      <p class="section-subtitle">Compara y elige el que se adapta a tu proyecto</p>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="compare-table reveal">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Característica</th>
+            <th>Starter</th>
+            <th>Pro Studio</th>
+            <th>Full Production</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Captación de Voces</td><td>2h</td><td>4h</td><td>6h</td></tr>
+          <tr><td>Beat personalizado</td><td class="dash">—</td><td class="dash">—</td><td><i class="fas fa-check check"></i></td></tr>
+          <tr><td>Mezcla</td><td>Básica</td><td>Profesional</td><td>Profesional</td></tr>
+          <tr><td>Masterización</td><td class="dash">—</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td></tr>
+          <tr><td>Video / Reel</td><td class="dash">—</td><td class="dash">—</td><td><i class="fas fa-check check"></i></td></tr>
+          <tr><td>Stems y archivos WAV</td><td class="dash">—</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td></tr>
+          <tr><td>Revisiones incluidas</td><td>1</td><td>2</td><td>3</td></tr>
+          <tr><td>Descuento</td><td style="color:#4caf50;">10%</td><td style="color:#4caf50;">20%</td><td style="color:#4caf50;">30%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA PERSONALIZADO ══════════════════════════════════════════════════════ -->
+<section style="padding:4rem 0;background:var(--bg);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;" class="reveal">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2.2rem);text-transform:uppercase;margin-bottom:0.75rem;">
+          ¿Necesitas un <span style="color:var(--gold);">plan personalizado?</span>
+        </h2>
+        <p style="color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;">
+          Si tu proyecto tiene requerimientos especiales o quieres combinar servicios a tu medida, escríbenos y armamos un presupuesto exclusivo para ti.
+        </p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-primary"><i class="fas fa-envelope"></i> Consultar precio especial</a>
+          <a href="booking.html" class="btn btn-secondary"><i class="fas fa-calendar-check"></i> Reservar sesión</a>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;">
+        <div style="font-family:var(--font-display);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);margin-bottom:1rem;">
+          <i class="fas fa-gift"></i> Lo que obtienes siempre
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div style="display:flex;gap:0.75rem;align-items:center;font-size:0.87rem;color:var(--text-muted);">
+            <i class="fas fa-check-circle" style="color:var(--gold);flex-shrink:0;"></i> Asesoría previa sin costo
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center;font-size:0.87rem;color:var(--text-muted);">
+            <i class="fas fa-check-circle" style="color:var(--gold);flex-shrink:0;"></i> Pago coordinado con el equipo
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center;font-size:0.87rem;color:var(--text-muted);">
+            <i class="fas fa-check-circle" style="color:var(--gold);flex-shrink:0;"></i> Confirmación en menos de 24h
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center;font-size:0.87rem;color:var(--text-muted);">
+            <i class="fas fa-check-circle" style="color:var(--gold);flex-shrink:0;"></i> Archivos en alta calidad
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center;font-size:0.87rem;color:var(--text-muted);">
+            <i class="fas fa-check-circle" style="color:var(--gold);flex-shrink:0;"></i> Soporte post-sesión
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo-wrap" style="margin-bottom:0.75rem;">
+          <img src="../img/LatinTunes.jpeg" alt="LatinTunes" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+          <span style="font-family:var(--font-display);font-size:1.2rem;">LATIN<span style="color:var(--gold);">TUNES</span></span>
+        </div>
+        <p>Productora Musical Profesional. Planes y paquetes para todos los proyectos.</p>
+      </div>
+      <div>
+        <div class="footer-title">Servicios</div>
+        <ul class="footer-links">
+          <li><a href="services.html">Portafolio</a></li>
+          <li><a href="booking.html">Reservar Sesión</a></li>
+          <li><a href="equipment.html">Alquiler de Equipos</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Estudio</div>
+        <ul class="footer-links">
+          <li><a href="about.html">Nosotros</a></li>
+          <li><a href="contact.html">Contacto</a></li>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 LatinTunes. Todos los derechos reservados.</span>
+      <span style="color:var(--gold);">Productora Musical Profesional</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+function fmtCOP(v) { return v > 0 ? '$' + v.toLocaleString('es-CO') : 'Consultar'; }
+
+function renderPackages(list) {
+  const grid = document.getElementById('pkg-grid');
+  if (!list.length) {
+    grid.style.display = 'none';
+    document.getElementById('static-packages').style.display = 'block';
+    return;
+  }
+  grid.innerHTML = list.map(pkg => {
+    const services = pkg.services_included ? (() => { try { return JSON.parse(pkg.services_included); } catch(e) { return [pkg.services_included]; } })() : [];
+    const savings = pkg.original_price > pkg.discounted_price ? pkg.original_price - pkg.discounted_price : 0;
+    return `
+    <div class="pkg-card${pkg.is_featured ? ' featured' : ''} reveal">
+      ${pkg.is_featured ? '<div class="pkg-featured-badge"><i class="fas fa-star"></i> Más popular</div>' : ''}
+      ${pkg.discount_pct > 0 ? `<div class="pkg-discount-badge">${pkg.discount_pct}% OFF</div>` : ''}
+      <div class="pkg-name">${pkg.name}</div>
+      ${pkg.description ? `<div class="pkg-desc">${pkg.description}</div>` : '<div class="pkg-desc"></div>'}
+      <ul class="pkg-services">
+        ${services.map(s => `<li><i class="fas fa-check-circle"></i> ${s}</li>`).join('')}
+      </ul>
+      <div class="pkg-pricing">
+        ${pkg.original_price > pkg.discounted_price ? `<div class="pkg-original">${fmtCOP(pkg.original_price)} COP</div>` : ''}
+        <div class="pkg-price">${fmtCOP(pkg.discounted_price)} <span>COP</span></div>
+        ${savings > 0 ? `<div class="pkg-savings"><i class="fas fa-piggy-bank"></i> Ahorras ${fmtCOP(savings)}</div>` : ''}
+      </div>
+      <a href="booking.html" class="btn ${pkg.is_featured ? 'btn-primary' : 'btn-secondary'}" style="width:100%;">
+        <i class="fas fa-calendar-check"></i> Solicitar paquete
+      </a>
+    </div>`;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initSharedNavbar('packages', true);
+  initScrollReveal();
+  hideLoader();
+
+  try {
+    const packages = await api.getPackages();
+    renderPackages(packages.filter(p => p.is_active));
+  } catch (err) {
+    document.getElementById('pkg-grid').style.display = 'none';
+    document.getElementById('static-packages').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>

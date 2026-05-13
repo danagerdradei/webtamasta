@@ -12,18 +12,19 @@ function buildNavbarHTML(isSubPage = false) {
 <nav class="navbar" id="navbar">
   <div class="container">
     <a href="${root}index.html" class="nav-logo-wrap">
-      <img src="${root}img/LatinTunes.jpeg" alt="LatinTunes" style="width:38px;height:38px;border-radius:50%;display:block;flex-shrink:0;object-fit:cover;" />
+      <img src="${root}img/LatinTunes.jpeg" alt="LatinTunes"
+        style="width:38px;height:38px;border-radius:50%;display:block;flex-shrink:0;object-fit:cover;" />
       <span class="nav-logo-text">LATIN<span>TUNES</span></span>
     </a>
     <ul class="nav-links" id="nav-links">
-      <li><a href="${root}index.html" data-page="home"><i class="fas fa-home"></i> Inicio</a></li>
-      <li><a href="${pages}services.html" data-page="services"><i class="fas fa-music"></i> Servicios</a></li>
-      <li><a href="${pages}booking.html" data-page="booking"><i class="fas fa-calendar-check"></i> Reservar</a></li>
-      <li><a href="${pages}beats.html" data-page="beats"><i class="fas fa-drum"></i> Beats</a></li>
-      <li><a href="${pages}discography.html" data-page="discography"><i class="fas fa-compact-disc"></i> Discografía</a></li>
-      <li><a href="${pages}music.html" data-page="music"><i class="fas fa-headphones"></i> Música</a></li>
-      <li><a href="${pages}videos.html" data-page="videos"><i class="fas fa-film"></i> Videos</a></li>
-      <li><a href="${pages}contact.html" data-page="contact"><i class="fas fa-envelope"></i> Contacto</a></li>
+      <li><a href="${root}index.html"          data-page="home"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="${pages}services.html"       data-page="services"><i class="fas fa-music"></i> Servicios</a></li>
+      <li><a href="${pages}booking.html"        data-page="booking"><i class="fas fa-calendar-check"></i> Reservar</a></li>
+      <li><a href="${pages}beats.html"          data-page="beats"><i class="fas fa-drum"></i> Beats</a></li>
+      <li><a href="${pages}equipment.html"      data-page="equipment"><i class="fas fa-microphone"></i> Equipos</a></li>
+      <li><a href="${pages}packages.html"       data-page="packages"><i class="fas fa-tags"></i> Paquetes</a></li>
+      <li><a href="${pages}about.html"          data-page="about"><i class="fas fa-building"></i> Nosotros</a></li>
+      <li><a href="${pages}contact.html"        data-page="contact"><i class="fas fa-envelope"></i> Contacto</a></li>
       <li class="nav-mobile-auth" id="nav-mobile-auth"></li>
     </ul>
     <div class="nav-auth" id="nav-auth"></div>
@@ -36,12 +37,10 @@ function buildNavbarHTML(isSubPage = false) {
 
 function initSharedNavbar(currentPage = '', isSubPage = false) {
   document.body.insertAdjacentHTML('afterbegin', buildNavbarHTML(isSubPage));
-
   if (currentPage) {
     const activeLink = document.querySelector(`[data-page="${currentPage}"]`);
     if (activeLink) activeLink.classList.add('active');
   }
-
   initNavbar();
   updateNavAuth();
 }

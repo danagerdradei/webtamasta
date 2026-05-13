@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional, List
 from datetime import datetime
-from .models import UserRole, ServiceCategory, BookingStatus
+from .models import UserRole, ServiceCategory, BookingStatus, LicenseType, LicenseStatus
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
@@ -267,6 +267,50 @@ class EquipmentOut(BaseModel):
     is_available: bool
     quantity_total: int
     quantity_available: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ── Licenses ──────────────────────────────────────────────────────────────────
+
+class LicenseCreate(BaseModel):
+    client_name: str
+    client_email: EmailStr
+    beat_id: Optional[int] = None
+    beat_title: Optional[str] = None
+    license_type: LicenseType = LicenseType.basic
+    price_paid: float = 0.0
+    expiry_date: Optional[datetime] = None
+    terms: Optional[str] = None
+    notes: Optional[str] = None
+
+
+class LicenseAdminUpdate(BaseModel):
+    status: Optional[LicenseStatus] = None
+    license_type: Optional[LicenseType] = None
+    price_paid: Optional[float] = None
+    expiry_date: Optional[datetime] = None
+    terms: Optional[str] = None
+    notes: Optional[str] = None
+
+
+class LicenseOut(BaseModel):
+    id: int
+    license_number: str
+    beat_id: Optional[int] = None
+    user_id: Optional[int] = None
+    client_name: str
+    client_email: str
+    beat_title: Optional[str] = None
+    license_type: LicenseType
+    status: LicenseStatus
+    price_paid: float
+    issued_date: datetime
+    expiry_date: Optional[datetime] = None
+    terms: Optional[str] = None
+    notes: Optional[str] = None
     created_at: datetime
 
     class Config:

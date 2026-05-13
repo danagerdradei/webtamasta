@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar Sesión — LatinTunes</title>
+  <meta name="description" content="Reserva tu sesión de grabación en LatinTunes. Captación de voces, mezcla, masterización, beats y más." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <style>
+    .booking-layout { display: grid; grid-template-columns: 1fr 360px; gap: 2.5rem; align-items: start; }
+    .booking-form-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; }
+    .booking-info { display: flex; flex-direction: column; gap: 1.25rem; }
+    .info-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .info-card-title { font-family: var(--font-display); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .info-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.88rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row i { color: var(--gold); width: 18px; text-align: center; flex-shrink: 0; }
+    .step-badge { background: var(--gold); color: var(--bg); width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; margin-right: 0.5rem; }
+    .booking-success { display: none; text-align: center; padding: 3rem 2rem; }
+    .booking-success i { font-size: 4rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+    @media (max-width: 900px) { .booking-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="loader-overlay" id="page-loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Reservar</div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-tag"><i class="fas fa-calendar-check"></i> Agenda tu espacio</div>
+    <h1>Reservar <span>Sesión</span></h1>
+    <p>Completa el formulario y nos ponemos en contacto en menos de 24h</p>
+  </div>
+</section>
+
+<section style="padding: 4rem 0; background: var(--bg);">
+  <div class="container">
+    <div class="booking-layout">
+
+      <!-- Form -->
+      <div class="booking-form-wrap">
+        <div id="booking-form-container">
+          <h2 style="font-family:var(--font-display);font-size:1.4rem;text-transform:uppercase;margin-bottom:0.25rem;">
+            <span class="step-badge">1</span> Datos de contacto
+          </h2>
+          <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.75rem;padding-left:2.25rem;">Cuéntanos quién eres y qué necesitas</p>
+
+          <div id="booking-alert"></div>
+
+          <form id="booking-form" novalidate>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group" style="grid-column:1/-1;">
+                <label class="form-label">Nombre completo *</label>
+                <input class="form-input" id="bk-name" placeholder="Tu nombre" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Correo electrónico *</label>
+                <input type="email" class="form-input" id="bk-email" placeholder="tu@email.com" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Teléfono / WhatsApp</label>
+                <input class="form-input" id="bk-phone" placeholder="+57 300 000 0000" />
+              </div>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;" />
+
+            <h2 style="font-family:var(--font-display);font-size:1.4rem;text-transform:uppercase;margin-bottom:0.25rem;">
+              <span class="step-badge">2</span> Tipo de sesión
+            </h2>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.75rem;padding-left:2.25rem;">¿Qué servicio necesitas?</p>
+
+            <div class="form-group">
+              <label class="form-label">Servicio *</label>
+              <select class="form-input" id="bk-service" required>
+                <option value="" disabled selected>Selecciona un servicio</option>
+                <option value="vocal_recording">🎤 Captación de Voces</option>
+                <option value="beat_creation">🥁 Creación de Beats</option>
+                <option value="mixing">🎚️ Mezcla</option>
+                <option value="mastering">💿 Masterización</option>
+                <option value="multimedia">🎬 Multimedia (Reels / Cortos)</option>
+                <option value="mobile_recording">🚐 Grabación Móvil a Domicilio</option>
+                <option value="equipment_rental">🎧 Alquiler de Equipos</option>
+              </select>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group">
+                <label class="form-label">Fecha deseada *</label>
+                <input type="datetime-local" class="form-input" id="bk-date" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Duración estimada</label>
+                <select class="form-input" id="bk-duration">
+                  <option value="1">1 hora</option>
+                  <option value="2" selected>2 horas</option>
+                  <option value="3">3 horas</option>
+                  <option value="4">4 horas (medio día)</option>
+                  <option value="8">8 horas (día completo)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Descripción del proyecto / Notas adicionales</label>
+              <textarea class="form-input" id="bk-notes" rows="4"
+                placeholder="Cuéntanos sobre tu proyecto: género musical, artistas involucrados, referencias de sonido, lugar de grabación (si es móvil), etc."></textarea>
+            </div>
+
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;font-size:0.83rem;color:var(--text-muted);">
+              <i class="fas fa-info-circle" style="color:var(--gold);margin-right:0.4rem;"></i>
+              Al enviar esta solicitud recibirás confirmación por email en menos de 24 horas. El pago se coordina directamente con el equipo.
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;" id="bk-btn">
+              <i class="fas fa-paper-plane"></i> Enviar solicitud de reserva
+            </button>
+          </form>
+        </div>
+
+        <!-- Success state -->
+        <div class="booking-success" id="booking-success">
+          <i class="fas fa-check-circle"></i>
+          <h2 style="font-family:var(--font-display);font-size:1.8rem;text-transform:uppercase;margin-bottom:0.75rem;">
+            ¡Solicitud <span style="color:var(--gold);">enviada!</span>
+          </h2>
+          <p style="color:var(--text-muted);line-height:1.7;margin-bottom:2rem;">
+            Recibimos tu solicitud. Nuestro equipo revisará la disponibilidad y te contactará en menos de 24 horas para confirmar los detalles y el pago.
+          </p>
+          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+            <a href="services.html" class="btn btn-secondary"><i class="fas fa-music"></i> Ver más servicios</a>
+            <a href="../index.html" class="btn btn-primary"><i class="fas fa-home"></i> Inicio</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info sidebar -->
+      <div class="booking-info">
+        <div class="info-card">
+          <div class="info-card-title"><i class="fas fa-clock"></i> Horarios</div>
+          <div class="info-row"><i class="fas fa-sun"></i> Lunes a Viernes: 8am – 9pm</div>
+          <div class="info-row"><i class="fas fa-star"></i> Sábados: 9am – 6pm</div>
+          <div class="info-row"><i class="fas fa-moon"></i> Domingos: Bajo solicitud</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><i class="fas fa-map-marker-alt"></i> Ubicación</div>
+          <div class="info-row"><i class="fas fa-city"></i> Medellín, Antioquia</div>
+          <div class="info-row"><i class="fas fa-truck"></i> Grabación móvil disponible</div>
+          <div class="info-row"><i class="fas fa-car"></i> Parqueadero cercano</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><i class="fas fa-phone-alt"></i> Contacto rápido</div>
+          <div class="info-row"><i class="fab fa-whatsapp"></i> WhatsApp directo</div>
+          <div class="info-row"><i class="fas fa-envelope"></i> info@latintunes.com</div>
+          <div class="info-row"><i class="fab fa-instagram"></i> @latintunes</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><i class="fas fa-tags"></i> ¿Quieres ahorrar?</div>
+          <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.6;margin-bottom:1rem;">Consulta nuestros paquetes combinados con descuentos de hasta el 30%.</p>
+          <a href="packages.html" class="btn btn-secondary" style="width:100%;font-size:0.85rem;">
+            <i class="fas fa-tags"></i> Ver Paquetes
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo-wrap" style="margin-bottom:0.75rem;">
+          <img src="../img/LatinTunes.jpeg" alt="LatinTunes" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+          <span style="font-family:var(--font-display);font-size:1.2rem;">LATIN<span style="color:var(--gold);">TUNES</span></span>
+        </div>
+        <p>Productora Musical Profesional. Tu proyecto, nuestra pasión.</p>
+      </div>
+      <div>
+        <div class="footer-title">Servicios</div>
+        <ul class="footer-links">
+          <li><a href="services.html">Portafolio</a></li>
+          <li><a href="equipment.html">Alquiler de Equipos</a></li>
+          <li><a href="packages.html">Paquetes y Planes</a></li>
+          <li><a href="beats.html">Tienda de Beats</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Estudio</div>
+        <ul class="footer-links">
+          <li><a href="about.html">Nosotros</a></li>
+          <li><a href="contact.html">Contacto</a></li>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 LatinTunes. Todos los derechos reservados.</span>
+      <span style="color:var(--gold);">Productora Musical Profesional</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initSharedNavbar('booking', true);
+  initScrollReveal();
+  hideLoader();
+
+  // Pre-select service from URL param
+  const params = new URLSearchParams(window.location.search);
+  const svc = params.get('service');
+  if (svc) {
+    const sel = document.getElementById('bk-service');
+    if (sel) sel.value = svc;
+  }
+
+  // Set min date to now
+  const dateInput = document.getElementById('bk-date');
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  dateInput.min = now.toISOString().slice(0, 16);
+
+  document.getElementById('booking-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const alertEl = document.getElementById('booking-alert');
+    alertEl.innerHTML = '';
+
+    const name = document.getElementById('bk-name').value.trim();
+    const email = document.getElementById('bk-email').value.trim();
+    const phone = document.getElementById('bk-phone').value.trim();
+    const service = document.getElementById('bk-service').value;
+    const date = document.getElementById('bk-date').value;
+    const duration = parseFloat(document.getElementById('bk-duration').value);
+    const notes = document.getElementById('bk-notes').value.trim();
+
+    if (!name || !email || !service || !date) {
+      alertEl.innerHTML = '<div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> Completa los campos obligatorios.</div>';
+      return;
+    }
+
+    const btn = document.getElementById('bk-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+    const serviceLabels = {
+      vocal_recording: 'Captación de Voces', beat_creation: 'Creación de Beats',
+      mixing: 'Mezcla', mastering: 'Masterización', multimedia: 'Multimedia',
+      mobile_recording: 'Grabación Móvil', equipment_rental: 'Alquiler de Equipos'
+    };
+
+    try {
+      await api.createBooking({
+        client_name: name,
+        client_email: email,
+        client_phone: phone || null,
+        service_type: serviceLabels[service] || service,
+        booking_date: new Date(date).toISOString(),
+        duration_hours: duration,
+        notes: notes || null,
+      });
+      document.getElementById('booking-form-container').style.display = 'none';
+      document.getElementById('booking-success').style.display = 'block';
+    } catch (err) {
+      alertEl.innerHTML = `<div class="alert alert-error"><i class="fas fa-times-circle"></i> ${err.message}</div>`;
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar solicitud de reserva';
+    }
+  });
+});
+</script>
+</body>
+</html>

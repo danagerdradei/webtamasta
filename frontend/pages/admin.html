@@ -8,24 +8,28 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="../css/main.css" />
   <style>
-    .admin-layout { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 64px); padding-top:64px; }
-    .admin-sidebar { background:var(--bg2); border-right:1px solid var(--border); padding:1.5rem 0; position:sticky; top:64px; height:calc(100vh - 64px); overflow-y:auto; }
-    .sidebar-logo { padding:0 1.5rem 1.5rem; border-bottom:1px solid var(--border); margin-bottom:1rem; }
-    .sidebar-logo span { font-family:var(--font-display); font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.15em; }
-    .admin-menu-item { display:flex; align-items:center; gap:0.75rem; padding:0.75rem 1.5rem; color:var(--text-muted); cursor:pointer; transition:var(--transition); border-left:3px solid transparent; font-size:0.9rem; }
-    .admin-menu-item:hover, .admin-menu-item.active { color:var(--gold); background:rgba(212,160,23,0.07); border-left-color:var(--gold); }
-    .admin-menu-item i { width:20px; text-align:center; }
-    .admin-main { padding:2rem; overflow:auto; }
+    .admin-layout { display:grid; grid-template-columns:220px 1fr; min-height:calc(100vh - 64px); padding-top:64px; }
+    .admin-sidebar { background:var(--bg2); border-right:1px solid var(--border); padding:1.25rem 0; position:sticky; top:64px; height:calc(100vh - 64px); overflow-y:auto; }
+    .sidebar-section { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--text-muted); padding:0.75rem 1.25rem 0.4rem; }
+    .admin-menu-item { display:flex; align-items:center; gap:0.7rem; padding:0.65rem 1.25rem; color:var(--text-muted); cursor:pointer; transition:var(--transition); border-left:3px solid transparent; font-size:0.87rem; }
+    .admin-menu-item:hover, .admin-menu-item.active { color:var(--gold); background:rgba(168,184,200,0.07); border-left-color:var(--gold); }
+    .admin-menu-item i { width:18px; text-align:center; flex-shrink:0; }
+    .admin-main { padding:2rem; overflow:auto; background:var(--bg); }
     .section-panel { display:none; }
     .section-panel.active { display:block; }
-    .panel-title { font-size:1.5rem; margin-bottom:1.5rem; color:var(--text); }
+    .panel-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem; }
+    .panel-title { font-family:var(--font-display); font-size:1.4rem; text-transform:uppercase; color:var(--text); }
     .panel-title span { color:var(--gold); }
     .filter-bar { display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center; }
     .table-wrap { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; overflow-x:auto; }
-    .action-btn { background:none; border:1px solid var(--border); color:var(--text-muted); padding:0.3rem 0.6rem; border-radius:var(--radius); cursor:pointer; font-size:0.78rem; transition:var(--transition); }
+    .action-btn { background:none; border:1px solid var(--border); color:var(--text-muted); padding:0.28rem 0.55rem; border-radius:var(--radius); cursor:pointer; font-size:0.75rem; transition:var(--transition); white-space:nowrap; }
     .action-btn:hover { border-color:var(--gold); color:var(--gold); }
     .action-btn.danger:hover { border-color:var(--red); color:var(--red-light); }
-    @media(max-width:768px) { .admin-layout { grid-template-columns:1fr; } .admin-sidebar { position:static; height:auto; } }
+    .action-btn.success:hover { border-color:#4caf50; color:#4caf50; }
+    .status-pending { color:#f9a825; } .status-confirmed { color:#29b6f6; }
+    .status-in_progress { color:#ab47bc; } .status-completed { color:#4caf50; } .status-cancelled { color:var(--red-light); }
+    .license-active { color:#4caf50; } .license-expired { color:#f9a825; } .license-revoked { color:var(--red-light); } .license-pending { color:#29b6f6; }
+    @media(max-width:900px) { .admin-layout { grid-template-columns:1fr; } .admin-sidebar { position:static; height:auto; display:flex; flex-wrap:wrap; gap:0; padding:0.5rem; } .admin-menu-item { border-left:none; border-bottom:2px solid transparent; font-size:0.8rem; padding:0.5rem 0.75rem; } .admin-menu-item.active { border-bottom-color:var(--gold); } }
   </style>
 </head>
 <body>
@@ -34,12 +38,12 @@
 
 <!-- Confirm Modal -->
 <div class="modal-overlay" id="confirm-modal">
-  <div class="modal" style="max-width:400px;">
+  <div class="modal" style="max-width:420px;">
     <div class="modal-header">
       <h3 id="confirm-title">Confirmar acción</h3>
       <button class="modal-close" onclick="closeConfirm()"><i class="fas fa-times"></i></button>
     </div>
-    <p id="confirm-message" style="color:var(--text-muted); margin-bottom:1.5rem;"></p>
+    <p id="confirm-message" style="color:var(--text-muted);margin-bottom:1.5rem;white-space:pre-wrap;"></p>
     <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
       <button class="btn btn-secondary btn-sm" onclick="closeConfirm()">Cancelar</button>
       <button class="btn btn-danger btn-sm" id="confirm-ok-btn">Confirmar</button>
@@ -47,25 +51,25 @@
   </div>
 </div>
 
-<!-- Ban Reason Modal -->
+<!-- Ban Modal -->
 <div class="modal-overlay" id="ban-modal">
   <div class="modal" style="max-width:420px;">
     <div class="modal-header">
       <h3>Banear usuario</h3>
       <button class="modal-close" onclick="closeBanModal()"><i class="fas fa-times"></i></button>
     </div>
-    <p style="color:var(--text-muted); margin-bottom:1rem;">Ingresa el motivo del baneo (visible para el usuario):</p>
+    <p style="color:var(--text-muted);margin-bottom:1rem;">Motivo del baneo:</p>
     <div class="form-group">
       <textarea class="form-input" id="ban-reason-input" rows="3" placeholder="Motivo del baneo..."></textarea>
     </div>
-    <div style="display:flex;gap:0.75rem;justify-content:flex-end; margin-top:1rem;">
+    <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem;">
       <button class="btn btn-secondary btn-sm" onclick="closeBanModal()">Cancelar</button>
       <button class="btn btn-danger btn-sm" id="ban-confirm-btn">Banear</button>
     </div>
   </div>
 </div>
 
-<!-- Add Album Modal -->
+<!-- Album Modal -->
 <div class="modal-overlay" id="album-modal">
   <div class="modal">
     <div class="modal-header">
@@ -73,19 +77,16 @@
       <button class="modal-close" onclick="closeAlbumModal()"><i class="fas fa-times"></i></button>
     </div>
     <form id="album-form">
-      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="alb-title" required /></div>
-      <div class="form-group"><label class="form-label">Año</label><input type="number" class="form-input" id="alb-year" min="2000" max="2030" required /></div>
-      <div class="form-group"><label class="form-label">URL de portada</label><input class="form-input" id="alb-cover" placeholder="https://..." /></div>
-      <div class="form-group"><label class="form-label">URL de Spotify</label><input class="form-input" id="alb-spotify" placeholder="https://open.spotify.com/..." /></div>
-      <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-input" id="alb-desc" rows="3"></textarea></div>
-      <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;">
-        <input type="checkbox" id="alb-premium" style="width:auto;" />
-        <label for="alb-premium" class="form-label" style="margin:0;">Contenido Premium</label>
+      <div class="form-group"><label class="form-label">Título *</label><input class="form-input" id="alb-title" required /></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group"><label class="form-label">Año *</label><input type="number" class="form-input" id="alb-year" min="2000" max="2030" required /></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;padding-top:1.5rem;"><input type="checkbox" id="alb-premium" style="width:auto;" /><label for="alb-premium" class="form-label" style="margin:0;">Premium</label></div>
       </div>
+      <div class="form-group"><label class="form-label">URL portada</label><input class="form-input" id="alb-cover" placeholder="https://..." /></div>
+      <div class="form-group"><label class="form-label">URL Spotify</label><input class="form-input" id="alb-spotify" placeholder="https://open.spotify.com/..." /></div>
+      <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-input" id="alb-desc" rows="3"></textarea></div>
       <div id="album-form-alert"></div>
-      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;" id="album-form-btn">
-        <i class="fas fa-save"></i> Guardar álbum
-      </button>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" id="album-form-btn"><i class="fas fa-save"></i> Guardar</button>
     </form>
   </div>
 </div>
@@ -99,120 +100,172 @@
     </div>
     <form id="beat-form">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div class="form-group" style="grid-column:1/-1;">
-          <label class="form-label">Título</label>
-          <input class="form-input" id="bt-title" required placeholder="Nombre del beat" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Categoría</label>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Título *</label><input class="form-input" id="bt-title" required /></div>
+        <div class="form-group"><label class="form-label">Categoría *</label>
           <select class="form-input" id="bt-category" required>
-            <option value="" disabled selected>Seleccionar categoría</option>
-            <option>Boom Bap</option>
-            <option>Trap</option>
-            <option>Drill</option>
-            <option>UK Drill</option>
-            <option>Phonk</option>
-            <option>Lo-Fi Hip-Hop</option>
-            <option>G-Funk</option>
-            <option>East Coast</option>
-            <option>West Coast</option>
-            <option>Southern / Dirty South</option>
-            <option>Cloud Rap</option>
-            <option>Emo Rap / Sad Rap</option>
-            <option>Latin Trap</option>
-            <option>Afro Trap</option>
-            <option>R&amp;B / Neo Soul</option>
-            <option>Jazz Rap</option>
-            <option>Golden Era / Old School</option>
-            <option>Underground / Conscious</option>
-            <option>Gangsta Rap</option>
-            <option>Melodic Rap</option>
-            <option>Experimental / Abstract</option>
-            <option>Detroit Hip-Hop</option>
-            <option>Memphis Rap</option>
-            <option>Hyphy</option>
-            <option>Crunk</option>
-            <option>Instrumental Hip-Hop</option>
-            <option>New School</option>
-            <option>Afrobeats Fusion</option>
+            <option value="" disabled selected>Seleccionar</option>
+            <option>Boom Bap</option><option>Trap</option><option>Drill</option><option>UK Drill</option><option>Phonk</option>
+            <option>Lo-Fi Hip-Hop</option><option>G-Funk</option><option>East Coast</option><option>West Coast</option>
+            <option>Southern / Dirty South</option><option>Cloud Rap</option><option>Emo Rap / Sad Rap</option>
+            <option>Latin Trap</option><option>Afro Trap</option><option>R&amp;B / Neo Soul</option><option>Jazz Rap</option>
+            <option>Golden Era / Old School</option><option>Underground / Conscious</option><option>Gangsta Rap</option>
+            <option>Melodic Rap</option><option>Experimental / Abstract</option><option>Detroit Hip-Hop</option>
+            <option>Memphis Rap</option><option>Hyphy</option><option>Crunk</option><option>Instrumental Hip-Hop</option>
+            <option>New School</option><option>Afrobeats Fusion</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">BPM</label>
-          <input type="number" class="form-input" id="bt-bpm" min="40" max="300" placeholder="ej. 90" />
+        <div class="form-group"><label class="form-label">BPM</label><input type="number" class="form-input" id="bt-bpm" min="40" max="300" placeholder="ej. 90" /></div>
+        <div class="form-group"><label class="form-label">Clave musical</label>
+          <select class="form-input" id="bt-key"><option value="">Sin especificar</option><option>C Major</option><option>C Minor</option><option>C# Major</option><option>C# Minor</option><option>D Major</option><option>D Minor</option><option>D# Major</option><option>D# Minor</option><option>E Major</option><option>E Minor</option><option>F Major</option><option>F Minor</option><option>F# Major</option><option>F# Minor</option><option>G Major</option><option>G Minor</option><option>G# Major</option><option>G# Minor</option><option>A Major</option><option>A Minor</option><option>A# Major</option><option>A# Minor</option><option>B Major</option><option>B Minor</option></select>
         </div>
-        <div class="form-group">
-          <label class="form-label">Clave musical</label>
-          <select class="form-input" id="bt-key">
-            <option value="">Sin especificar</option>
-            <option>C Major</option>
-            <option>C Minor</option>
-            <option>C# Major</option>
-            <option>C# Minor</option>
-            <option>D Major</option>
-            <option>D Minor</option>
-            <option>D# Major</option>
-            <option>D# Minor</option>
-            <option>E Major</option>
-            <option>E Minor</option>
-            <option>F Major</option>
-            <option>F Minor</option>
-            <option>F# Major</option>
-            <option>F# Minor</option>
-            <option>G Major</option>
-            <option>G Minor</option>
-            <option>G# Major</option>
-            <option>G# Minor</option>
-            <option>A Major</option>
-            <option>A Minor</option>
-            <option>A# Major</option>
-            <option>A# Minor</option>
-            <option>B Major</option>
-            <option>B Minor</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Precio (USD)</label>
-          <input type="number" class="form-input" id="bt-price" min="0" step="0.01" placeholder="0.00" value="0" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tags (separados por coma)</label>
-          <input class="form-input" id="bt-tags" placeholder="boom bap, sample, dark" />
-        </div>
-        <div class="form-group" style="grid-column:1/-1;">
-          <label class="form-label">URL de audio preview</label>
-          <input class="form-input" id="bt-audio" placeholder="https://..." />
-        </div>
-        <div class="form-group" style="grid-column:1/-1;">
-          <label class="form-label">URL de imagen de portada</label>
-          <input class="form-input" id="bt-image" placeholder="https://..." />
-        </div>
-        <div class="form-group" style="grid-column:1/-1;">
-          <label class="form-label">Descripción</label>
-          <textarea class="form-input" id="bt-desc" rows="2" placeholder="Describe el beat..."></textarea>
-        </div>
-        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;">
-          <input type="checkbox" id="bt-available" style="width:auto;" checked />
-          <label for="bt-available" class="form-label" style="margin:0;">Disponible</label>
-        </div>
-        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;">
-          <input type="checkbox" id="bt-exclusive" style="width:auto;" />
-          <label for="bt-exclusive" class="form-label" style="margin:0;">Exclusivo</label>
-        </div>
+        <div class="form-group"><label class="form-label">Precio (COP)</label><input type="number" class="form-input" id="bt-price" min="0" step="1000" value="0" /></div>
+        <div class="form-group"><label class="form-label">Tags</label><input class="form-input" id="bt-tags" placeholder="boom bap, sample, dark" /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">URL audio preview</label><input class="form-input" id="bt-audio" placeholder="https://..." /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">URL imagen</label><input class="form-input" id="bt-image" placeholder="https://..." /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Descripción</label><textarea class="form-input" id="bt-desc" rows="2"></textarea></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="bt-available" style="width:auto;" checked /><label for="bt-available" class="form-label" style="margin:0;">Disponible</label></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="bt-exclusive" style="width:auto;" /><label for="bt-exclusive" class="form-label" style="margin:0;">Exclusivo</label></div>
       </div>
       <div id="beat-form-alert"></div>
-      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.75rem;" id="beat-form-btn">
-        <i class="fas fa-save"></i> Guardar beat
-      </button>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.75rem;" id="beat-form-btn"><i class="fas fa-save"></i> Guardar beat</button>
     </form>
   </div>
 </div>
 
+<!-- Equipment Modal -->
+<div class="modal-overlay" id="equip-modal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h3 id="equip-modal-title">Nuevo equipo</h3>
+      <button class="modal-close" onclick="closeEquipModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="equip-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Nombre *</label><input class="form-input" id="eq-name" required /></div>
+        <div class="form-group"><label class="form-label">Categoría</label>
+          <select class="form-input" id="eq-cat">
+            <option value="">Sin categoría</option>
+            <option>Micrófonos</option><option>Interfaces de Audio</option><option>Monitores</option>
+            <option>Auriculares</option><option>Controladores MIDI</option><option>Instrumentos</option>
+            <option>Procesadores / Outboard</option><option>Cables y Accesorios</option><option>Iluminación</option><option>Cámaras / Video</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Marca</label><input class="form-input" id="eq-brand" placeholder="Shure, Focusrite..." /></div>
+        <div class="form-group"><label class="form-label">Tarifa por día (COP)</label><input type="number" class="form-input" id="eq-daily" min="0" step="1000" value="0" /></div>
+        <div class="form-group"><label class="form-label">Tarifa por semana (COP)</label><input type="number" class="form-input" id="eq-weekly" min="0" step="1000" value="0" /></div>
+        <div class="form-group"><label class="form-label">Depósito (COP)</label><input type="number" class="form-input" id="eq-deposit" min="0" step="1000" value="0" /></div>
+        <div class="form-group"><label class="form-label">Cantidad total</label><input type="number" class="form-input" id="eq-qty-total" min="1" value="1" /></div>
+        <div class="form-group"><label class="form-label">Cantidad disponible</label><input type="number" class="form-input" id="eq-qty-avail" min="0" value="1" /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">URL imagen</label><input class="form-input" id="eq-image" placeholder="https://..." /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Descripción</label><textarea class="form-input" id="eq-desc" rows="2"></textarea></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="eq-available" style="width:auto;" checked /><label for="eq-available" class="form-label" style="margin:0;">Disponible para alquiler</label></div>
+      </div>
+      <div id="equip-form-alert"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.75rem;" id="equip-form-btn"><i class="fas fa-save"></i> Guardar equipo</button>
+    </form>
+  </div>
+</div>
+
+<!-- Package Modal -->
+<div class="modal-overlay" id="pkg-modal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h3 id="pkg-modal-title">Nuevo paquete</h3>
+      <button class="modal-close" onclick="closePkgModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="pkg-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Nombre *</label><input class="form-input" id="pkg-name" required /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Descripción</label><textarea class="form-input" id="pkg-desc" rows="2"></textarea></div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Servicios incluidos (uno por línea)</label>
+          <textarea class="form-input" id="pkg-services" rows="4" placeholder="2h Captación de Voces&#10;Mezcla profesional&#10;Masterización"></textarea>
+        </div>
+        <div class="form-group"><label class="form-label">Precio original (COP)</label><input type="number" class="form-input" id="pkg-orig" min="0" step="1000" value="0" /></div>
+        <div class="form-group"><label class="form-label">Precio con descuento (COP)</label><input type="number" class="form-input" id="pkg-disc" min="0" step="1000" value="0" /></div>
+        <div class="form-group"><label class="form-label">% Descuento</label><input type="number" class="form-input" id="pkg-pct" min="0" max="100" value="0" /></div>
+        <div class="form-group" style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="pkg-active" style="width:auto;" checked /><label for="pkg-active" class="form-label" style="margin:0;">Activo</label></div>
+          <div style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="pkg-featured" style="width:auto;" /><label for="pkg-featured" class="form-label" style="margin:0;">Destacado</label></div>
+        </div>
+      </div>
+      <div id="pkg-form-alert"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.75rem;" id="pkg-form-btn"><i class="fas fa-save"></i> Guardar paquete</button>
+    </form>
+  </div>
+</div>
+
+<!-- License Modal -->
+<div class="modal-overlay" id="lic-modal">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-header">
+      <h3 id="lic-modal-title">Nueva licencia</h3>
+      <button class="modal-close" onclick="closeLicModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="lic-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group"><label class="form-label">Cliente *</label><input class="form-input" id="lic-client" required placeholder="Nombre del cliente" /></div>
+        <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-input" id="lic-email" required placeholder="email@example.com" /></div>
+        <div class="form-group"><label class="form-label">Beat / Obra</label><input class="form-input" id="lic-beat-title" placeholder="Título del beat" /></div>
+        <div class="form-group"><label class="form-label">Tipo de licencia</label>
+          <select class="form-input" id="lic-type">
+            <option value="basic">Basic (No exclusiva)</option>
+            <option value="standard">Standard</option>
+            <option value="exclusive">Exclusive</option>
+            <option value="sync">Sync / Video</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Precio pagado (COP)</label><input type="number" class="form-input" id="lic-price" min="0" step="1000" value="0" /></div>
+        <div class="form-group"><label class="form-label">Fecha de vencimiento</label><input type="date" class="form-input" id="lic-expiry" /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Términos y condiciones</label><textarea class="form-input" id="lic-terms" rows="3" placeholder="Términos específicos de la licencia..."></textarea></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Notas internas</label><textarea class="form-input" id="lic-notes" rows="2" placeholder="Notas para el equipo..."></textarea></div>
+      </div>
+      <div id="lic-form-alert"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.75rem;" id="lic-form-btn"><i class="fas fa-certificate"></i> Emitir licencia</button>
+    </form>
+  </div>
+</div>
+
+<!-- Booking Status Modal -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <h3>Actualizar reserva <span id="booking-modal-id" style="color:var(--gold);"></span></h3>
+      <button class="modal-close" onclick="closeBookingModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="booking-modal-info" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1rem;font-size:0.85rem;color:var(--text-muted);"></div>
+    <div class="form-group">
+      <label class="form-label">Estado</label>
+      <select class="form-input" id="booking-status-sel">
+        <option value="pending">Pendiente</option>
+        <option value="confirmed">Confirmada</option>
+        <option value="in_progress">En progreso</option>
+        <option value="completed">Completada</option>
+        <option value="cancelled">Cancelada</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Precio total (COP)</label>
+      <input type="number" class="form-input" id="booking-price-inp" min="0" step="1000" value="0" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas del admin</label>
+      <textarea class="form-input" id="booking-admin-notes" rows="3" placeholder="Notas internas..."></textarea>
+    </div>
+    <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem;">
+      <button class="btn btn-secondary btn-sm" onclick="closeBookingModal()">Cancelar</button>
+      <button class="btn btn-primary btn-sm" id="booking-save-btn" onclick="saveBookingUpdate()"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
 <nav class="navbar scrolled">
   <div class="container">
     <a href="../index.html" class="nav-logo-wrap">
       <img src="../img/LatinTunes.jpeg" alt="LatinTunes" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" />
-      <span class="nav-logo-text">LATIN<span>TUNES</span> <span style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.15em;font-family:var(--font-body);font-weight:400;">ADMIN</span></span>
+      <span class="nav-logo-text">LATIN<span>TUNES</span> <span style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.15em;font-family:var(--font-body);font-weight:400;">ADMIN</span></span>
     </a>
     <div class="nav-auth" id="nav-auth"></div>
   </div>
@@ -221,49 +274,201 @@
 <div class="admin-layout">
   <!-- Sidebar -->
   <aside class="admin-sidebar">
-    <div class="sidebar-logo"><span>Panel de control</span></div>
-    <div class="admin-menu-item active" data-panel="dashboard" onclick="showPanel('dashboard')">
-      <i class="fas fa-chart-pie"></i> Dashboard
+    <div class="sidebar-section">Principal</div>
+    <div class="admin-menu-item active" data-panel="dashboard" onclick="showPanel('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</div>
+
+    <div class="sidebar-section">Operaciones</div>
+    <div class="admin-menu-item" data-panel="bookings" onclick="showPanel('bookings')">
+      <i class="fas fa-calendar-check"></i> Reservas
+      <span id="pending-badge" style="margin-left:auto;background:var(--gold);color:var(--bg);font-size:0.65rem;padding:1px 6px;border-radius:10px;display:none;">0</span>
     </div>
-    <div class="admin-menu-item" data-panel="users" onclick="showPanel('users')">
-      <i class="fas fa-users"></i> Usuarios
-    </div>
-    <div class="admin-menu-item" data-panel="albums" onclick="showPanel('albums')">
-      <i class="fas fa-compact-disc"></i> Álbumes
-    </div>
-    <div class="admin-menu-item" data-panel="beats" onclick="showPanel('beats')">
-      <i class="fas fa-drum"></i> Beats
-    </div>
+    <div class="admin-menu-item" data-panel="services" onclick="showPanel('services')"><i class="fas fa-music"></i> Servicios</div>
+    <div class="admin-menu-item" data-panel="packages" onclick="showPanel('packages')"><i class="fas fa-tags"></i> Paquetes</div>
+    <div class="admin-menu-item" data-panel="equipment" onclick="showPanel('equipment')"><i class="fas fa-microphone-alt"></i> Equipos</div>
+
+    <div class="sidebar-section">Contenido</div>
+    <div class="admin-menu-item" data-panel="licenses" onclick="showPanel('licenses')"><i class="fas fa-certificate"></i> Licencias</div>
+    <div class="admin-menu-item" data-panel="beats" onclick="showPanel('beats')"><i class="fas fa-drum"></i> Beats</div>
+    <div class="admin-menu-item" data-panel="music" onclick="showPanel('music')"><i class="fas fa-compact-disc"></i> Música</div>
+
+    <div class="sidebar-section">Sistema</div>
+    <div class="admin-menu-item" data-panel="users" onclick="showPanel('users')"><i class="fas fa-users"></i> Usuarios</div>
     <div class="admin-menu-item" data-panel="messages" onclick="showPanel('messages')">
       <i class="fas fa-envelope"></i> Mensajes
-      <span id="unread-badge" style="margin-left:auto;background:var(--red);color:#fff;font-size:0.7rem;padding:1px 6px;border-radius:10px;display:none;">0</span>
+      <span id="unread-badge" style="margin-left:auto;background:var(--red);color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:10px;display:none;">0</span>
     </div>
-    <div style="border-top:1px solid var(--border); margin-top:1rem; padding-top:1rem;">
-      <div class="admin-menu-item" onclick="window.open('../index.html','_blank')">
-        <i class="fas fa-globe"></i> Ver sitio
-      </div>
-      <div class="admin-menu-item" onclick="handleLogout()">
-        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-      </div>
+
+    <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:0.75rem;">
+      <div class="admin-menu-item" onclick="window.open('../index.html','_blank')"><i class="fas fa-globe"></i> Ver sitio</div>
+      <div class="admin-menu-item" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</div>
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="admin-main">
 
-    <!-- Dashboard Panel -->
+    <!-- ── DASHBOARD ─────────────────────────────────────────────────────── -->
     <div class="section-panel active" id="panel-dashboard">
       <div class="panel-title">Dashboard <span>General</span></div>
       <div class="stats-grid" id="stats-grid">
         <div class="stat-card"><div class="loader-ring" style="margin:0 auto;"></div></div>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;" id="recent-activity">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+        <div>
+          <div style="font-family:var(--font-display);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.75rem;"><i class="fas fa-calendar-check"></i> Últimas reservas</div>
+          <div id="recent-bookings" class="table-wrap">
+            <div style="padding:1.5rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">Cargando...</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-display);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.75rem;"><i class="fas fa-envelope"></i> Mensajes recientes</div>
+          <div id="recent-messages" class="table-wrap">
+            <div style="padding:1.5rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">Cargando...</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Users Panel -->
+    <!-- ── RESERVAS ───────────────────────────────────────────────────────── -->
+    <div class="section-panel" id="panel-bookings">
+      <div class="panel-header">
+        <div class="panel-title">Gestión de <span>Reservas</span></div>
+      </div>
+      <div class="filter-bar">
+        <select class="form-input" id="booking-status-filter" style="max-width:180px;" onchange="loadBookings()">
+          <option value="">Todos los estados</option>
+          <option value="pending">Pendientes</option>
+          <option value="confirmed">Confirmadas</option>
+          <option value="in_progress">En progreso</option>
+          <option value="completed">Completadas</option>
+          <option value="cancelled">Canceladas</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="loadBookings()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Cliente</th><th>Servicio</th><th>Fecha</th><th>Duración</th><th>Estado</th><th>Precio</th><th>Acciones</th></tr></thead>
+          <tbody id="bookings-tbody"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SERVICIOS ─────────────────────────────────────────────────────── -->
+    <div class="section-panel" id="panel-services">
+      <div class="panel-header">
+        <div class="panel-title">Gestión de <span>Servicios</span></div>
+        <button class="btn btn-primary btn-sm" onclick="openServiceModal()"><i class="fas fa-plus"></i> Nuevo servicio</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio desde</th><th>Duración</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="services-tbody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── PAQUETES ───────────────────────────────────────────────────────── -->
+    <div class="section-panel" id="panel-packages">
+      <div class="panel-header">
+        <div class="panel-title">Gestión de <span>Paquetes</span></div>
+        <button class="btn btn-primary btn-sm" onclick="openPkgModal()"><i class="fas fa-plus"></i> Nuevo paquete</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Nombre</th><th>Precio orig.</th><th>Precio desc.</th><th>% Desc.</th><th>Destacado</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="packages-tbody"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── EQUIPOS ────────────────────────────────────────────────────────── -->
+    <div class="section-panel" id="panel-equipment">
+      <div class="panel-header">
+        <div class="panel-title">Gestión de <span>Equipos</span></div>
+        <button class="btn btn-primary btn-sm" onclick="openEquipModal()"><i class="fas fa-plus"></i> Nuevo equipo</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Marca</th><th>Día</th><th>Semana</th><th>Disponible</th><th>Uds.</th><th>Acciones</th></tr></thead>
+          <tbody id="equipment-tbody"><tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── LICENCIAS ──────────────────────────────────────────────────────── -->
+    <div class="section-panel" id="panel-licenses">
+      <div class="panel-header">
+        <div class="panel-title">Verificar <span>Licencias</span></div>
+        <button class="btn btn-primary btn-sm" onclick="openLicModal()"><i class="fas fa-plus"></i> Emitir licencia</button>
+      </div>
+
+      <!-- Verify bar -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem;">
+        <div style="font-family:var(--font-display);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.75rem;"><i class="fas fa-search"></i> Verificar número de licencia</div>
+        <div style="display:flex;gap:0.75rem;align-items:center;">
+          <input class="form-input" id="lic-verify-input" placeholder="LT-202501-XXXXXXXX" style="max-width:300px;" />
+          <button class="btn btn-secondary btn-sm" onclick="verifyLicenseNumber()"><i class="fas fa-search"></i> Verificar</button>
+        </div>
+        <div id="lic-verify-result" style="margin-top:0.75rem;font-size:0.85rem;"></div>
+      </div>
+
+      <div class="filter-bar">
+        <select class="form-input" id="lic-status-filter" style="max-width:180px;" onchange="loadLicenses()">
+          <option value="">Todos los estados</option>
+          <option value="active">Activas</option>
+          <option value="expired">Vencidas</option>
+          <option value="revoked">Revocadas</option>
+          <option value="pending">Pendientes</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="loadLicenses()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>N° Licencia</th><th>Cliente</th><th>Beat</th><th>Tipo</th><th>Estado</th><th>Precio</th><th>Emitida</th><th>Vence</th><th>Acciones</th></tr></thead>
+          <tbody id="licenses-tbody"><tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── BEATS ──────────────────────────────────────────────────────────── -->
+    <div class="section-panel" id="panel-beats">
+      <div class="panel-header">
+        <div class="panel-title">Gestión de <span>Beats</span></div>
+        <button class="btn btn-primary btn-sm" onclick="openBeatModal()"><i class="fas fa-plus"></i> Nuevo beat</button>
+      </div>
+      <div class="filter-bar">
+        <button class="btn btn-secondary btn-sm" onclick="loadAdminBeats()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Título</th><th>Categoría</th><th>BPM</th><th>Clave</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="beats-tbody"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── MÚSICA (ÁLBUMES) ───────────────────────────────────────────────── -->
+    <div class="section-panel" id="panel-music">
+      <div class="panel-header">
+        <div class="panel-title">Gestión de <span>Música</span></div>
+        <button class="btn btn-primary btn-sm" onclick="openAlbumModal()"><i class="fas fa-plus"></i> Nuevo álbum</button>
+      </div>
+      <div class="filter-bar">
+        <button class="btn btn-secondary btn-sm" onclick="loadAdminAlbums()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Título</th><th>Año</th><th>Tipo</th><th>Pistas</th><th>Acciones</th></tr></thead>
+          <tbody id="albums-tbody"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── USUARIOS ───────────────────────────────────────────────────────── -->
     <div class="section-panel" id="panel-users">
-      <div class="panel-title">Gestión de <span>Usuarios</span></div>
+      <div class="panel-header">
+        <div class="panel-title">Gestión de <span>Usuarios</span></div>
+      </div>
       <div class="filter-bar">
         <select class="form-input" id="role-filter" style="max-width:160px;" onchange="filterUsers()">
           <option value="">Todos los roles</option>
@@ -280,72 +485,62 @@
       </div>
       <div class="table-wrap">
         <table class="data-table">
-          <thead>
-            <tr>
-              <th>ID</th><th>Usuario</th><th>Email</th><th>Rol</th><th>Estado</th><th>Miembro desde</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="users-tbody"><tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr></tbody>
+          <thead><tr><th>ID</th><th>Usuario</th><th>Email</th><th>Rol</th><th>Estado</th><th>Miembro desde</th><th>Acciones</th></tr></thead>
+          <tbody id="users-tbody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
         </table>
       </div>
     </div>
 
-    <!-- Albums Panel -->
-    <div class="section-panel" id="panel-albums">
-      <div class="panel-title">Gestión de <span>Álbumes</span></div>
-      <div class="filter-bar">
-        <button class="btn btn-primary btn-sm" onclick="openAlbumModal()"><i class="fas fa-plus"></i> Nuevo álbum</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadAdminAlbums()"><i class="fas fa-sync-alt"></i> Actualizar</button>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead><tr><th>ID</th><th>Título</th><th>Año</th><th>Tipo</th><th>Pistas</th><th>Acciones</th></tr></thead>
-          <tbody id="albums-tbody"><tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Beats Panel -->
-    <div class="section-panel" id="panel-beats">
-      <div class="panel-title">Gestión de <span>Beats</span></div>
-      <div class="filter-bar">
-        <button class="btn btn-primary btn-sm" onclick="openBeatModal()"><i class="fas fa-plus"></i> Nuevo beat</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadAdminBeats()"><i class="fas fa-sync-alt"></i> Actualizar</button>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Categoría</th>
-              <th>BPM</th>
-              <th>Clave</th>
-              <th>Precio</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="beats-tbody">
-            <tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Messages Panel -->
+    <!-- ── MENSAJES ───────────────────────────────────────────────────────── -->
     <div class="section-panel" id="panel-messages">
-      <div class="panel-title">Mensajes de <span>Contacto</span></div>
-      <button class="btn btn-secondary btn-sm" onclick="loadMessages()" style="margin-bottom:1.5rem;"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      <div class="panel-header">
+        <div class="panel-title">Mensajes de <span>Contacto</span></div>
+        <button class="btn btn-secondary btn-sm" onclick="loadMessages()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+      </div>
       <div class="table-wrap">
         <table class="data-table">
           <thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Asunto</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
-          <tbody id="messages-tbody"><tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr></tbody>
+          <tbody id="messages-tbody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Cargando...</td></tr></tbody>
         </table>
       </div>
     </div>
 
   </main>
+</div>
+
+<!-- Service Modal (inline since rarely used) -->
+<div class="modal-overlay" id="svc-modal">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-header">
+      <h3 id="svc-modal-title">Nuevo servicio</h3>
+      <button class="modal-close" onclick="closeSvcModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="svc-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Nombre *</label><input class="form-input" id="svc-name" required /></div>
+        <div class="form-group"><label class="form-label">Categoría *</label>
+          <select class="form-input" id="svc-cat" required>
+            <option value="vocal_recording">Captación de Voces</option>
+            <option value="beat_creation">Creación de Beats</option>
+            <option value="mixing">Mezcla</option>
+            <option value="mastering">Masterización</option>
+            <option value="multimedia">Multimedia</option>
+            <option value="equipment_rental">Alquiler de Equipos</option>
+            <option value="mobile_recording">Grabación Móvil</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Precio desde (COP)</label><input type="number" class="form-input" id="svc-price" min="0" step="1000" /></div>
+        <div class="form-group"><label class="form-label">Duración estimada (h)</label><input type="number" class="form-input" id="svc-dur" min="0" step="0.5" /></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Descripción</label><textarea class="form-input" id="svc-desc" rows="2"></textarea></div>
+        <div class="form-group" style="grid-column:1/-1;"><label class="form-label">Características (una por línea)</label><textarea class="form-input" id="svc-features" rows="3" placeholder="Cabina insonorizada&#10;Micrófonos de condensador"></textarea></div>
+        <div class="form-group"><label class="form-label">URL imagen</label><input class="form-input" id="svc-image" placeholder="https://..." /></div>
+        <div class="form-group"><label class="form-label">Orden</label><input type="number" class="form-input" id="svc-order" value="0" /></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;padding-top:1.5rem;"><input type="checkbox" id="svc-active" style="width:auto;" checked /><label for="svc-active" class="form-label" style="margin:0;">Activo</label></div>
+      </div>
+      <div id="svc-form-alert"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.75rem;" id="svc-form-btn"><i class="fas fa-save"></i> Guardar servicio</button>
+    </form>
+  </div>
 </div>
 
 <script src="../js/api.js"></script>
@@ -355,275 +550,538 @@ let allUsers = [];
 let confirmCallback = null;
 let banUserId = null;
 let editAlbumId = null;
+let editBeatId = null;
+let editEquipId = null;
+let editPkgId = null;
+let editLicId = null;
+let editSvcId = null;
+let editBookingId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const user = requireAdmin();
   if (!user) return;
   updateNavAuth();
   await loadStats();
-  await loadUsers();
-  await loadAdminAlbums();
-  await loadAdminBeats();
-  await loadMessages();
+  loadBookings();
+  loadUsers();
+  loadAdminAlbums();
+  loadAdminBeats();
+  loadMessages();
+  loadServices();
+  loadPackages();
+  loadEquipment();
+  loadLicenses();
+  loadRecentActivity();
 });
 
-/* ── Panel navigation ─────────────────────────────────────────────────────── */
+/* ── Panel nav ──────────────────────────────────────────────────────────── */
 function showPanel(name) {
   document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active'));
   document.getElementById('panel-' + name).classList.add('active');
-  document.querySelector(`[data-panel="${name}"]`).classList.add('active');
+  const item = document.querySelector(`[data-panel="${name}"]`);
+  if (item) item.classList.add('active');
 }
 
-/* ── Stats ────────────────────────────────────────────────────────────────── */
+/* ── Stats ──────────────────────────────────────────────────────────────── */
 async function loadStats() {
   try {
-    const stats = await api.adminGetStats();
-    const grid = document.getElementById('stats-grid');
-    grid.innerHTML = `
-      <div class="stat-card"><div class="stat-number">${stats.total_users}</div><div class="stat-label">Usuarios totales</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:#c39bd3">${stats.premium_users}</div><div class="stat-label">Premium</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:#7fb3d3">${stats.free_users}</div><div class="stat-label">Gratuitos</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:var(--red-light)">${stats.banned_users}</div><div class="stat-label">Baneados</div></div>
-      <div class="stat-card"><div class="stat-number">${stats.total_albums}</div><div class="stat-label">Álbumes</div></div>
-      <div class="stat-card"><div class="stat-number">${stats.total_songs}</div><div class="stat-label">Canciones</div></div>
-      <div class="stat-card"><div class="stat-number">${stats.total_messages}</div><div class="stat-label">Mensajes</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:var(--red-light)">${stats.unread_messages}</div><div class="stat-label">Sin leer</div></div>
+    const s = await api.adminGetStats();
+    document.getElementById('stats-grid').innerHTML = `
+      <div class="stat-card"><div class="stat-number">${s.total_bookings}</div><div class="stat-label">Reservas</div></div>
+      <div class="stat-card"><div class="stat-number" style="color:#f9a825;">${s.pending_bookings}</div><div class="stat-label">Pendientes</div></div>
+      <div class="stat-card"><div class="stat-number">${s.total_users}</div><div class="stat-label">Usuarios</div></div>
+      <div class="stat-card"><div class="stat-number" style="color:#c39bd3;">${s.premium_users}</div><div class="stat-label">Premium</div></div>
+      <div class="stat-card"><div class="stat-number">${s.total_equipment ?? 0}</div><div class="stat-label">Equipos</div></div>
+      <div class="stat-card"><div class="stat-number">${s.total_packages ?? 0}</div><div class="stat-label">Paquetes</div></div>
+      <div class="stat-card"><div class="stat-number">${s.active_licenses ?? 0}</div><div class="stat-label">Licencias</div></div>
+      <div class="stat-card"><div class="stat-number" style="color:var(--red-light);">${s.unread_messages}</div><div class="stat-label">Mensajes nuevos</div></div>
     `;
-    // Update unread badge
-    if (stats.unread_messages > 0) {
-      const badge = document.getElementById('unread-badge');
-      badge.style.display = 'inline-block';
-      badge.textContent = stats.unread_messages;
+    if (s.pending_bookings > 0) {
+      const b = document.getElementById('pending-badge');
+      b.style.display = 'inline-block'; b.textContent = s.pending_bookings;
     }
-  } catch (err) {
-    toast('Error cargando estadísticas: ' + err.message, 'error');
-  }
+    if (s.unread_messages > 0) {
+      const b = document.getElementById('unread-badge');
+      b.style.display = 'inline-block'; b.textContent = s.unread_messages;
+    }
+  } catch (err) { toast('Error cargando estadísticas: ' + err.message, 'error'); }
 }
 
-/* ── Users ────────────────────────────────────────────────────────────────── */
-async function loadUsers() {
+async function loadRecentActivity() {
   try {
-    allUsers = await api.adminGetUsers();
-    renderUsers(allUsers);
-  } catch (err) {
-    toast('Error cargando usuarios: ' + err.message, 'error');
-  }
+    const [bookings, msgs] = await Promise.all([api.adminGetBookings(), api.adminGetMessages()]);
+
+    const rb = document.getElementById('recent-bookings');
+    rb.innerHTML = bookings.slice(0, 5).map(b => `
+      <div style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.83rem;display:flex;justify-content:space-between;align-items:center;">
+        <span><strong>${b.client_name}</strong> — ${b.service_type || 'N/A'}</span>
+        <span class="status-${b.status}" style="font-size:0.75rem;">${statusLabel(b.status)}</span>
+      </div>
+    `).join('') || '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">Sin reservas</div>';
+
+    const rm = document.getElementById('recent-messages');
+    rm.innerHTML = msgs.slice(0, 5).map(m => `
+      <div style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.83rem;display:flex;justify-content:space-between;align-items:center;${!m.is_read ? 'background:rgba(168,184,200,0.03);' : ''}">
+        <span><strong>${m.name}</strong> — ${m.subject}</span>
+        <span style="font-size:0.72rem;color:${m.is_read ? 'var(--text-muted)' : 'var(--gold)'};">${m.is_read ? 'Leído' : 'Nuevo'}</span>
+      </div>
+    `).join('') || '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">Sin mensajes</div>';
+  } catch {}
 }
 
-function filterUsers() {
-  const role = document.getElementById('role-filter').value;
-  const banned = document.getElementById('ban-filter').value;
-  let filtered = allUsers;
-  if (role) filtered = filtered.filter(u => u.role === role);
-  if (banned !== '') filtered = filtered.filter(u => String(u.is_banned) === banned);
-  renderUsers(filtered);
+/* ── Bookings ───────────────────────────────────────────────────────────── */
+function statusLabel(s) {
+  return {pending:'Pendiente',confirmed:'Confirmada',in_progress:'En progreso',completed:'Completada',cancelled:'Cancelada'}[s] || s;
 }
 
-function renderUsers(users) {
-  const tbody = document.getElementById('users-tbody');
-  if (!users.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin usuarios</td></tr>';
-    return;
-  }
-  tbody.innerHTML = users.map(u => `
-    <tr>
-      <td>#${u.id}</td>
-      <td><strong>${u.username}</strong></td>
-      <td style="color:var(--text-muted);">${u.email}</td>
-      <td><span class="badge badge-${u.role}">${u.role}</span></td>
-      <td>
-        ${u.is_banned
-          ? `<span class="badge badge-banned">Baneado</span>`
-          : `<span class="badge badge-active">Activo</span>`
-        }
-      </td>
-      <td style="color:var(--text-muted);">${formatDate(u.created_at)}</td>
-      <td>
-        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-          ${u.role !== 'admin' ? `
-            <button class="action-btn" onclick="changeRole(${u.id}, '${u.role}')">
-              <i class="fas fa-user-tag"></i> Rol
-            </button>
-          ` : ''}
-          ${u.is_banned
-            ? `<button class="action-btn" onclick="unbanUser(${u.id})"><i class="fas fa-unlock"></i> Desbanear</button>`
-            : `<button class="action-btn danger" onclick="banUser(${u.id})"><i class="fas fa-ban"></i> Banear</button>`
-          }
-          ${u.role !== 'admin' ? `
-            <button class="action-btn danger" onclick="deleteUser(${u.id}, '${u.username}')">
-              <i class="fas fa-trash"></i>
-            </button>
-          ` : ''}
-        </div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-async function changeRole(userId, currentRole) {
-  const roles = ['free', 'premium'];
-  const newRole = roles.find(r => r !== currentRole) || 'free';
-  if (!confirm(`¿Cambiar rol a "${newRole}"?`)) return;
+async function loadBookings() {
   try {
-    await api.adminUpdateUser(userId, { role: newRole });
-    toast(`Rol actualizado a ${newRole}`, 'success');
-    await loadUsers();
-  } catch (err) { toast(err.message, 'error'); }
-}
-
-function banUser(userId) {
-  banUserId = userId;
-  document.getElementById('ban-reason-input').value = '';
-  document.getElementById('ban-modal').classList.add('open');
-  document.getElementById('ban-confirm-btn').onclick = async () => {
-    const reason = document.getElementById('ban-reason-input').value.trim() || 'Violación de términos de servicio';
-    try {
-      await api.adminUpdateUser(banUserId, { is_banned: true, ban_reason: reason });
-      toast('Usuario baneado', 'success');
-      closeBanModal();
-      await loadUsers();
-      await loadStats();
-    } catch (err) { toast(err.message, 'error'); }
-  };
-}
-
-async function unbanUser(userId) {
-  try {
-    await api.adminUpdateUser(userId, { is_banned: false, ban_reason: null });
-    toast('Usuario desbaneado', 'success');
-    await loadUsers();
-    await loadStats();
-  } catch (err) { toast(err.message, 'error'); }
-}
-
-function deleteUser(userId, username) {
-  openConfirm(`¿Eliminar usuario "${username}"?`, 'Esta acción no se puede deshacer.', async () => {
-    try {
-      await api.adminDeleteUser(userId);
-      toast('Usuario eliminado', 'success');
-      await loadUsers();
-      await loadStats();
-    } catch (err) { toast(err.message, 'error'); }
-  });
-}
-
-/* ── Albums ───────────────────────────────────────────────────────────────── */
-async function loadAdminAlbums() {
-  try {
-    const albums = await api.getAlbums();
-    const tbody = document.getElementById('albums-tbody');
-    tbody.innerHTML = albums.map(a => `
+    const status = document.getElementById('booking-status-filter')?.value || '';
+    const bookings = await api.adminGetBookings(status);
+    const tbody = document.getElementById('bookings-tbody');
+    if (!bookings.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin reservas</td></tr>';
+      return;
+    }
+    tbody.innerHTML = bookings.map(b => `
       <tr>
-        <td>#${a.id}</td>
-        <td><strong>${a.title}</strong></td>
-        <td>${a.year}</td>
-        <td><span class="badge ${a.is_premium ? 'badge-premium' : 'badge-free'}">${a.is_premium ? 'Premium' : 'Gratuito'}</span></td>
-        <td>${a.songs ? a.songs.length : '—'}</td>
+        <td>#${b.id}</td>
+        <td>
+          <strong>${b.client_name}</strong>
+          <div style="font-size:0.75rem;color:var(--text-muted);">${b.client_email}</div>
+        </td>
+        <td style="color:var(--text-muted);font-size:0.85rem;">${b.service_type || '—'}</td>
+        <td style="color:var(--text-muted);font-size:0.83rem;">${formatDate(b.booking_date)}</td>
+        <td style="color:var(--text-muted);">${b.duration_hours}h</td>
+        <td><span class="status-${b.status}">${statusLabel(b.status)}</span></td>
+        <td style="color:var(--gold);">${b.total_price > 0 ? '$' + b.total_price.toLocaleString('es-CO') : '—'}</td>
         <td>
           <div style="display:flex;gap:0.4rem;">
-            <button class="action-btn" onclick="editAlbum(${a.id})"><i class="fas fa-edit"></i> Editar</button>
-            <button class="action-btn danger" onclick="deleteAlbum(${a.id}, '${a.title.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+            <button class="action-btn" onclick="openBookingModal(${b.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn danger" onclick="deleteBooking(${b.id})"><i class="fas fa-trash"></i></button>
           </div>
         </td>
       </tr>
-    `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin álbumes</td></tr>';
-  } catch (err) { toast('Error cargando álbumes: ' + err.message, 'error'); }
+    `).join('');
+  } catch (err) { toast('Error cargando reservas: ' + err.message, 'error'); }
 }
 
-function openAlbumModal(album = null) {
-  editAlbumId = album ? album.id : null;
-  document.getElementById('album-modal-title').textContent = album ? 'Editar álbum' : 'Nuevo álbum';
-  document.getElementById('alb-title').value = album?.title || '';
-  document.getElementById('alb-year').value = album?.year || new Date().getFullYear();
-  document.getElementById('alb-cover').value = album?.cover_url || '';
-  document.getElementById('alb-spotify').value = album?.spotify_url || '';
-  document.getElementById('alb-desc').value = album?.description || '';
-  document.getElementById('alb-premium').checked = album?.is_premium || false;
-  document.getElementById('album-form-alert').innerHTML = '';
-  document.getElementById('album-modal').classList.add('open');
-}
-function closeAlbumModal() { document.getElementById('album-modal').classList.remove('open'); editAlbumId = null; }
-
-async function editAlbum(id) {
+let allBookings = [];
+async function openBookingModal(id) {
   try {
-    const album = await api.getAlbum(id);
-    openAlbumModal(album);
+    const bookings = await api.adminGetBookings();
+    const b = bookings.find(x => x.id === id);
+    if (!b) return;
+    editBookingId = id;
+    document.getElementById('booking-modal-id').textContent = `#${id}`;
+    document.getElementById('booking-modal-info').innerHTML = `
+      <strong>${b.client_name}</strong> &lt;${b.client_email}&gt;<br/>
+      Servicio: ${b.service_type || 'N/A'} &nbsp;|&nbsp; ${formatDate(b.booking_date)} &nbsp;|&nbsp; ${b.duration_hours}h
+      ${b.notes ? '<br/>Notas: ' + b.notes : ''}
+    `;
+    document.getElementById('booking-status-sel').value = b.status;
+    document.getElementById('booking-price-inp').value = b.total_price || 0;
+    document.getElementById('booking-admin-notes').value = b.admin_notes || '';
+    document.getElementById('booking-modal').classList.add('open');
   } catch (err) { toast(err.message, 'error'); }
 }
 
-async function deleteAlbum(id, title) {
-  openConfirm(`¿Eliminar álbum "${title}"?`, 'Se eliminarán todas las canciones del álbum.', async () => {
-    try {
-      await api.deleteAlbum(id);
-      toast('Álbum eliminado', 'success');
-      await loadAdminAlbums();
-      await loadStats();
-    } catch (err) { toast(err.message, 'error'); }
+async function saveBookingUpdate() {
+  if (!editBookingId) return;
+  try {
+    await api.adminUpdateBooking(editBookingId, {
+      status: document.getElementById('booking-status-sel').value,
+      total_price: parseFloat(document.getElementById('booking-price-inp').value) || 0,
+      admin_notes: document.getElementById('booking-admin-notes').value.trim() || null,
+    });
+    toast('Reserva actualizada', 'success');
+    closeBookingModal();
+    loadBookings();
+    loadStats();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+function closeBookingModal() { document.getElementById('booking-modal').classList.remove('open'); editBookingId = null; }
+
+function deleteBooking(id) {
+  openConfirm('¿Eliminar reserva #' + id + '?', 'Esta acción no se puede deshacer.', async () => {
+    try { await api.adminDeleteBooking(id); toast('Reserva eliminada', 'success'); loadBookings(); loadStats(); }
+    catch (err) { toast(err.message, 'error'); }
   });
 }
 
-document.getElementById('album-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const btn = document.getElementById('album-form-btn');
-  const alertEl = document.getElementById('album-form-alert');
-  const body = {
-    title: document.getElementById('alb-title').value.trim(),
-    year: parseInt(document.getElementById('alb-year').value),
-    cover_url: document.getElementById('alb-cover').value.trim() || null,
-    spotify_url: document.getElementById('alb-spotify').value.trim() || null,
-    description: document.getElementById('alb-desc').value.trim() || null,
-    is_premium: document.getElementById('alb-premium').checked,
-  };
-  if (!body.title || !body.year) {
-    alertEl.innerHTML = '<div class="alert alert-error">Título y año son requeridos.</div>';
-    return;
-  }
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+/* ── Services ───────────────────────────────────────────────────────────── */
+const SERVICE_CAT_LABELS = {
+  vocal_recording:'Captación de Voces', beat_creation:'Creación de Beats', mixing:'Mezcla',
+  mastering:'Masterización', multimedia:'Multimedia', equipment_rental:'Alquiler de Equipos', mobile_recording:'Grabación Móvil'
+};
+
+async function loadServices() {
   try {
-    if (editAlbumId) await api.updateAlbum(editAlbumId, body);
-    else await api.createAlbum(body);
-    toast(editAlbumId ? 'Álbum actualizado' : 'Álbum creado', 'success');
-    closeAlbumModal();
-    await loadAdminAlbums();
-    await loadStats();
+    const svcs = await api.getServices(false);
+    const tbody = document.getElementById('services-tbody');
+    if (!svcs.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin servicios</td></tr>'; return; }
+    tbody.innerHTML = svcs.map(s => `
+      <tr>
+        <td>#${s.id}</td>
+        <td><strong>${s.name}</strong></td>
+        <td style="color:var(--text-muted);font-size:0.85rem;">${SERVICE_CAT_LABELS[s.category] || s.category}</td>
+        <td style="color:var(--gold);">${s.price_from ? '$' + s.price_from.toLocaleString('es-CO') : '—'}</td>
+        <td style="color:var(--text-muted);">${s.duration_hours ? s.duration_hours + 'h' : '—'}</td>
+        <td><span class="badge ${s.is_active ? 'badge-active' : 'badge-banned'}">${s.is_active ? 'Activo' : 'Inactivo'}</span></td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn" onclick="editService(${s.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn danger" onclick="deleteService(${s.id}, '${s.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) { toast('Error cargando servicios: ' + err.message, 'error'); }
+}
+
+function openServiceModal(svc = null) {
+  editSvcId = svc ? svc.id : null;
+  document.getElementById('svc-modal-title').textContent = svc ? 'Editar servicio' : 'Nuevo servicio';
+  document.getElementById('svc-name').value = svc?.name || '';
+  document.getElementById('svc-cat').value = svc?.category || 'vocal_recording';
+  document.getElementById('svc-price').value = svc?.price_from || '';
+  document.getElementById('svc-dur').value = svc?.duration_hours || '';
+  document.getElementById('svc-desc').value = svc?.description || '';
+  document.getElementById('svc-image').value = svc?.image_url || '';
+  document.getElementById('svc-order').value = svc?.sort_order || 0;
+  document.getElementById('svc-active').checked = svc ? svc.is_active : true;
+  try { document.getElementById('svc-features').value = svc?.features ? JSON.parse(svc.features).join('\n') : ''; } catch { document.getElementById('svc-features').value = svc?.features || ''; }
+  document.getElementById('svc-form-alert').innerHTML = '';
+  document.getElementById('svc-modal').classList.add('open');
+}
+function closeSvcModal() { document.getElementById('svc-modal').classList.remove('open'); editSvcId = null; }
+
+async function editService(id) {
+  try { const svcs = await api.getServices(false); const s = svcs.find(x => x.id === id); if (s) openServiceModal(s); }
+  catch (err) { toast(err.message, 'error'); }
+}
+
+async function deleteService(id, name) {
+  openConfirm(`¿Eliminar servicio "${name}"?`, 'Esta acción no se puede deshacer.', async () => {
+    try { await api.deleteService(id); toast('Servicio eliminado', 'success'); loadServices(); }
+    catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+document.getElementById('svc-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('svc-form-btn');
+  const featuresRaw = document.getElementById('svc-features').value.trim();
+  const featuresArr = featuresRaw ? featuresRaw.split('\n').map(l => l.trim()).filter(Boolean) : [];
+  const body = {
+    name: document.getElementById('svc-name').value.trim(),
+    category: document.getElementById('svc-cat').value,
+    price_from: parseFloat(document.getElementById('svc-price').value) || null,
+    duration_hours: parseFloat(document.getElementById('svc-dur').value) || null,
+    description: document.getElementById('svc-desc').value.trim() || null,
+    image_url: document.getElementById('svc-image').value.trim() || null,
+    sort_order: parseInt(document.getElementById('svc-order').value) || 0,
+    is_active: document.getElementById('svc-active').checked,
+    features: featuresArr.length ? JSON.stringify(featuresArr) : null,
+  };
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  try {
+    if (editSvcId) await api.updateService(editSvcId, body);
+    else await api.createService(body);
+    toast(editSvcId ? 'Servicio actualizado' : 'Servicio creado', 'success');
+    closeSvcModal(); loadServices();
   } catch (err) {
-    alertEl.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-save"></i> Guardar álbum';
-  }
+    document.getElementById('svc-form-alert').innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Guardar servicio'; }
 });
 
-/* ── Beats ────────────────────────────────────────────────────────────────── */
-let editBeatId = null;
+/* ── Packages ───────────────────────────────────────────────────────────── */
+async function loadPackages() {
+  try {
+    const pkgs = await api.getPackages(false);
+    const tbody = document.getElementById('packages-tbody');
+    if (!pkgs.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin paquetes</td></tr>'; return; }
+    tbody.innerHTML = pkgs.map(p => `
+      <tr>
+        <td>#${p.id}</td>
+        <td><strong>${p.name}</strong></td>
+        <td style="color:var(--text-muted);">${p.original_price > 0 ? '$' + p.original_price.toLocaleString('es-CO') : '—'}</td>
+        <td style="color:var(--gold);">${p.discounted_price > 0 ? '$' + p.discounted_price.toLocaleString('es-CO') : '—'}</td>
+        <td style="color:#4caf50;">${p.discount_pct > 0 ? p.discount_pct + '%' : '—'}</td>
+        <td>${p.is_featured ? '<i class="fas fa-star" style="color:var(--gold);"></i>' : '—'}</td>
+        <td><span class="badge ${p.is_active ? 'badge-active' : 'badge-banned'}">${p.is_active ? 'Activo' : 'Inactivo'}</span></td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn" onclick="editPkg(${p.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn danger" onclick="deletePkg(${p.id}, '${p.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) { toast('Error cargando paquetes: ' + err.message, 'error'); }
+}
 
+function openPkgModal(pkg = null) {
+  editPkgId = pkg ? pkg.id : null;
+  document.getElementById('pkg-modal-title').textContent = pkg ? 'Editar paquete' : 'Nuevo paquete';
+  document.getElementById('pkg-name').value = pkg?.name || '';
+  document.getElementById('pkg-desc').value = pkg?.description || '';
+  document.getElementById('pkg-orig').value = pkg?.original_price || 0;
+  document.getElementById('pkg-disc').value = pkg?.discounted_price || 0;
+  document.getElementById('pkg-pct').value = pkg?.discount_pct || 0;
+  document.getElementById('pkg-active').checked = pkg ? pkg.is_active : true;
+  document.getElementById('pkg-featured').checked = pkg?.is_featured || false;
+  try { document.getElementById('pkg-services').value = pkg?.services_included ? JSON.parse(pkg.services_included).join('\n') : ''; }
+  catch { document.getElementById('pkg-services').value = pkg?.services_included || ''; }
+  document.getElementById('pkg-form-alert').innerHTML = '';
+  document.getElementById('pkg-modal').classList.add('open');
+}
+function closePkgModal() { document.getElementById('pkg-modal').classList.remove('open'); editPkgId = null; }
+
+async function editPkg(id) {
+  try { const pkgs = await api.getPackages(false); const p = pkgs.find(x => x.id === id); if (p) openPkgModal(p); }
+  catch (err) { toast(err.message, 'error'); }
+}
+
+async function deletePkg(id, name) {
+  openConfirm(`¿Eliminar paquete "${name}"?`, 'Esta acción no se puede deshacer.', async () => {
+    try { await api.deletePackage(id); toast('Paquete eliminado', 'success'); loadPackages(); }
+    catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+document.getElementById('pkg-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('pkg-form-btn');
+  const svcRaw = document.getElementById('pkg-services').value.trim();
+  const svcArr = svcRaw ? svcRaw.split('\n').map(l => l.trim()).filter(Boolean) : [];
+  const body = {
+    name: document.getElementById('pkg-name').value.trim(),
+    description: document.getElementById('pkg-desc').value.trim() || null,
+    services_included: svcArr.length ? JSON.stringify(svcArr) : null,
+    original_price: parseFloat(document.getElementById('pkg-orig').value) || 0,
+    discounted_price: parseFloat(document.getElementById('pkg-disc').value) || 0,
+    discount_pct: parseInt(document.getElementById('pkg-pct').value) || 0,
+    is_active: document.getElementById('pkg-active').checked,
+    is_featured: document.getElementById('pkg-featured').checked,
+  };
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  try {
+    if (editPkgId) await api.updatePackage(editPkgId, body);
+    else await api.createPackage(body);
+    toast(editPkgId ? 'Paquete actualizado' : 'Paquete creado', 'success');
+    closePkgModal(); loadPackages();
+  } catch (err) {
+    document.getElementById('pkg-form-alert').innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Guardar paquete'; }
+});
+
+/* ── Equipment ──────────────────────────────────────────────────────────── */
+async function loadEquipment() {
+  try {
+    const equips = await api.getEquipment(false);
+    const tbody = document.getElementById('equipment-tbody');
+    if (!equips.length) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin equipos</td></tr>'; return; }
+    tbody.innerHTML = equips.map(eq => `
+      <tr>
+        <td>#${eq.id}</td>
+        <td><strong>${eq.name}</strong></td>
+        <td style="color:var(--text-muted);font-size:0.83rem;">${eq.category || '—'}</td>
+        <td style="color:var(--text-muted);">${eq.brand || '—'}</td>
+        <td style="color:var(--gold);">${eq.daily_rate > 0 ? '$' + eq.daily_rate.toLocaleString('es-CO') : '—'}</td>
+        <td style="color:var(--gold);">${eq.weekly_rate > 0 ? '$' + eq.weekly_rate.toLocaleString('es-CO') : '—'}</td>
+        <td><span class="badge ${eq.is_available ? 'badge-active' : 'badge-banned'}">${eq.is_available ? 'Sí' : 'No'}</span></td>
+        <td style="color:var(--text-muted);">${eq.quantity_available}/${eq.quantity_total}</td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn" onclick="editEquip(${eq.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn danger" onclick="deleteEquip(${eq.id}, '${eq.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) { toast('Error cargando equipos: ' + err.message, 'error'); }
+}
+
+function openEquipModal(eq = null) {
+  editEquipId = eq ? eq.id : null;
+  document.getElementById('equip-modal-title').textContent = eq ? 'Editar equipo' : 'Nuevo equipo';
+  document.getElementById('eq-name').value = eq?.name || '';
+  document.getElementById('eq-cat').value = eq?.category || '';
+  document.getElementById('eq-brand').value = eq?.brand || '';
+  document.getElementById('eq-daily').value = eq?.daily_rate || 0;
+  document.getElementById('eq-weekly').value = eq?.weekly_rate || 0;
+  document.getElementById('eq-deposit').value = eq?.deposit_amount || 0;
+  document.getElementById('eq-qty-total').value = eq?.quantity_total || 1;
+  document.getElementById('eq-qty-avail').value = eq?.quantity_available || 1;
+  document.getElementById('eq-image').value = eq?.image_url || '';
+  document.getElementById('eq-desc').value = eq?.description || '';
+  document.getElementById('eq-available').checked = eq ? eq.is_available : true;
+  document.getElementById('equip-form-alert').innerHTML = '';
+  document.getElementById('equip-modal').classList.add('open');
+}
+function closeEquipModal() { document.getElementById('equip-modal').classList.remove('open'); editEquipId = null; }
+
+async function editEquip(id) {
+  try { const equips = await api.getEquipment(false); const eq = equips.find(x => x.id === id); if (eq) openEquipModal(eq); }
+  catch (err) { toast(err.message, 'error'); }
+}
+
+async function deleteEquip(id, name) {
+  openConfirm(`¿Eliminar equipo "${name}"?`, 'Esta acción no se puede deshacer.', async () => {
+    try { await api.deleteEquipment(id); toast('Equipo eliminado', 'success'); loadEquipment(); }
+    catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+document.getElementById('equip-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('equip-form-btn');
+  const body = {
+    name: document.getElementById('eq-name').value.trim(),
+    category: document.getElementById('eq-cat').value || null,
+    brand: document.getElementById('eq-brand').value.trim() || null,
+    daily_rate: parseFloat(document.getElementById('eq-daily').value) || 0,
+    weekly_rate: parseFloat(document.getElementById('eq-weekly').value) || 0,
+    deposit_amount: parseFloat(document.getElementById('eq-deposit').value) || 0,
+    quantity_total: parseInt(document.getElementById('eq-qty-total').value) || 1,
+    quantity_available: parseInt(document.getElementById('eq-qty-avail').value) || 1,
+    image_url: document.getElementById('eq-image').value.trim() || null,
+    description: document.getElementById('eq-desc').value.trim() || null,
+    is_available: document.getElementById('eq-available').checked,
+  };
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  try {
+    if (editEquipId) await api.updateEquipment(editEquipId, body);
+    else await api.createEquipment(body);
+    toast(editEquipId ? 'Equipo actualizado' : 'Equipo creado', 'success');
+    closeEquipModal(); loadEquipment();
+  } catch (err) {
+    document.getElementById('equip-form-alert').innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Guardar equipo'; }
+});
+
+/* ── Licenses ───────────────────────────────────────────────────────────── */
+const LIC_TYPE_LABELS = { basic:'Basic', standard:'Standard', exclusive:'Exclusive', sync:'Sync', custom:'Custom' };
+const LIC_STATUS_LABELS = { active:'Activa', expired:'Vencida', revoked:'Revocada', pending:'Pendiente' };
+
+async function loadLicenses() {
+  try {
+    const status = document.getElementById('lic-status-filter')?.value || '';
+    const lics = await api.adminGetLicenses(status);
+    const tbody = document.getElementById('licenses-tbody');
+    if (!lics.length) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin licencias</td></tr>'; return; }
+    tbody.innerHTML = lics.map(l => `
+      <tr>
+        <td style="font-family:monospace;font-size:0.8rem;color:var(--gold);">${l.license_number}</td>
+        <td>
+          <strong>${l.client_name}</strong>
+          <div style="font-size:0.73rem;color:var(--text-muted);">${l.client_email}</div>
+        </td>
+        <td style="color:var(--text-muted);font-size:0.83rem;">${l.beat_title || '—'}</td>
+        <td style="color:var(--text-muted);">${LIC_TYPE_LABELS[l.license_type] || l.license_type}</td>
+        <td><span class="license-${l.status}">${LIC_STATUS_LABELS[l.status] || l.status}</span></td>
+        <td style="color:var(--gold);">${l.price_paid > 0 ? '$' + l.price_paid.toLocaleString('es-CO') : '—'}</td>
+        <td style="color:var(--text-muted);font-size:0.82rem;">${formatDate(l.issued_date)}</td>
+        <td style="color:var(--text-muted);font-size:0.82rem;">${l.expiry_date ? formatDate(l.expiry_date) : '—'}</td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn success" onclick="toggleLicenseStatus(${l.id}, '${l.status}')"><i class="fas fa-toggle-on"></i></button>
+            <button class="action-btn danger" onclick="deleteLicense(${l.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) { toast('Error cargando licencias: ' + err.message, 'error'); }
+}
+
+async function toggleLicenseStatus(id, currentStatus) {
+  const newStatus = currentStatus === 'active' ? 'revoked' : 'active';
+  try {
+    await api.updateLicense(id, { status: newStatus });
+    toast(`Licencia ${newStatus === 'active' ? 'reactivada' : 'revocada'}`, 'success');
+    loadLicenses();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function deleteLicense(id) {
+  openConfirm('¿Eliminar licencia?', 'Esta acción eliminará el registro permanentemente.', async () => {
+    try { await api.deleteLicense(id); toast('Licencia eliminada', 'success'); loadLicenses(); }
+    catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+async function verifyLicenseNumber() {
+  const num = document.getElementById('lic-verify-input').value.trim();
+  const res = document.getElementById('lic-verify-result');
+  if (!num) { res.innerHTML = '<span style="color:var(--red-light);">Ingresa un número de licencia.</span>'; return; }
+  try {
+    const l = await api.verifyLicense(num);
+    res.innerHTML = `<span style="color:#4caf50;"><i class="fas fa-check-circle"></i> Licencia válida — ${l.client_name} | ${LIC_TYPE_LABELS[l.license_type]} | ${LIC_STATUS_LABELS[l.status]} | Beat: ${l.beat_title || 'N/A'}</span>`;
+  } catch {
+    res.innerHTML = '<span style="color:var(--red-light);"><i class="fas fa-times-circle"></i> Licencia no encontrada.</span>';
+  }
+}
+
+function openLicModal(lic = null) {
+  editLicId = lic ? lic.id : null;
+  document.getElementById('lic-modal-title').textContent = lic ? 'Editar licencia' : 'Nueva licencia';
+  document.getElementById('lic-client').value = lic?.client_name || '';
+  document.getElementById('lic-email').value = lic?.client_email || '';
+  document.getElementById('lic-beat-title').value = lic?.beat_title || '';
+  document.getElementById('lic-type').value = lic?.license_type || 'basic';
+  document.getElementById('lic-price').value = lic?.price_paid || 0;
+  document.getElementById('lic-expiry').value = lic?.expiry_date ? lic.expiry_date.split('T')[0] : '';
+  document.getElementById('lic-terms').value = lic?.terms || '';
+  document.getElementById('lic-notes').value = lic?.notes || '';
+  document.getElementById('lic-form-alert').innerHTML = '';
+  document.getElementById('lic-modal').classList.add('open');
+}
+function closeLicModal() { document.getElementById('lic-modal').classList.remove('open'); editLicId = null; }
+
+document.getElementById('lic-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('lic-form-btn');
+  const body = {
+    client_name: document.getElementById('lic-client').value.trim(),
+    client_email: document.getElementById('lic-email').value.trim(),
+    beat_title: document.getElementById('lic-beat-title').value.trim() || null,
+    license_type: document.getElementById('lic-type').value,
+    price_paid: parseFloat(document.getElementById('lic-price').value) || 0,
+    expiry_date: document.getElementById('lic-expiry').value || null,
+    terms: document.getElementById('lic-terms').value.trim() || null,
+    notes: document.getElementById('lic-notes').value.trim() || null,
+  };
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Emitiendo...';
+  try {
+    await api.createLicense(body);
+    toast('Licencia emitida', 'success');
+    closeLicModal(); loadLicenses(); loadStats();
+  } catch (err) {
+    document.getElementById('lic-form-alert').innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-certificate"></i> Emitir licencia'; }
+});
+
+/* ── Beats ──────────────────────────────────────────────────────────────── */
 async function loadAdminBeats() {
   try {
     const beats = await api.getBeats('available_only=false');
     const tbody = document.getElementById('beats-tbody');
-    if (!beats.length) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin beats</td></tr>';
-      return;
-    }
+    if (!beats.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin beats</td></tr>'; return; }
     tbody.innerHTML = beats.map(b => `
       <tr>
         <td>#${b.id}</td>
-        <td>
-          <strong>${b.title}</strong>
-          ${b.is_exclusive ? '<span class="badge badge-premium" style="font-size:0.65rem;margin-left:0.4rem;">Excl.</span>' : ''}
-        </td>
+        <td><strong>${b.title}</strong>${b.is_exclusive ? '<span class="badge badge-premium" style="font-size:0.65rem;margin-left:0.4rem;">Excl.</span>' : ''}</td>
         <td style="color:var(--text-muted);font-size:0.85rem;">${b.category}</td>
         <td style="color:var(--text-muted);">${b.bpm || '—'}</td>
         <td style="color:var(--text-muted);font-size:0.82rem;">${b.musical_key || '—'}</td>
-        <td style="color:var(--gold);">${b.price > 0 ? '$' + b.price.toLocaleString('es-CO') : 'Consultar'}</td>
-        <td>
-          <span class="badge ${b.is_available ? 'badge-active' : 'badge-banned'}">${b.is_available ? 'Activo' : 'Inactivo'}</span>
-        </td>
+        <td style="color:var(--gold);">${b.price > 0 ? '$' + b.price.toLocaleString('es-CO') : '—'}</td>
+        <td><span class="badge ${b.is_available ? 'badge-active' : 'badge-banned'}">${b.is_available ? 'Activo' : 'Inactivo'}</span></td>
         <td>
           <div style="display:flex;gap:0.4rem;">
-            <button class="action-btn" onclick="editBeat(${b.id})"><i class="fas fa-edit"></i> Editar</button>
+            <button class="action-btn" onclick="editBeat(${b.id})"><i class="fas fa-edit"></i></button>
             <button class="action-btn danger" onclick="deleteBeat(${b.id}, '${b.title.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
           </div>
         </td>
@@ -649,33 +1107,23 @@ function openBeatModal(beat = null) {
   document.getElementById('beat-form-alert').innerHTML = '';
   document.getElementById('beat-modal').classList.add('open');
 }
-
-function closeBeatModal() {
-  document.getElementById('beat-modal').classList.remove('open');
-  editBeatId = null;
-}
+function closeBeatModal() { document.getElementById('beat-modal').classList.remove('open'); editBeatId = null; }
 
 async function editBeat(id) {
-  try {
-    const beat = await api.getBeat(id);
-    openBeatModal(beat);
-  } catch (err) { toast(err.message, 'error'); }
+  try { const beat = await api.getBeat(id); openBeatModal(beat); }
+  catch (err) { toast(err.message, 'error'); }
 }
 
 async function deleteBeat(id, title) {
   openConfirm(`¿Eliminar beat "${title}"?`, 'Esta acción no se puede deshacer.', async () => {
-    try {
-      await api.deleteBeat(id);
-      toast('Beat eliminado', 'success');
-      await loadAdminBeats();
-    } catch (err) { toast(err.message, 'error'); }
+    try { await api.deleteBeat(id); toast('Beat eliminado', 'success'); loadAdminBeats(); }
+    catch (err) { toast(err.message, 'error'); }
   });
 }
 
 document.getElementById('beat-form').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = document.getElementById('beat-form-btn');
-  const alertEl = document.getElementById('beat-form-alert');
   const body = {
     title: document.getElementById('bt-title').value.trim(),
     category: document.getElementById('bt-category').value,
@@ -690,32 +1138,165 @@ document.getElementById('beat-form').addEventListener('submit', async e => {
     is_exclusive: document.getElementById('bt-exclusive').checked,
   };
   if (!body.title || !body.category) {
-    alertEl.innerHTML = '<div class="alert alert-error">Título y categoría son requeridos.</div>';
+    document.getElementById('beat-form-alert').innerHTML = '<div class="alert alert-error">Título y categoría son requeridos.</div>';
     return;
   }
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
   try {
     if (editBeatId) await api.updateBeat(editBeatId, body);
     else await api.createBeat(body);
     toast(editBeatId ? 'Beat actualizado' : 'Beat creado', 'success');
-    closeBeatModal();
-    await loadAdminBeats();
+    closeBeatModal(); loadAdminBeats();
   } catch (err) {
-    alertEl.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-save"></i> Guardar beat';
-  }
+    document.getElementById('beat-form-alert').innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Guardar beat'; }
 });
 
-/* ── Messages ─────────────────────────────────────────────────────────────── */
+/* ── Música (álbumes) ───────────────────────────────────────────────────── */
+async function loadAdminAlbums() {
+  try {
+    const albums = await api.getAlbums();
+    const tbody = document.getElementById('albums-tbody');
+    tbody.innerHTML = albums.map(a => `
+      <tr>
+        <td>#${a.id}</td>
+        <td><strong>${a.title}</strong></td>
+        <td>${a.year}</td>
+        <td><span class="badge ${a.is_premium ? 'badge-premium' : 'badge-free'}">${a.is_premium ? 'Premium' : 'Gratuito'}</span></td>
+        <td>${a.songs ? a.songs.length : '—'}</td>
+        <td>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="action-btn" onclick="editAlbum(${a.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn danger" onclick="deleteAlbum(${a.id}, '${a.title.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin álbumes</td></tr>';
+  } catch (err) { toast('Error cargando álbumes: ' + err.message, 'error'); }
+}
+
+function openAlbumModal(album = null) {
+  editAlbumId = album ? album.id : null;
+  document.getElementById('album-modal-title').textContent = album ? 'Editar álbum' : 'Nuevo álbum';
+  document.getElementById('alb-title').value = album?.title || '';
+  document.getElementById('alb-year').value = album?.year || new Date().getFullYear();
+  document.getElementById('alb-cover').value = album?.cover_url || '';
+  document.getElementById('alb-spotify').value = album?.spotify_url || '';
+  document.getElementById('alb-desc').value = album?.description || '';
+  document.getElementById('alb-premium').checked = album?.is_premium || false;
+  document.getElementById('album-form-alert').innerHTML = '';
+  document.getElementById('album-modal').classList.add('open');
+}
+function closeAlbumModal() { document.getElementById('album-modal').classList.remove('open'); editAlbumId = null; }
+
+async function editAlbum(id) {
+  try { const album = await api.getAlbum(id); openAlbumModal(album); }
+  catch (err) { toast(err.message, 'error'); }
+}
+
+async function deleteAlbum(id, title) {
+  openConfirm(`¿Eliminar álbum "${title}"?`, 'Se eliminarán todas las canciones.', async () => {
+    try { await api.deleteAlbum(id); toast('Álbum eliminado', 'success'); loadAdminAlbums(); loadStats(); }
+    catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+document.getElementById('album-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('album-form-btn');
+  const body = {
+    title: document.getElementById('alb-title').value.trim(),
+    year: parseInt(document.getElementById('alb-year').value),
+    cover_url: document.getElementById('alb-cover').value.trim() || null,
+    spotify_url: document.getElementById('alb-spotify').value.trim() || null,
+    description: document.getElementById('alb-desc').value.trim() || null,
+    is_premium: document.getElementById('alb-premium').checked,
+  };
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  try {
+    if (editAlbumId) await api.updateAlbum(editAlbumId, body);
+    else await api.createAlbum(body);
+    toast(editAlbumId ? 'Álbum actualizado' : 'Álbum creado', 'success');
+    closeAlbumModal(); loadAdminAlbums(); loadStats();
+  } catch (err) {
+    document.getElementById('album-form-alert').innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+  } finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Guardar'; }
+});
+
+/* ── Users ──────────────────────────────────────────────────────────────── */
+async function loadUsers() {
+  try { allUsers = await api.adminGetUsers(); renderUsers(allUsers); }
+  catch (err) { toast('Error cargando usuarios: ' + err.message, 'error'); }
+}
+
+function filterUsers() {
+  const role = document.getElementById('role-filter').value;
+  const banned = document.getElementById('ban-filter').value;
+  let f = allUsers;
+  if (role) f = f.filter(u => u.role === role);
+  if (banned !== '') f = f.filter(u => String(u.is_banned) === banned);
+  renderUsers(f);
+}
+
+function renderUsers(users) {
+  const tbody = document.getElementById('users-tbody');
+  if (!users.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin usuarios</td></tr>'; return; }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td>#${u.id}</td>
+      <td><strong>${u.username}</strong></td>
+      <td style="color:var(--text-muted);">${u.email}</td>
+      <td><span class="badge badge-${u.role}">${u.role}</span></td>
+      <td>${u.is_banned ? '<span class="badge badge-banned">Baneado</span>' : '<span class="badge badge-active">Activo</span>'}</td>
+      <td style="color:var(--text-muted);">${formatDate(u.created_at)}</td>
+      <td>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+          ${u.role !== 'admin' ? `<button class="action-btn" onclick="changeRole(${u.id}, '${u.role}')"><i class="fas fa-user-tag"></i> Rol</button>` : ''}
+          ${u.is_banned ? `<button class="action-btn" onclick="unbanUser(${u.id})"><i class="fas fa-unlock"></i></button>` : `<button class="action-btn danger" onclick="banUser(${u.id})"><i class="fas fa-ban"></i></button>`}
+          ${u.role !== 'admin' ? `<button class="action-btn danger" onclick="deleteUser(${u.id}, '${u.username}')"><i class="fas fa-trash"></i></button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function changeRole(userId, currentRole) {
+  const newRole = currentRole === 'premium' ? 'free' : 'premium';
+  if (!confirm(`¿Cambiar rol a "${newRole}"?`)) return;
+  try { await api.adminUpdateUser(userId, { role: newRole }); toast(`Rol → ${newRole}`, 'success'); loadUsers(); }
+  catch (err) { toast(err.message, 'error'); }
+}
+
+function banUser(userId) {
+  banUserId = userId;
+  document.getElementById('ban-reason-input').value = '';
+  document.getElementById('ban-modal').classList.add('open');
+  document.getElementById('ban-confirm-btn').onclick = async () => {
+    const reason = document.getElementById('ban-reason-input').value.trim() || 'Violación de términos';
+    try { await api.adminUpdateUser(banUserId, { is_banned: true, ban_reason: reason }); toast('Usuario baneado', 'success'); closeBanModal(); loadUsers(); loadStats(); }
+    catch (err) { toast(err.message, 'error'); }
+  };
+}
+
+async function unbanUser(userId) {
+  try { await api.adminUpdateUser(userId, { is_banned: false, ban_reason: null }); toast('Usuario desbaneado', 'success'); loadUsers(); loadStats(); }
+  catch (err) { toast(err.message, 'error'); }
+}
+
+function deleteUser(userId, username) {
+  openConfirm(`¿Eliminar usuario "${username}"?`, 'Esta acción no se puede deshacer.', async () => {
+    try { await api.adminDeleteUser(userId); toast('Usuario eliminado', 'success'); loadUsers(); loadStats(); }
+    catch (err) { toast(err.message, 'error'); }
+  });
+}
+
+/* ── Messages ───────────────────────────────────────────────────────────── */
 async function loadMessages() {
   try {
     const msgs = await api.adminGetMessages();
     const tbody = document.getElementById('messages-tbody');
     tbody.innerHTML = msgs.map(m => `
-      <tr style="${!m.is_read ? 'background:rgba(212,160,23,0.04);' : ''}">
+      <tr style="${!m.is_read ? 'background:rgba(168,184,200,0.03);' : ''}">
         <td>#${m.id}</td>
         <td><strong>${m.name}</strong></td>
         <td style="color:var(--text-muted);">${m.email}</td>
@@ -724,15 +1305,12 @@ async function loadMessages() {
         <td><span class="badge ${m.is_read ? 'badge-free' : 'badge-active'}">${m.is_read ? 'Leído' : 'Nuevo'}</span></td>
         <td>
           <div style="display:flex;gap:0.4rem;">
-            <button class="action-btn" onclick="viewMessage(${m.id})" title="Ver mensaje">
-              <i class="fas fa-eye"></i>
-            </button>
-            ${!m.is_read ? `<button class="action-btn" onclick="markRead(${m.id})"><i class="fas fa-check"></i> Leído</button>` : ''}
+            <button class="action-btn" onclick="viewMessage(${m.id})"><i class="fas fa-eye"></i></button>
+            ${!m.is_read ? `<button class="action-btn" onclick="markRead(${m.id})"><i class="fas fa-check"></i></button>` : ''}
           </div>
         </td>
       </tr>
     `).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Sin mensajes</td></tr>';
-
     const unread = msgs.filter(m => !m.is_read).length;
     const badge = document.getElementById('unread-badge');
     badge.style.display = unread > 0 ? 'inline-block' : 'none';
@@ -741,31 +1319,25 @@ async function loadMessages() {
 }
 
 async function markRead(id) {
-  try { await api.adminMarkRead(id); await loadMessages(); } catch (err) { toast(err.message, 'error'); }
+  try { await api.adminMarkRead(id); loadMessages(); } catch (err) { toast(err.message, 'error'); }
 }
 
 async function viewMessage(id) {
-  try {
-    const msgs = await api.adminGetMessages();
-    const m = msgs.find(x => x.id === id);
-    if (!m) return;
-    if (!m.is_read) await api.adminMarkRead(id).catch(() => {});
-    openConfirm(
-      `Mensaje de: ${m.name}`,
-      `De: ${m.email}\nAsunto: ${m.subject}\n\n${m.message}`,
-      null
-    );
-    document.getElementById('confirm-ok-btn').style.display = 'none';
-    await loadMessages();
-  } catch (err) { toast(err.message, 'error'); }
+  const msgs = await api.adminGetMessages().catch(() => []);
+  const m = msgs.find(x => x.id === id);
+  if (!m) return;
+  if (!m.is_read) api.adminMarkRead(id).catch(() => {});
+  openConfirm(`Mensaje de: ${m.name}`, `De: ${m.email}\nAsunto: ${m.subject}\n\n${m.message}`, null);
+  document.getElementById('confirm-ok-btn').style.display = 'none';
+  setTimeout(loadMessages, 500);
 }
 
-/* ── Modals helpers ──────────────────────────────────────────────────────── */
+/* ── Modal helpers ──────────────────────────────────────────────────────── */
 function openConfirm(title, message, onConfirm) {
   document.getElementById('confirm-title').textContent = title;
   document.getElementById('confirm-message').textContent = message;
-  const okBtn = document.getElementById('confirm-ok-btn');
-  okBtn.style.display = onConfirm ? 'inline-flex' : 'none';
+  const ok = document.getElementById('confirm-ok-btn');
+  ok.style.display = onConfirm ? 'inline-flex' : 'none';
   confirmCallback = onConfirm;
   document.getElementById('confirm-modal').classList.add('open');
 }
@@ -776,7 +1348,11 @@ function closeConfirm() { document.getElementById('confirm-modal').classList.rem
 function closeBanModal() { document.getElementById('ban-modal').classList.remove('open'); banUserId = null; }
 
 document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) { closeConfirm(); closeBanModal(); closeAlbumModal(); closeBeatModal(); } });
+  m.addEventListener('click', e => {
+    if (e.target !== m) return;
+    [closeConfirm, closeBanModal, closeAlbumModal, closeBeatModal, closeEquipModal, closePkgModal, closeLicModal, closeSvcModal, closeBookingModal]
+      .forEach(fn => fn());
+  });
 });
 </script>
 </body>
